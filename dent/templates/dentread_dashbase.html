@@ -245,12 +245,12 @@
 								<li class="nav-item">
 									<a class="nav-link" id="bgcolor" href="/index"><span class="shape1" id="shadow"></span><span class="shape2"></span><i class="fa-solid fa-book size--update" aria-hidden="true"></i><span class="sidemenu-label">My Orders</span></a>
 								</li>
-								<li class="nav-item d-none">
-									<a class="nav-link" id="bgcolor" href="/allShipment"><span class="shape1" id="shadow"></span><span class="shape2"></span><i class="fa fa-truck" aria-hidden="true"></i><span class="sidemenu-label">Shipments</span></a>
+								<li class="nav-item disabled">
+									<a class="nav-link" id="bgcolor" href="#"><span class="shape1" id="shadow"></span><span class="shape2"></span><i class="fa fa-truck" aria-hidden="true"></i><span class="sidemenu-label">Shipments</span></a>
 								</li>
 								{% endif %}
-								<li class="nav-item d-none">
-									<a class="nav-link" id="bgcolor" href="/imageDataManagement" style="text-align: left"><span class="shape1" id="shadow" class="shape2" ></span><i class="fa-solid fa-image size--update" aria-hidden="true"></i><span class="sidemenu-label">Image Management</span></a>
+								<li class="nav-item disabled">
+									<a class="nav-link" id="bgcolor" href="#" style="text-align: left"><span class="shape1" id="shadow" class="shape2" ></span><i class="fa-solid fa-image size--update" aria-hidden="true"></i><span class="sidemenu-label">Image Management</span></a>
 								</li>
 								
 								{% if org.orgtype == "Dental Clinic" or  org.orgtype == "Imaging Centre" %}
@@ -307,7 +307,7 @@
 										<a class="nav-sub-link" href="/newBranchClinic">Branch Profile</span></a>
 									</li>
 								{% endif %}
-								<li class="nav-sub-item">
+								<li class="nav-sub-item d-none">
 									<a class="nav-sub-link" href="/profileDetails">My Profile </a>
 								</li>
 								{% if org.orgtype == "Dental Lab" %}
@@ -389,7 +389,7 @@
 									<h6 class="main-notification-title">{{usr.name}}</h6>
 									<p class="main-notification-text">{{usr.department}}</p>
 								</div>
-								<a class="dropdown-item border-top" href="/myprofile">
+								<a class="dropdown-item border-top d-none" href="/myprofile">
 									<i class="fe fe-user"></i> My Profile
 								</a>
 								<a class="dropdown-item" href="/reset_pwd">
@@ -429,7 +429,7 @@
 									<h6 class="main-notification-title">{{usr.name}}</h6>
 									<p class="main-notification-text">{{usr.department}}</p>
 								</div>
-								<a class="dropdown-item border-top" href="/myprofile">
+								<a class="dropdown-item border-top d-none" href="/myprofile">
 									<i class="fe fe-user"></i> My Profile
 								</a>
 								<a class="dropdown-item" href="/reset_pwd">

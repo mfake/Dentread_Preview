@@ -834,11 +834,11 @@
                             <div class="radio-group">
                                 <div class="">
                                     <input type="radio" name="premium" id="premium1">
-                                    <label for="premium1">Rs. 3999/-</label>
+                                    <label for="premium1"><i class="fa fa-usd" aria-hidden="true"></i> 50/-</label>
                                 </div>
                                 <div class="">
                                     <input type="radio" name="premium" id="premium2">
-                                    <label for="premium2">Rs. 9999/-</label>
+                                    <label for="premium2"><i class="fa fa-usd" aria-hidden="true"></i> 120/-</label>
                                 </div>
                             </div>
                             <div class="inclusions">
@@ -884,7 +884,7 @@
                         <div class="wallet-cols row">
                             <div class="col-sm-6 d-flex">
                                 <div class="p-2 text-center">
-                                    <div style="font-size: 15px;">Available Balance</div>
+                                    <div style="font-size: 15px;">Available Balance ($)</div>
                                     <div style="font-size: 1rem; color: green; font-weight: 450;">
                                         {% if total_balance %}
                                         {{total_balance}}
@@ -905,16 +905,16 @@
                                             {% csrf_token %}
                                             <h6>Select Amount</h6>
                                             <div class="form-group">
-                                                <input type="radio" name="amount" value="5000" id="10000">
-                                                <label for="10000">5000/-</label>
+                                                <input type="radio" name="amount" value="2000" id="10000">
+                                                <label for="10000"> $ 2000/-</label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="radio" name="amount" value="10000" id="15000">
-                                                <label for="15000">10000/-</label>
+                                                <input type="radio" name="amount" value="2500" id="15000">
+                                                <label for="15000">$ 2500/-</label>
                                             </div>
                                             <div class="form-group">
-                                                <input type="radio" name="amount" value="15000" id="20000">
-                                                <label for="20000">15000/-</label>
+                                                <input type="radio" name="amount" value="3000" id="20000">
+                                                <label for="20000">$ 3000/-</label>
                                             </div>
                                             <button type="submit" class="submit-button-dropleft">+ Add</button>
                                         </form> 
@@ -944,12 +944,12 @@
                                 {% endif %}
                         </div>
                         {% if org.paymentOption == 'payLater' %}
-                        <div class="flex" style="flex:1;"><span>Credit Limit:</span> <span style="color: green;">Rs. {{org.topUp}}/-</span></div>
+                        <div class="flex" style="flex:1;"><span>Credit Limit:</span> <span style="color: green;"><i class="fa fa-usd" aria-hidden="true"></i> {{org.topUp}}/-</span></div>
                         {% else %}
-                        <div class="flex" style="flex:1;"><span>Credit Limit:</span> <span style="color: green;">Rs. 0.0</span></div>
+                        <div class="flex" style="flex:1;"><span>Credit Limit:</span> <span style="color: green;"><i class="fa fa-usd" aria-hidden="true"></i> 0.0</span></div>
                         {% endif %}
                         {% if org.paymentOption == 'payLater' %}
-                        <div class="flex" style="flex:1;"><span>Available Balance:</span> <span style="color: green;">Rs. {{org.topUpAvailable}}/-</span></div>
+                        <div class="flex" style="flex:1;"><span>Available Balance:</span> <span style="color: green;"><i class="fa fa-usd" aria-hidden="true"></i> {{org.topUpAvailable}}/-</span></div>
                         {% endif %}
                     </div>
                     {% endif %}

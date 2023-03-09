@@ -13814,7 +13814,7 @@ def buysubs_imaging(request):
 #                 return render(request, 'paymentfail_imaging.html')
 
 #             else:
-#                 amount = mpack.TXNAMOUNT  # Rs. 200
+#                 amount = mpack.TXNAMOUNT  # <i class="fa fa-usd" aria-hidden="true"></i> 200
 #                 razorpay_client.payment.capture(payment_id, amount)
 #                 mpack.TXNID = payment_id
 #                 mpack.TXNDATE = datetime.today()
@@ -13903,7 +13903,7 @@ def handlerequest(request):
                 service_order.save()
                 return render(request, 'paymentfail_imaging.html', data)
             else:
-                amount = service_order.ref_price*100  # Rs. 200
+                amount = service_order.ref_price*100  # <i class="fa fa-usd" aria-hidden="true"></i> 200
                 razorpay_client.payment.capture(payment_id, amount)
                 service_order.TXNID = payment_id
                 service_order.TXNDATE = datetime.today()
