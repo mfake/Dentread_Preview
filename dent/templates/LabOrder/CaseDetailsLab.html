@@ -1,0 +1,706 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="{% static '/dropzone/dropzone.js' %}"></script>
+
+    <script src="{% static '/tinymce/tinymce.min.js' %}"></script>
+
+    <script src="https://kit.fontawesome.com/1e67968654.js" crossorigin="anonymous"></script>
+    <script>
+        tinymce.init({
+        selector: '#text',
+        plugins: 'print preview paste importcss searchreplace save autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap emoticons',
+        imagetools_cors_hosts: ['picsum.photos'],
+        menubar: 'file edit view insert format tools table help',
+        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | save | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+        toolbar_sticky: true,
+        autosave_ask_before_unload: true,
+        autosave_interval: "30s",
+        autosave_prefix: "{path}{query}-{id}-",
+        autosave_restore_when_empty: false,
+        autosave_retention: "2m",
+        image_advtab: true,
+        content_style: "body { background: white; color: Black; font-size: 12pt; font-family: Arial; }",
+
+        link_list: [
+            { title: 'My page 1', value: 'http://www.tinymce.com' },
+            { title: 'My page 2', value: 'http://www.moxiecode.com' }
+        ],
+
+        image_list: [
+            { title: 'My page 1', value: 'http://www.tinymce.com' },
+            { title: 'My page 2', value: 'http://www.moxiecode.com' }
+        ],
+        image_class_list: [
+            { title: 'None', value: '' },
+            { title: 'Some class', value: 'class-name' }
+        ],
+        importcss_append: true,
+        height: 800,
+
+        file_picker_callback: function (callback, value, meta) {
+            /* Provide file and text for the link dialog */
+            if (meta.filetype === 'file') {
+            callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
+            }
+
+            /* Provide image and alt text for the image dialog */
+            if (meta.filetype === 'image') {
+            callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+            }
+
+            /* Provide alternative source and posted for the media dialog */
+            if (meta.filetype === 'media') {
+            callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
+            }
+        },
+        templates: [
+                { title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
+            { title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
+            { title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
+        ],
+        template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
+        template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
+
+
+        image_caption: true,
+        quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+        noneditable_noneditable_class: "mceNonEditable",
+        toolbar_mode: 'sliding',
+        contextmenu: "link image imagetools table",
+        });
+
+    </script>
+</head>
+
+<style>
+    body{
+        background: white;
+    }
+    .enclosing-row{
+        /* background: aliceblue; */
+        box-shadow: 1px 4px 14px rgba(129, 119, 119, 0.1);
+        border-radius: 5px;
+        padding: 1rem;
+        align-items: center;
+        border: 1px solid #ededed;
+    }
+    
+    .name-heading, .heading{
+        font-size: 18px;
+        font-weight: 500;
+        margin-left: 1rem;
+    }
+    .gender-icon--enclosing{
+        
+        background: white;
+        border-radius: 50%;
+        text-align: center;
+        color: white;
+
+    }
+    .icon-image{
+        width: 48px !important;
+    }
+    
+    input, textarea, select, button{
+        font-size: 0.875rem !important;
+        letter-spacing: 1px;
+        border: 1px solid #e8e8f7;
+        color: #a8afc7;;
+        box-shadow: 1px 4px 10px rgba(129, 119, 119, 0.1);
+    }
+   
+    .main-footer{
+        box-shadow: 1px -3px 14px 0px #8177771A;
+    }
+    label:not(.card-body label){
+        letter-spacing: 1px;
+    }
+    .form-group{
+        margin-bottom: 1.3rem;
+    }
+   
+    .heading{
+        letter-spacing: 0.4px;
+    }
+   
+    .order-heading{
+        margin-left: auto;
+        margin-right: 1rem;
+        font-size: initial;
+        margin-bottom: 1rem;
+    }
+
+    .property-box{
+        margin: 0.5rem 0;
+    }
+    .property-box>span:first-child{
+        margin-right: 1rem;
+        font-size: 14px;
+        font-weight: 400;
+    }
+    .property-box>span:last-child{
+        font-size: 15px;
+        font-weight: 500;
+    }
+    p {
+        margin-bottom: 1rem !important;
+    }
+    .change_para {
+        font-size: medium;
+        font-weight: 450;
+        margin: 1.5rem 0 !important;
+    }
+    .change_para:first-child {
+        margin-top: 0.3rem !important;
+    }
+    
+    @media (min-width: 576px) {
+        .modal-dialog {
+        max-width: 700px;
+        margin: 1.75rem auto;
+        }
+    }
+    #btn-later{
+        color: #1f3f7f !important;
+        border: 1px solid #1f3f7f !important;
+    }
+
+    .patient-information--enclosing{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 0.75rem;
+        border-right: 2px solid black;
+    }
+
+    @media (min-width: 576px){    
+        #chatBoxModal > .modal-dialog {
+            max-width: 500px;
+            margin: 6rem 8rem 6rem auto;
+        }
+    }
+    .back-button:hover{
+        cursor: pointer;
+    }
+
+    .floating-date-left{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      right: 5px;
+    }
+    .floating-date-right{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      right: 5px;
+    }
+    .dateEle{
+        text-align: center;
+        background: lavender;
+        font-size: 13px;
+        width: 100px;
+        margin: 2rem auto;
+        border-radius: 10px;
+    }
+    .admin-side--comment{
+      font-size: 14px;
+      position: relative;
+      margin: 17px 0;
+      color: black;
+      padding: 3px 55px 3px 10px;
+      width: 60%;
+      border-radius: 4px;
+      margin-left: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+      background: lavender;
+    }
+    .clinic-side--comment{
+      margin-right: 10px;
+      font-size: 14px;
+      position: relative;
+      margin: 17px 0;
+      color: black;
+      padding: 3px 55px 3px 10px;
+      width: 60%;
+      margin-left: auto;
+      border-radius: 4px;
+      margin-right: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+    }
+    .start-dot{
+        width: 20px;
+        height: 20px;
+        background: rgb(25, 122, 122);
+        border-radius: 50%;
+        border: 3px solid white;
+        left: 0;
+        top: -7px;
+    }
+    .end-dot{
+        width: 20px;
+        height: 20px;
+        background: grey;
+        /* border: 1px solid black; */
+        border: 3px solid white;
+        border-radius: 50%;
+        right: 0;
+        top: -7px;
+    }
+    .timeline{
+        height: 5px; 
+        background-color: #c0b5b5; 
+        width: 80%; 
+        border-radius: 5px; 
+        margin: 0 auto;
+    }
+    .timeline-over{
+        height: 7px; 
+        background-color: rgb(25, 122, 122);  
+        border-radius: 5px; 
+        margin: 0 auto;
+        left: 0;
+        top: -1px;
+    }
+    .footnotes-card{
+        min-width: 250px;
+        text-align: left;
+        margin: 1rem 1rem 1rem 0;
+    }
+</style>
+
+<div class="container mb-3">
+    
+    <h4 class="mt-3 mb-3" ><img class="back-button" src="/static/svg_icons/arrowleft2.svg" onclick="history.back()" style="transform: rotate(90deg);" alt=""> <span class="back-button" onclick="history.back()"> Order Details </span> </h4>
+    <div class="row m-2 enclosing-row">
+        
+        <div class="col-sm-6 col-md-2 patient-information--enclosing">
+            <div class="gender-icon--enclosing">
+                {% if patient.gender == 'Female' %}
+                <img class="icon-image" src="/static/svg_icons/Female.svg" alt="">
+                {% endif %}
+                {% if patient.gender != 'Female' %}
+                <img class="icon-image" src="/static/svg_icons/Male.svg" alt="">
+                {% endif %}
+            </div>
+            <div class="heading" style="margin-left: 0;">{{patient.name}}</div>
+            <div style="color: #4f5057;"><span style="font-size: 14px; font-weight: 400;">ID: </span> <span style="font-size: 15px; font-weight: 500;">{{patient.pid}}</span></div>
+        </div>
+        <div class="col-sm-11 col-md-7 row" style="font-weight: 500;">
+            <div class="col-sm-6 property-box pl-5" style="color: #4f5057;"><span>Clinic: </span> <span>{{service_order.locate}}</span> </div>
+            <div class="col-sm-6 property-box " style="color: #4f5057;"><span>Service: </span> <span>{{mycat.topcat}}</span></div>
+            <div class="col-sm-6 property-box pl-5" style="color: #4f5057;"><span>Order ID: </span> <span>{{service_order.order_id}}</span></div>
+            <div class="col-sm-6 property-box " style="color: #4f5057;"><span>Payment Status: </span> <span>{{service_order.paymentStatus}}</span></div>
+            <div class="col-sm-6 property-box pl-5" style="color: #4f5057;"><span>Order Date: </span> <span>{{service_order.date}}</span></div>
+            <div class="col-sm-6 property-box " style="color: #4f5057;"><span>Last Modified: </span> <span>{{service_order.date}}</span></div>
+            <div class="col-sm-6 property-box pl-5" style="color: #4f5057;"><span>Tooth Notation: </span> <span>{{service_order.tooth_notation}}</span></div>
+            
+        </div>
+        <div class="col-sm-11 col-md-3 row justify-content-between" style="font-weight: 500;">
+            <div class="property-box" style="color: #4f5057;">
+                <span>Total Amount: </span> 
+                <span>
+                    {% autoescape off %}
+                    {{icon}}
+                    {% endautoescape %}
+                    {{service_order.ref_price}}
+                </span>
+            </div>
+            <button class="btn btn-sm ml-3 mr-3" data-toggle="modal" data-target="#chatBoxModal" style="border: 1px solid #ededed;">
+                
+                <img src="/static/svg_icons/Group 98.svg" width="23px"/>
+            </button>
+        </div>
+
+    </div>
+
+    {% for item in image_order %}
+
+        <div class="row m-2 mt-4 enclosing-row mb-4">
+            <!-- <h5 class="heading order-heading">
+                Total: <span style="margin-left: 0.5rem;">Rs</span> <span style="font-size: larger; color: #1f3f7f;">{{item.price}}/-</span>
+            </h5> -->
+            <div class="col-12 d-flex align-items-center">
+                <img src="/static/svg_icons/pointer_icon.svg" alt="">
+                <div class="heading">{{item.item}}</div>
+                
+            </div>
+
+            <div class="col-sm-12 col-md-8 row mt-3 mb-3" style="font-weight: 500;">
+                {% if item.type != '' and item.type != 'NULL' and item.type != NULL %}
+                    <div class="col-sm-6 property-box">
+                        <span>Product: </span>
+                        <span>{{item.type}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.method != '' and item.method != 'NULL' and item.method != NULL %}
+                    <div class="col-sm-6 property-box">
+                        <span>Method: </span>
+                        <span>{{item.method}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.material %}
+                    <div class="col-sm-6 property-box">
+                        <span>Material: </span>
+                        <span>{{item.material}}</span>
+                    </div>
+                {% endif %}
+                {% if item.sub_material %}
+                    <div class="col-sm-6 property-box">
+                        <span>Sub-Material: </span>
+                        <span>{{item.sub_material}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.price %}
+                    <div class="col-sm-6 property-box">
+                        <span>Price Per Unit: </span>
+                        <span>{{item.pricePerUnit}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.expectedDate %}
+                    <div class="col-sm-6 property-box">
+                        <span>Expected Date: </span>
+                        <span>{{item.expectedDate}}</span>
+                    </div>
+                {% endif %}
+                
+                {% if item.tooth %}
+                    <div class="col-sm-6 property-box">
+                        <span>Tooth Sites: </span>
+                        <span>{{item.tooth}}</span>
+                    </div>
+                {% endif %}
+                
+                {% if item.shade %}
+                    <div class="col-sm-6 property-box">
+                        <span>Item Shade: </span>
+                        <span>{{item.shade}}</span>
+                    </div>
+                {% endif %}
+                
+                {% if item.shadeType %}
+                    <div class="col-sm-6 property-box">
+                        <span>Shade Type: </span>
+                        <span>{{item.shadeType}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.fabrication %}
+                    <div class="col-sm-6 col-md-4 property-box">
+                        <span>Fabrication: </span>
+                        <span>{{item.fabrication}}</span>
+                    </div>
+                {% endif %}
+
+                
+            </div>
+            <div class="col-sm-6 col-md-4 row justify-content-between">
+                <div class="property-box">
+                    <span>Price: </span>
+                    <span>{{item.price}}/-</span>
+                </div>
+                <div class="property-box">
+                    <span>Units: </span>
+                    <span>{{item.unit}}</span>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <hr>
+                <span style="margin-right: 1rem;">Clinical Notes: </span>
+                <span>{{item.remark}}</span>
+                <hr>
+            </div>
+            
+            {% for i in extraItems %}
+                <!-- console.log('{{i.itemId}}', '{{i.lineItemId}}', '{{i.lineItemIdNumber}}') -->
+                {% if i.lineItemIdNumber == item.id %}
+                    <div class="card enclosing-row footnotes-card align-items-baseline" >
+                        <div class="property-box">
+                            <span class="d-none"></span>
+                            <span>
+                                {{i.addOnService}}
+                            </span>
+                        </div>
+                        
+                        <div class="property-box d-flex align-items-center">
+                            <span>Units: </span>
+                            <div class="increment-decrement--button">
+                                {{i.addOnunit}}
+                            </div>
+                        </div>
+                        <div class="property-box">
+                            <span>Unit Price: </span>
+                            <span>{{i.unitPrice}}/-</span>  
+                        </div>
+                        <div class="property-box">
+                            <span>Total Price: </span>
+                            <span>{{i.addOnprice}}/-</span>  
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <div class="col-sm-12 row align-items-center mt-3">
+                <div class="col-sm-10">
+                    <div class="timeline position-relative">
+                        <div class="timeline-over position-absolute"></div>
+                        <span class="position-absolute start-dot"></span>
+                        {% if item.status == 'Order Delivered' %}
+                            <span class="position-absolute end-dot" style="background-color: rgb(25, 122, 122) !important;"></span>
+                        {% endif %}
+                        {% if item.status != 'Order Delivered' %}
+                            <span class="position-absolute end-dot"></span>
+                        {% endif %}
+                        <span class="position-absolute" style="left: -91px; top: -8px;">Submit Order</span>
+                        <span class="position-absolute" style="right: -110px; top: -8px;">Order Delivered</span>
+                    </div>
+                </div>
+
+                <div class="col-sm-2"> <a class="btn btn-outline-primary" style="float: right;" type="button" href="/lineOrderDetailsDigitalLab/{{service_order.id}}/{{item.id}}">View Details</a> </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+</div>
+
+
+<!-- all modals are here  -->
+
+<!-- 1. share report modal  -->
+
+<div class="modal fade" id="chatBoxModal" tabindex="-1" role="dialog" aria-labelledby="chatBoxModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+        
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatBoxTitle">Case Chat</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div id="case-chat"></div>
+                <form class="form-inline" style="margin-top: 1rem" method="post" action="/adminCommentLab/{{service_order.id}}/{{mycat.id}}">
+                    {% csrf_token %}
+
+                    <div class="input-group w-100">
+                        <input type="text" class="form-control" name="comment" placeholder="Type your comment here..." aria-label="Type your comment here..." aria-describedby="comment-send">
+                        <div class="input-group-append">
+                          <button  type="submit" class="btn" style="border-color: #e8e8f7;" id="comment-send"><i class="fa fa-sharp fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            
+      
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ------------------our modals -----------------  -->
+<script>
+    // chat section starts here
+    '{% for i in extraItems %}'
+        console.log('{{i.itemId}}', '{{i.lineItemId}}', '{{i.lineItemIdNumber}}')
+    '{% endfor %}'
+    
+    let parent=  document.getElementById('case-chat')
+    let prevDate = ''
+    '{% for i in comment %}'
+        var ele= document.createElement('div');
+        
+        var date= document.createElement('span');
+        date.innerText=`{{i.date}}`.slice(15);
+        
+        if('{{i.date}}'.slice(0, 13) != prevDate ){
+            prevDate = '{{i.date}}'.slice(0, -11);
+            var dateEle= document.createElement('div');
+            dateEle.innerText = prevDate;
+            dateEle.classList.add('dateEle');
+            parent.appendChild(dateEle);
+        }
+        
+        var text= document.createElement('span');
+        text.innerText= `{{i.comment}}`
+        
+    
+        if(`{{i.orgid}}`=='{{org}}'){
+            
+            date.classList.add('floating-date-right');
+            ele.appendChild(date);
+            ele.appendChild(text);
+            ele.classList.add('clinic-side--comment');
+        }    
+        else{
+            date.classList.add('floating-date-left');
+            ele.appendChild(text);
+            ele.appendChild(date);
+            ele.classList.add('admin-side--comment')
+            
+        }    
+        parent.appendChild(ele);           
+        
+    '{% endfor %}'
+    
+    // chat section ends here
+
+    let timelineOverWidth = [];
+    let statuses = [];
+    '{% for item in image_order %}'
+        statuses.push('{{item.status}}')
+        console.log('{{item.preferredData}}', '{{item.designCheck}}');
+        
+        if('{{service_order.preferredData}}' == 'digitalData' && '{{item.designCheck}}' == 'on'){
+            if( '{{item.status}}' == 'Submit Order' ){
+                timelineOverWidth.push(0);
+            }
+            
+            else if( '{{item.status}}' == 'Validate Data' ){
+                timelineOverWidth.push(17);
+            }
+            else if( '{{item.status}}' == 'Share Design' ){
+                timelineOverWidth.push(34);
+            }
+            else if( '{{item.status}}' == 'Review Design' ){
+                timelineOverWidth.push(51);
+            }
+            else if( '{{item.status}}' == 'Production Complete' ){
+                timelineOverWidth.push(68);
+            }
+            else if( '{{item.status}}' == 'Order Dispatched' ){
+                timelineOverWidth.push(85);
+            }
+            else if( '{{item.status}}' == 'Order Delivered' ){
+                console.log('inside first console');
+                timelineOverWidth.push(100);
+            }
+        }
+        else if('{{service_order.preferredData}}' == 'nonDigitalData' && '{{item.designCheck}}' == 'on'){
+            if( '{{item.status}}' == 'Submit Order' ){
+                timelineOverWidth.push(0);
+            }
+            else if( '{{item.status}}' == 'Pickup Order' ){
+                timelineOverWidth.push(14);
+            }
+            else if( '{{item.status}}' == 'Validate Data' ){
+                timelineOverWidth.push(28);
+            }
+            else if( '{{item.status}}' == 'Share Design' ){
+                timelineOverWidth.push(42);
+            }
+            else if( '{{item.status}}' == 'Review Design' ){
+                timelineOverWidth.push(56);
+            }
+            else if( '{{item.status}}' == 'Production Complete' ){
+                timelineOverWidth.push(70);
+            }
+            else if( '{{item.status}}' == 'Order Dispatched' ){
+                timelineOverWidth.push(84);
+            }
+            else if( '{{item.status}}' == 'Order Delivered' ){
+                console.log('inside first console');
+                timelineOverWidth.push(100);
+            }
+        }
+        else if('{{service_order.preferredData}}' == 'digitalData' && '{{item.designCheck}}' != 'on'){
+            if( '{{item.status}}' == 'Submit Order' ){
+                timelineOverWidth.push(0);
+            }
+            else if( '{{item.status}}' == 'Validate Data' ){
+                timelineOverWidth.push(20);
+            }
+            else if( '{{item.status}}' == 'Share Design' ){
+                timelineOverWidth.push(40);
+            }
+            else if( '{{item.status}}' == 'Production Complete' ){
+                timelineOverWidth.push(60);
+            }
+            else if( '{{item.status}}' == 'Order Dispatched' ){
+                timelineOverWidth.push(80);
+            }
+            else if( '{{item.status}}' == 'Order Delivered' ){
+                console.log('inside first console');
+                timelineOverWidth.push(100);
+            }
+        }
+        else if('{{service_order.preferredData}}' == 'nonDigitalData' && '{{item.designCheck}}' != 'on' ){
+            if( '{{item.status}}' == 'Submit Order' ){
+                timelineOverWidth.push(0);
+            }
+            else if( '{{item.status}}' == 'Pickup Order' ){
+                timelineOverWidth.push(17);
+            }
+            else if( '{{item.status}}' == 'Validate Data' ){
+                timelineOverWidth.push(34);
+            }
+            else if( '{{item.status}}' == 'Share Design' ){
+                timelineOverWidth.push(51);
+            }
+            else if( '{{item.status}}' == 'Production Complete' ){
+                timelineOverWidth.push(68);
+            }
+            else if( '{{item.status}}' == 'Order Dispatched' ){
+                timelineOverWidth.push(85);
+            }
+            else if( '{{item.status}}' == 'Order Delivered' ){
+                console.log('inside first console');
+                timelineOverWidth.push(100);
+            }
+        }
+    
+    '{% endfor %}'
+    
+    let index= 0;
+    console.log("the timeLine over width is", timelineOverWidth)
+    for(let i of document.getElementsByClassName('timeline-over')){
+        console.log(i, timelineOverWidth[index]);
+        i.style.width = timelineOverWidth[index] + '%';
+        
+        let span= document.createElement('span');
+        span.classList.add('position-absolute');
+        span.innerText = statuses[index];
+        span.style.left= (timelineOverWidth[index++] - 5) + '%';
+        span.style.top= '-30px';
+        if(span.innerText != 'Submit Order' && span.innerText != 'Order Delivered' && span.innerText != undefined){
+            i.parentElement.appendChild(span);
+        }
+        
+    }
+    
+</script>
+
+<input id="service_orderid" name="service_orderid" value="{{service_order.id}}" hidden>
+
+<!-- </div> -->
+
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+
+{% endif %}
+{%endblock%}

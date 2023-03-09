@@ -1,0 +1,508 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+<style>
+    body{
+        background: white;
+    }
+    .content{
+        width: 85%;
+        max-width: 1300px;
+        margin: 0.5rem auto 0 auto;
+    }
+    .add-product--section, .product-listing--section, .footnotes-listing--section{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 100%;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+    }
+    form{
+        position: relative;
+        padding: 2rem 5rem 3rem 2rem;
+    }
+    .save-button, .reset-button{
+        position: absolute;
+        right: 0;
+        width: 161px;
+        height: 36px;
+        color: white;
+        border: 1px solid #1F3F7F;
+        margin-top: 1rem;
+        background: #1F3F7F;
+        border-radius: 8px;
+    }
+    .reset-button{
+        right: 11rem;
+        border: 1px solid #1F3F7F;
+        background: white;
+        color: #1F3F7F;
+    }
+    .search-box{
+        float: right;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+    }
+    .search-box input{
+        box-shadow: 1px 2px 10px 0px #79797942;
+    }
+    .search-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    .header img{
+        width: 20px;
+    }
+    .animate{
+        animation: search-animate 2s ease-in;
+    }
+    @keyframes search-animate {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(1);
+        }
+    }
+    
+    .card{
+        position: relative;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        margin-bottom: 1rem;
+        padding: 1.5rem 4.5rem 1.5rem 2.5rem;
+    }
+    .card h6{
+        margin-bottom: 1rem;
+    }
+    .card .row{
+        row-gap: 0.75rem;
+    }
+    .kebab-button{
+        position: absolute;
+        right: 3%;
+        top: 40%;
+    }
+    .modal--header{
+        padding: 2rem 0 1rem 2rem;
+    }
+    .edit-confirm--button{
+        width: 132px; 
+        height: 36px !important; 
+        float: right; 
+        border-radius: 8px; 
+        background-color: #1f3f7f;
+    }
+    .form-edit--pencil{
+        float: right;
+        height: 15px;
+        margin-right: 5px;
+        margin-top: 5px;
+    }
+    input + label::before, input + label::after{
+        display: none !important;
+    }
+    #editProductModal .modal-body, #editFootnoteModal .modal-body{
+        padding-top: 0;
+    }
+</style>
+
+<div class="content container">
+    <div class="add-product--section">
+        <h5>Product Details</h5>
+        <form method="post" action="/addOrderItems">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="item">Item</label>
+                    <select id="item" name="item" class="form-control">
+                        {% for i in labItem %}
+                            <option value="{{ i.item }}">{{ i.item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="type">Type</label>
+                    <input type="text" class="form-control" id="type" name="type" placeholder="Enter Type">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="method">Method</label>
+                    <input type="text" class="form-control" id="method" name="method" placeholder="Enter Method">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="material">Material</label>
+                    <input type="text" class="form-control" id="material" name="material" placeholder="Enter Material">
+                </div>
+                <!-- ---- the division  -->
+                <div class="form-group col-md-4">
+                    <label for="sub-method">Sub Method</label>
+                    <input type="text" class="form-control" id="sub-method" name="submethod" placeholder="Enter Sub Method">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="application">Application</label>
+                    <input type="text" class="form-control" id="application" name="application" placeholder="Enter Application">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="warranty">Warranty ( in years )</label>
+                    <input type="text" list="numbers"  class="form-control" id="warranty" name="warranty"  placeholder="Enter Warranty"/>
+                    <datalist id="numbers">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                    </datalist>
+                   
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="price">Price ( in Rupees )</label>
+                    <input type="text" class="form-control" id="price" name="price" placeholder="Enter Price">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" placeholder="Enter Description">
+                </div>
+            </div>
+            
+            <button type="reset" class="reset-button">Reset</button>
+            <button type="submit" class="save-button">Save</button>
+        </form>
+    </div>
+
+    <div class="add-product--section">
+        <h5>Footnotes</h5>
+        <form method="post" action="/addFootNotes">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="footnote-item">Item</label>
+                    <select id="footnote-item" name="footnote-item" class="form-control">
+                        {% for i in labItem %}
+                            <option value="{{ i.item }}">{{ i.item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="add-on-item">Add On Items</label>
+                    <input type="text" class="form-control" id="add-on-item" name="add-on-item" placeholder="Enter Add On Item">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="footnote-price">Price ( in Rupees )</label>
+                    <input type="text" class="form-control" id="footnote-price" name="footnote-price" placeholder="Enter Price">
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label for="footnote-description">Description</label>
+                    <input type="text" class="form-control" id="footnote-description" name="footnote-description" placeholder="Enter Description">
+                </div>
+            </div>
+            
+            <button type="reset" class="reset-button">Reset</button>
+            <button type="submit" class="save-button">Save</button>
+        </form>
+    </div>
+
+    <div class="product-listing--section">
+
+        <div class="header">
+            <h5>Product Listing</h5>
+            <div class="search-enclosing" onclick="onSearchAnimate(this)">
+                <img src="/static/svg_icons/ei_search_icon.svg" alt="">
+            </div>
+            <div class="search-box d-none ml-2">
+                <input type="text" placeholder="Search here..." class="form-control" id="cardSearch" onkeydown="onCardSearch(this.value)">
+            </div>
+        </div>
+
+        <!-- --- for loop for products here ---  -->
+        {% for i in labOrderItem %}
+        <div class="card">
+            <h6>Item: {{i.item}}</h6>
+            <div class="row">
+                <div class="col-sm-6 col-md-4 d-none">Order Item Id: {{i.id}}</div>
+                {% if i.type %}
+                    <div class="col-sm-6 col-md-4">Type: {{i.type}}</div>
+                {% endif %}
+                {% if i.method != 'NULL' and i.method != None %}
+                    <div class="col-sm-6 col-md-4">Method: {{i.method}}</div>
+                {% endif %}
+                {% if i.material %}
+                    <div class="col-sm-6 col-md-4">Material: {{i.material}}</div>
+                {% endif %}
+                {% if i.price %}
+                    <div class="col-sm-6 col-md-4">Price: {{i.price}}</div>
+                {% endif %}
+                {% if i.application %}
+                    <div class="col-sm-6 col-md-4">Application: {{i.application}}</div>
+                {% endif %}
+                {% if i.submethod %}
+                    <div class="col-sm-6 col-md-4">Sub Method: {{i.submethod}}</div>
+                {% endif %}
+                {% if i.warranty %}
+                    <div class="col-sm-6 col-md-4">Warranty: {{i.warranty}} years</div>
+                {% endif %}
+            </div>
+            <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+            </button>
+            
+            <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal" data-target="#editProductModal" onclick="editLabOrderItem('{{i.id}}','{{ i.item }}','{{i.type}}','{{i.method}}','{{i.material}}','{{i.price}}','{{i.application}}','{{i.submethod}}', '{{i.warranty}}')">
+                    Edit
+                </a>
+                <a class="dropdown-item" style="cursor: pointer;" href="/removeLabOrderItem/{{i.id}}">
+                    Delete
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="footnotes-listing--section">
+
+        <div class="header">
+            <h5>Footnotes Listing</h5>
+            <div class="search-enclosing" onclick="onSearchAnimate(this)">
+                <img src="/static/svg_icons/ei_search_icon.svg" alt="">
+            </div>
+            <div class="search-box d-none ml-2">
+                <input type="text" placeholder="Search here..." class="form-control" id="footnotesCardSearch" onkeydown="onFootnotesCardSearch(this.value)">
+            </div>
+        </div>
+
+        <!-- --- for loop for products here ---  -->
+        {% for j in footNotes %}
+        <div class="card">
+            <h6>Item: {{j.itemId}}</h6>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">Add On Item: {{j.addOnService}}</div>
+                <div class="col-sm-6 col-md-4">Price: {{j.price}}</div>
+                {% if j.descriptions %}
+                <div class="col-sm-6 col-md-4">Description: {{j.descriptions}}</div>
+                {% endif %}
+            </div>
+            <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                id="dropleftMenuButton-footnote" type="button"><i class="si si-options-vertical"></i>
+            </button>
+            
+            <div aria-labelledby="dropleftMenuButton-footnote" class="dropdown-menu tx-13">
+                <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal" data-target="#editFootnoteModal" onclick="editExtraLabItem('{{j.id}}','{{j.itemId}}','{{j.addOnService}}','{{j.price}}','{{j.descriptions}}')">
+                    Edit
+                </a>
+                <a class="dropdown-item" style="cursor: pointer;" href="/removeExtraItem/{{j.id}}">
+                    Delete
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+           <div class="modal--header">
+                <h5>
+                    Are you sure you want to edit this product?
+                    <button type="button" class="close mr-4" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="font-size: 1.5rem;" >&times;</span>
+                    </button>
+                </h5>
+               
+           </div>
+
+            <div class="modal-body">
+                <div class="actual-editable--content">
+                    <form class="form container" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+
+                            <div class="form-group col-6">
+                                <label for="item-edit">Item </label>
+                                <select id="item-edit" name="item-edit" class="form-control">
+                                    {% for i in labItem %}
+                                        <option value="{{ i.item }}">{{ i.item }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="type-edit">Type </label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="type-edit" id="type-edit" >
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="method-edit">Method </label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="method-edit" id="method-edit" >
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label for="material-edit">Material</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="material-edit" id="material-edit" >
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label for="subMethod-edit">Sub Method</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="subMethod-edit" id="subMethod-edit">
+                            </div>
+
+                            <div class="form-group col-6">
+                                <label for="application-edit">Application </label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="application-edit" id="application-edit" >
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label for="warranty-edit">Warranty ( in years )</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="warranty-edit" id="warranty-edit" >
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label for="price-edit">Price ( in Rupees )</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="price-edit" id="price-edit">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary edit-confirm--button" >Confirm</button>
+                      </form>
+                </div>
+
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editFootnoteModal" tabindex="-1" role="dialog" aria-labelledby="editProductModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+           <div class="modal--header">
+                <h5>
+                    Are you sure you want to edit this foonote?
+                    <button type="button" class="close mr-4" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="font-size: 1.5rem;" >&times;</span>
+                    </button>
+                </h5>   
+           </div>
+            <div class="modal-body">
+                <div class="actual-editable--content">
+                    <form class="form container" id="editExtra" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+
+                            <div class="form-group col-6">
+                                <label for="foonote-item-edit">Item </label>
+                                <select id="footnote-item-edit" name="footnote-item-edit" class="form-control">
+                                    {% for i in labItem %}
+                                        <option value="{{ i.id }}">{{ i.item }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="add-on-item-edit">Add On Item</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" id="add-on-item-edit" name="add-on-item-edit" placeholder="Enter Add On Item">
+                            </div>
+            
+                            <div class="form-group col-md-6">
+                                <label for="footnote-price-edit">Price ( in Rupees )</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" id="footnote-price-edit" name="footnote-price-edit" placeholder="Enter Price">
+                            </div>
+            
+                            <div class="form-group col-md-12">
+                                <label for="footnote-description-edit">Description</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" id="footnote-description-edit" name="footnote-description-edit" placeholder="Enter Description">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary edit-confirm--button" >Confirm</button>
+                      </form>
+                </div>
+
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function editLabOrderItem(id, item, type, method, material, price, application, submethod, warranty){
+        document.querySelector('.actual-editable--content form').action = `/editOrderItem/${id}`
+        document.getElementById('item-edit').selected = item;
+        if(type != 'NULL'){
+            document.getElementById('type-edit').value = type;
+        }
+        else{
+            document.getElementById('type-edit').value = '';
+        }
+        document.getElementById('method-edit').value = method;
+        document.getElementById('material-edit').value = material;
+        document.getElementById('subMethod-edit').value = submethod;
+        document.getElementById('application-edit').value = application;
+        document.getElementById('warranty-edit').value = warranty;
+        document.getElementById('price-edit').value = price;
+
+    };
+    function onSearchAnimate(target){
+        target = target.parentElement
+        target.querySelector('.search-box').classList.toggle('d-none');
+        if(!target.querySelector('.search-box').classList.contains('d-none')){
+            target.querySelector('.search-box').classList.add('animate');
+        }
+    };
+    function editExtraLabItem(id, itemId, addOnService, price, descriptions){
+        console.log(itemId)
+        document.getElementById('editExtra').action = `/editExtraItem/${id}`
+        for(let x of document.getElementById('footnote-item-edit').options){
+            if(x.value==itemId){
+                x.selected ='selected';
+                break;
+            }
+        }
+        document.getElementById('add-on-item-edit').value = addOnService;
+        document.getElementById('footnote-price-edit').value = price;
+        document.getElementById('footnote-description-edit').value = descriptions;
+    };
+</script>
+
+{% endif %}
+{% endblock %}

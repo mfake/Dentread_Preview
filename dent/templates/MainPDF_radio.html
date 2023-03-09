@@ -1,0 +1,104 @@
+<style>
+    
+    header{
+        display: flex;
+        margin-top: 2rem;
+        justify-content: space-between;
+    }
+    
+    header img{
+        
+        width: 125px;
+        height: 125px;
+    }
+    footer{
+        display: flex;
+        justify-content: center;
+    }
+    
+    
+    
+    .patient-details{
+        position: relative;
+    }
+    
+    .date{
+        position: absolute;
+        right: 0;
+        top: 0.5rem;
+    }
+    
+    .patient-id{
+        margin: 0.5rem 0;
+    }
+    
+    .signature{
+        margin: 3rem 0 3rem 0;
+    }
+    
+    
+    </style>
+    {% load static %}
+    
+    <div class="enclosing-div">
+    
+    
+    
+        <header class="header">
+            {% comment %} <img src="/{{centre.logo}}" alt="clinic logo"> {% endcomment %}
+            {% comment %} <img src="/static/My_PDF.png" alt="qr code"> {% endcomment %}
+        </header>
+    
+        <section class="main-section">
+    
+            <h4>{{line_item.service_name}} — {{line_item.data_type}}-{{line_item.service_catagory}}</h4>
+            
+            <hr>
+            
+            <div class="patient-details">
+                <div class="patient-id">
+                    <label for="patientID" style="font-weight: bold;">Patient ID:</label>
+                    <span id="patientID">{{service_order.patient_id}}</span>
+                </div>
+                <div style="font-weight: bold; margin-bottom: 0.5rem;">
+                    <span>{{service_order.name}}, </span>
+                    <span>{{service_order.age}}</span>
+                    <span id='patient-gender'>{{patient.gender}}</span>
+                </div>
+                <span class="date">{{line_item.date}}</span>
+            </div>
+    
+            <h4>{{line_item.service_catagory}}</h4>
+            <div class="scan-detailed--result">
+                {{line_item.text|safe}}
+                
+            </div>
+            
+    
+        </section>
+    
+        <div class="signature">
+            <div class="pos-absolute" >
+                {% comment %} <img src="/{{line_item.signurl}}" /> {% endcomment %}
+               <h5 style="margin: 0.7rem 0 0.7rem 0">{{line_item.sgn}}, {{line_item.edu}}<br>{{line_item.spec}}</h5>
+    
+            <div style="display: flex; align-items: center">
+            <b style="color:grey;font-size:12px;">Powered by 
+            </b>
+            {% comment %} <img src="{% 'static/dentread/assets/img/brand/mainlogo.png' %}" class="header-brand-img desktop-logo" height="20" alt="logo"> {% endcomment %}
+            </div>
+            </div>
+        </div>
+    
+        <footer class="footer">
+            <pre><------------- End of Report -------------></pre>
+        </footer>
+    
+    </div>
+    
+    <script>
+        if (document.getElementById('patient-gender').innerText.startsWith('M')){
+            document.getElementById('patient-gender').innerText='M';
+        }
+        window.addEventListener("load", window.print());
+    </script>

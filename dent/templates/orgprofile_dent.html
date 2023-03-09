@@ -1,0 +1,99 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Organisation Profile</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+		<div class="row mb-2">
+
+
+<div class="col-sm-12 col-md-7 col-xl-12">
+								<div class="card custom-card">
+									<div class="">
+										<div class="main-content-body main-content-body-contacts">
+											<div class="main-contact-info-header pt-3">
+												<div class="media">
+													<div class="main-img-user">
+														{% if org.propic %}
+														<img alt="avatar" src="{{org.propic.url}}">
+														{% endif %}
+														{% if not org.propic %}
+														<img alt="avatar" src="{% static '/profilepic/propic.jpg' %}">
+														{% endif %}
+													</div>
+													<div class="media-body">
+														<h4>{{org.orgname}}</h4>
+														<p>{{org.orgtype}}</p>
+
+													</div>
+												</div>
+												<div class="main-contact-action btn-list pt-3 pr-3" hidden
+													<a href="/editorgprofile_dent" class="btn ripple btn-primary text-white btn-icon" data-placement="top" data-toggle="tooltip" title="Edit Profile"><i class="fe fe-edit"></i></a>
+
+												</div>
+											</div>
+											<div class="main-contact-info-body">
+
+
+												<div class="media-list">
+													<div class="media">
+														<div class="media-body">
+															<div>
+																<label>Official Email</label> <span class="tx-medium">{{org.email}}</span>
+															</div>
+															<div>
+																<label>Contact</label> <span class="tx-medium">{{org.contact}}</span>
+															</div>
+														</div>
+													</div>
+													<div class="media">
+														<div class="media-body">
+															<div>
+																<label>Reg/GSTIN</label> <span class="tx-medium">{{org.gstin}}</span>
+															</div>
+															<div>
+																<label>Other Account</label> <span class="tx-medium"></span>
+															</div>
+														</div>
+													</div>
+													<div class="media">
+														<div class="media-body">
+															<div>
+																<label>Current Address</label> <span class="tx-medium">{{org.address}}</span>
+															</div>
+														</div>
+													</div>
+
+												</div>
+                                                 <hr>
+
+													</div></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+		</div>
+		  </div>
+	  </div>
+  </div>
+
+			{% endif %}
+			{% endblock %}

@@ -1,0 +1,190 @@
+{% extends 'clinic_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Edit Profile</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+
+    <!-- Main content -->
+
+
+
+
+
+            <!-- /.card -->
+
+
+    <!-- Main content -->
+    <form  method="post" action="/editprofile_clinic" enctype="multipart/form-data">
+        {% csrf_token %}
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+                    	<div class="row row-sm  mt-lg-4">
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+
+									</div>
+								</div>
+
+          <!-- /.col (left) -->
+          <div class="col-md-8">
+            <div class="card card-primary">
+              <div class="card-header bg-primary text-white" >
+                <h6 class="card-title">User Details</h6>
+              </div>
+              <div class="card-body">
+<label for="exampleInputPassword1">Profile Image</label>
+
+                  <div class="input-group file-browser">
+
+													<input type="text" class="form-control border-right-0 browse-file" placeholder="choose" readonly>
+													<label class="input-group-btn">
+														<span class="btn btn-primary">
+															Browse <input type="file" id="propic" name="propic" style="display: none;" multiple>
+														</span>
+													</label>
+												</div>
+                <!-- Name -->
+
+                     <div class="form-group">
+                        <label for="exampleInputPassword1">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{usr.name}}" placeholder="Name" required>
+                      </div>
+
+
+
+
+
+               <!-- Email Contact Address -->
+                     <div class="row">
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Email</label>
+                          <input type="email" class="form-control" id="email" name="email" value="{{usr.email}}" placeholder="Email" readonly>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Contact</label>
+                          <input type="tel" class="form-control" id="contact" name="contact" value="{{usr.contact}}" placeholder="Contact" required>
+                      </div>
+                  </div>
+                </div>
+
+                  <div class="row">
+                  <div class="col-sm-12">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">User Name</label>
+                          <input type="text" class="form-control" id="username" name="username" value="{{usr.username}}" placeholder="username" readonly>
+                      </div>
+                  </div>
+
+                </div>
+
+
+
+<div class="row">
+
+
+
+
+</div>
+
+                  <div class="row">
+  <div class="col-sm-6">
+      <div class="form-group">
+    <label for="Department" class="form-label">Department</label>
+    <select type="text" id="department" name="department"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected"  value="{{usr.department}}">{{usr.department}} </option>
+
+                           <option value="Admin">Admin</option>
+
+
+                       </select>
+  </div>
+  </div>
+                      <div class="col-sm-6">
+      <div class="form-group">
+    <label for="status" class="form-label">Status</label>
+     <select type="text" id="status" name="status"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected"  value="{{usr.status}}">{{usr.status}}</option>
+                           <option value="Active">Active</option>
+                           <option value="Inactive">Inactive</option>
+</select>
+
+
+
+
+
+
+
+
+
+
+              </div>
+
+                      </div>
+
+
+
+
+
+
+<div class="col-md-12">
+<div class="row">
+
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary">Add</button>
+                  </div>
+                      <div class="col-sm-6">
+
+                        <button type="reset" value="reset" class="btn btn-block ripple btn-warning">Reset</button>
+                      </div>
+
+
+     </div>
+      </div>
+                  </div>
+              </div>
+            </div>
+            </form>
+   </div>
+      </div>
+ </div>
+</div>
+</div>
+</div>
+	<script src="{% static '/dentread/assets/plugins/jquery/jquery.min.js' %}"></script>
+
+<script src="{% static '/dentread/assets/js/form-elements.js' %}"></script>
+
+{% endif %}
+{%endblock%}

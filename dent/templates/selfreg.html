@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Registration</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- LINEARICONS -->
+		<link rel="stylesheet" href="{% static '/self/fonts/linearicons/style.css' %}">
+		<link rel="icon" href="{% static '/dentread/assets/img/brand/favicon.ico' %}" type="image/x-icon"/>
+		
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href="{% static '/self/css/style.css' %}">
+	</head>
+<style>
+div.a {
+  text-align: center;
+  font-size: 20px;
+}
+</style>
+	<body>
+
+		<div class="wrapper">
+			<div class="inner">
+				<img src="{% static '/self/images/image-1.png' %}" alt="" class="image-1">
+				<form action="">
+					<h3>Thanks</h3>
+					<h3>{{name}}!</h3>
+					<div class="a">
+					<span >Your Token number is {{token}}</span>
+					</div>
+					<button >
+						<a  href="/self" style="color:white;"><i class="fa fa-home"></i>Home</a>
+					</button>
+				</form>
+				<img src="{% static '/self/images/image-2.png' %}" alt="" class="image-2">
+			</div>
+			
+		</div>
+		
+		<script src="{% static '/self/js/jquery-3.3.1.min.js' %}"></script>
+		<script src="{% static '/self/js/main.js' %}"></script>
+	</body>
+</html>

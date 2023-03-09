@@ -1,0 +1,139 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    body{
+        background: white;
+        margin: 0;
+        padding: 0;
+    }
+    *, *::before, *::after{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 20px;
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .user-table{
+        width: 100%;
+        border: 1px solid #dfe2e9;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        text-align: center;
+    }
+    th, td{
+        padding: 0.75rem 1rem;
+    }
+    thead{
+        background-color: #1F3F7F;
+        color: white;
+    }
+    tbody tr{
+        border-bottom: 1px solid #dfe2e9;
+    }
+    .user-table th img{
+        margin-right: 0.5rem
+    }
+    .details{
+        padding:  1.15rem 2rem;
+        border-left: 5px solid;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        display: flex;
+        border-left: 5px solid #1F3F7F;
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+        align-items: center;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+    .details label{
+        margin-bottom: 0;
+        margin-left: 3rem;
+        margin-right: 0.25rem;
+    }
+</style>
+
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5>Order Shipment History</h5>        
+    </div>
+
+    <div class="details">
+        {% if patient.gender == 'Female' %}
+        <img src="/static/svg_icons/Female.svg" alt="female" height="40">
+        {% else %}
+        <img src="/static/svg_icons/Male.svg" alt="female" height="40">
+        {% endif %}
+        <span class="ml-2">{{repId.name}}</span>
+        <label for="">Order ID: </label>
+        <span>{{repId.order_id}}</span>
+    </div>
+
+    <table class="user-table">
+        <thead>
+            <tr>
+                <th>Shipment ID</th>
+                <th>Shipment Status</th>
+                <th>Product Name</th>
+                <th>Shipped By</th>
+                <th>Shipped To</th>
+                <th>Delivery Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in service_order %}
+                <tr>
+                    <td>{{ i.shipment_id }}</td>
+                    <td>{{ i.status }}</td>
+                    <td>{{ i.product }}</td>
+                    <td>{{ i.shipBy }}</td>
+                    <td>{{ i.shipTo }}</td>
+                    <td>{{ i.ship_date }}
+                    </td>
+                </tr>
+            {% endfor %}
+            {% comment %} <tr>
+                <td>{lorem}</td>
+                <td>{lorem}</td>
+                <td>{lorem}</td>
+                <td>{lorem}</td>
+                <td>{lorem}</td>
+                <td>{lorem}</td>
+            </tr>
+            <tr>
+                <td>{lorem}</td>
+                <td>{lorem}</td>
+                <td>{lorem}</td>
+                <td>{lorem}</td>
+                <td>{lorem}</td>
+                <td>{lorem}</td>
+            </tr> {% endcomment %}
+        </tbody>
+
+    </table>
+</div>
+
+
+
+{% endif %}
+{%endblock%}

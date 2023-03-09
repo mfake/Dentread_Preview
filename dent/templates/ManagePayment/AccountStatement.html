@@ -1,0 +1,326 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+<script>
+    function generatePDF(){
+        const ele= document.querySelector('.container-div');
+        html2pdf().from(ele).save();
+    }
+</script>
+
+<style>
+    .container-div{
+        width: 100%;
+        background: white;
+        max-width: 1100px;
+        margin: 1rem auto;
+    }
+
+    .weekly-heading{
+        text-align: center;
+        padding: 1rem;
+        background: aliceblue;
+        margin-top: 1rem;
+    }
+
+    .name-table, .summary-table, .collection-table{
+        width: inherit;
+
+    }
+    .collection-table{
+        box-shadow: 1px 4px 14px rgba(129, 119, 119, 0.1);
+        border-collapse: separate;
+        /* background: rgb(227 227 227 / 10%); */
+        border-radius: 5px;
+        border-spacing: 5px;
+        padding: 5px 10px;
+    }
+
+    .collection-table td{
+        font-size: 13px;
+        background-color: white;
+    }
+
+    .container .row{
+        margin-top: 1rem;
+        row-gap: 1.5rem;
+        padding: 0 1rem;
+    }
+
+    .date-range{
+        display: inline-block;
+
+    }
+
+    .collection-table thead{
+        background: aliceblue;
+    }
+
+    .collection-table thead th, .collection-table td, .summary-table td, .summary-table th, .name-table td, .name-table th{
+        padding: 5px 10px;
+    }
+
+    .export-button{
+        margin-left: auto;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+    }
+    .note-text{
+        font-size: 11px;
+    }
+
+</style>
+
+<div class="container-div">
+    <h5 class="weekly-heading">Weekly Account Statement</h5>    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <img src="/static/logo/DentreadlogoV3cloud30May.png" alt="Dentread Logo" height="50px">
+            </div>
+            <div class="col-sm-6">
+                <table class="name-table">
+                    
+                    <tbody>
+                        <tr>
+                            <th>
+                                Display Name: 
+                            </th>
+                            <td>
+                                {{org.orgname}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Legal Name: 
+                            </th>
+                            <td>
+                                {{org.orgname}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-12">
+                <h6 class="date-range">Date Range:</h6>
+                <span>Account activity from {{start_date}} through {{end_date}}</span>
+            </div>
+            <div class="col-sm-12">
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Summaries</th>
+                            <th style="width: 50%;">Lorem ipsum doleloremque. Consequatur, dolore?</th>
+                            <th>Totals</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Income</td>
+                            <td>ulla officiis deleniti doloremque. Consequatur, dolore?</th>
+                            <td>{{ref_price}}</td>
+                        </tr>
+                        <tr>
+                            <td>Expenses</td>
+                            <td>ulla officiis deleniti doloredolore avjsk  iake ciakx ?</th>
+                            <td>{{totalExpense}}</td>
+                        </tr>
+                        <tr>
+                            <td>GST</td>
+                            <td>ulla officiis deleniti doloremque. Consequatur, dolore ohei c?</th>
+                            <td>{{GST}}</td>
+                        </tr>
+                        <tr>
+                            <td>Transfer</td>
+                            <td>ulla officiis deleniti doloremque. Consequatur?</th>
+                            <td>{{transfer}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-7">
+                <h6>INCOME</h6>
+                <table class="income-table collection-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Unit(s)</th>
+                            <th>Unit Price</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>CROWN AND BRIDGES</td>
+                            {% for cr in crown %}
+                                <td>{{cr.unit}}</td>
+                                <td>{{cr.pricePerUnit}}</td>
+                                <td>{{cr.price}}</td>
+                                <td>{{cr.debit}}</td>
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>IMPLANT SPECIFIC SECTION</td>
+                            {% for im in implant %}
+                                <td>{{im.unit}}</td>
+                                <td>{{im.pricePerUnit}}</td>
+                                <td>{{im.price}}</td>
+                                <td>{{im.debit}}</td>
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>REMOVABLE PROSTHESIS</td>
+                            {% for rem in removable %}
+                                <td>{{rem.unit}}</td>
+                                <td>{{rem.pricePerUnit}}</td>
+                                <td>{{rem.price}}</td>
+                                <td>{{rem.debit}}</td>
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>PRECISION ATTACHMENT</td>
+                            {% for pre in precision %}
+                                <td>{{pre.unit}}</td>
+                                <td>{{pre.pricePerUnit}}</td>
+                                <td>{{pre.price}}</td>
+                                <td>{{pre.debit}}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>ORTHODONTIC AND PREDIODONTIC APPLIANCES / RETAINERS</td>
+                            {% for ort in ortho %}
+                                <td>{{ort.unit}}</td>
+                                <td>{{ort.pricePerUnit}}</td>
+                                <td>{{ort.price}}</td>
+                                <td>{{ort.debit}}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>MISCELLANEOUS</td>
+                            {% for mis in miscellaneous %}
+                                <td>{{mis.unit}}</td>
+                                <td>{{mis.pricePerUnit}}</td>
+                                <td>{{mis.price}}</td>
+                                <td>{{mis.debt}}</td>
+                            {% endfor %}
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-5">
+                <h6>EXPENSES</h6>
+                <table class="expense-table collection-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>PAYMENT GATEWAY TRANSACTION FEE</td>
+                            <td>{i.credit}</td>
+                            <td>{i.debit}</td>
+                        </tr>
+                        <tr>
+                            <td>LOGISTICS PARTNER FEE</td>
+                            <td>{i.credit}</td>
+                            <td>{i.debit}</td>
+                        </tr>
+                        <tr>
+                            <td>SHIPPING LABEL PURCHASE</td>
+                            <td>{i.credit}</td>
+                            <td>{i.debit}</td>
+                        </tr>
+                        <tr>
+                            <td>DENTREAD SERVICE FEE</td>
+                            <td>{i.credit}</td>
+                            <td>{i.debit}</td>
+                        </tr>
+                        <tr>
+                            <td>COST OF ADVERTISING</td>
+                            <td>{i.credit}</td>
+                            <td>{i.debit}</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-7">
+                <h6>GOODS AND SERVICE TAX</h6>
+                <table class="gst-table collection-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>GST COLLECTED</td>
+                            <td>{i.credit}</td>
+                            <td>{i.debit}</td>
+                        </tr>
+                        <tr>
+                            <td>GST REFUND (in case of refund)</td>
+                            <td>{i.credit}</td>
+                            <td>{i.debit}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-5">
+                <h6>TRANSFER</h6>
+                <table class="transfer-table collection-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>Transfers to Bank Account</td>
+                            <td>{i.credit}</td>
+                            <td>{i.debit}</td>
+                        </tr>
+                        <tr>
+                            <td>Failed Transfers to Bank Account</td>
+                            <td>{i.credit}</td>
+                            <td>{i.debit}</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <ul class="note-text">
+                <li>
+                    Information in this statement does not constitute accounting, tax, legal or other professional advice
+                </li>
+            </ul>
+            <button class="btn btn-primary btn-sm export-button" onclick="generatePDF()">
+                Export to Excel
+            </button>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+{%endblock%}

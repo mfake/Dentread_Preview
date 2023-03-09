@@ -1,0 +1,217 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Buy Subscription</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+
+    <!-- Main content -->
+
+
+
+
+
+            <!-- /.card -->
+
+
+
+
+
+    <!-- Main content -->
+
+    <form  method="post" action="/addmodule">
+        {% csrf_token %}
+<div class="row row-sm">
+							<div class="col-xl-12 col-lg-12">
+								<div class="card custom-card">
+									<div class="card-body">
+										<div>
+											<h6 class="main-content-label mb-1">Subscriptions</h6>
+
+										</div>
+										<div class="pricing-tabs">
+											<div class=" text-center">
+												<div class="pri-tabs-heading">
+													<ul class="nav nav-price" hidden>
+														<li><a class="active show"  data-toggle="tab" href="#year" >Year</a></li>
+														<li><a class=""  data-toggle="tab" href="#month">Month</a></li>
+													</ul>
+												</div>
+												<div class="tab-content">
+													<div class="tab-pane  active show" id="year">
+														<div class="row row-sm">
+															<div class="col-sm-6 col-lg-6">
+																<div class="card overflow-hidden">
+																	<div class="text-center card-pricing pricing1">
+																		<div class="p-2 text-white bg-primary fs-20">Trial <small>(30 Days)</small></div>
+																		<div class="p-3 font-weight-normal mb-0"><span class="price">Free</span></div>
+																		<div class="card-body text-center pt-0">
+																			<ul class="list-unstyled mb-0">
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Business User Management</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Patient Management </li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Billing / Invoice Generation</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Business Summary Reports</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Radiological Reporting Generation</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Reporting Templates</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>DICOM / PDF sharing & archival</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Cloud DICOM Viewing</li>
+
+
+
+																			</ul>
+
+																		</div>
+																		<div class="p-2 text-white bg-warning fs-12">Validity {{basic.validity}}, Scans {{basic.scans}}</small></div>
+																		<div class="card-footer text-center">
+																			<a href="/payment" class="btn ripple btn-primary btn-block">Try Now</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col-sm-6 col-lg-6 mg-t-10 mg-lg-t-0">
+																<div class="card overflow-hidden">
+																	<div class="text-center card-pricing pricing1">
+																		<div class="p-2 text-white bg-primary fs-20">Premium <small></small></div>
+																		<div class="p-3 font-weight-normal mb-0"><span class="price">Price -{{premium.price}}</span></div>
+																		<div class="card-body text-center pt-0">
+																			<ul class="list-unstyled mb-0">
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Business User Management</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Patient Management </li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Billing / Invoice Generation</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Business Summary Reports</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Radiological Reporting Generation</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Reporting Templates</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>DICOM / PDF sharing & archival</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong></strong>Cloud DICOM Viewing</li>
+
+
+
+																			</ul>
+
+																		</div>
+																		<div class="p-2 text-white bg-warning fs-12">Validity {{premium.validity}}, Scans {{premium.scans}}</small></div>
+																		<div class="card-footer text-center">
+																			<a href="/payment/{{premium.id}}" class="btn ripple btn-primary btn-block">Buy Now</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+
+														</div>
+													</div>
+													<div class="tab-pane" id="month">
+														<div class="row row-sm">
+															<div class="col-sm-6 col-lg-3">
+																<div class="card overflow-hidden">
+																	<div class="text-center card-pricing pricing1">
+																		<div class="p-2 text-white bg-primary fs-20">Free</div>
+																		<div class="p-3 font-weight-normal mb-0"><span class="price">$0</span></div>
+																		<div class="card-body text-center pt-0">
+																			<ul class="list-unstyled mb-0">
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>2 </strong> FreeDomain Name</li>
+																				<li><i class="fe fe-x mr-2 text-danger"></i><strong>0</strong> One-Click Apps</li>
+																				<li><i class="fe fe-x mr-2 text-danger"></i><strong>0</strong>  Databases</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>Money</strong> BackGuarntee</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>24/7</strong> Support</li>
+																			</ul>
+																		</div>
+																		<div class="card-footer text-center">
+																			<a href="#" class="btn ripple btn-primary btn-block">Buy Now</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+																<div class="card overflow-hidden">
+																	<div class="text-center card-pricing pricing1">
+																		<div class="p-2 text-white bg-secondary fs-20">Personal</div>
+																		<div class="p-3 font-weight-normal mb-0"><span class="price">$15</span></div>
+																		<div class="card-body text-center pt-0">
+																			<ul class="list-unstyled mb-0">
+																				<li><i class="fe fe-x mr-2 text-danger"></i><strong>2 </strong> FreeDomain Name</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>2</strong> One-Click Apps</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>1</strong>  Databases</li>
+																				<li><i class="fe fe-x mr-2 text-danger"></i><strong>Money</strong> BackGuarntee</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>24/7</strong> Support</li>
+																			</ul>
+																		</div>
+																		<div class="card-footer text-center">
+																			<a href="#" class="btn ripple btn-secondary btn-block">Buy Now</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+																<div class="card overflow-hidden">
+																	<div class="text-center card-pricing pricing1">
+																		<div class="p-2 text-white bg-info fs-20">Personal</div>
+																		<div class="p-3 font-weight-normal mb-0"><span class="price">$25</span></div>
+																		<div class="card-body text-center pt-0">
+																			<ul class="list-unstyled mb-0">
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>3 </strong> FreeDomain Name</li>
+																				<li><i class="fe fe-x mr-2 text-danger"></i><strong>5</strong> One-Click Apps</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>3</strong>  Databases</li>
+																				<li><i class="fe fe-x mr-2 text-danger"></i><strong>Money</strong> BackGuarntee</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>24/7</strong> Support</li>
+																			</ul>
+																		</div>
+																		<div class="card-footer text-center">
+																			<a href="#" class="btn ripple btn-info btn-block">Buy Now</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+																<div class="card overflow-hidden">
+																	<div class="text-center card-pricing pricing1">
+																		<div class="p-2 text-white bg-success fs-20">Enterprise</div>
+																		<div class="p-3 font-weight-normal mb-0"><span class="price">$35</span></div>
+																		<div class="card-body text-center pt-0">
+																			<ul class="list-unstyled mb-0">
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>10 </strong> FreeDomain Name</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>10</strong> One-Click Apps</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>8</strong>  Databases</li>
+																				<li><i class="fe fe-x mr-2 text-danger"></i><strong>Money</strong> BackGuarntee</li>
+																				<li><i class="fe fe-check mr-2 text-success"></i><strong>24/7</strong> Support</li>
+																			</ul>
+																		</div>
+																		<div class="card-footer text-center">
+																			<a href="#" class="btn ripple btn-success btn-block">Buy Now</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+      </div>
+ </div>
+</div>
+</div>
+</div>
+</div>
+{% endif %}
+{%endblock%}

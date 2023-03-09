@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% load static %}
+{% if user.is_authenticated %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Registration</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- LINEARICONS -->
+		<link rel="icon" href="{% static '/dentread/assets/img/brand/favicon.ico' %}" type="image/x-icon"/>
+		<link rel="stylesheet" href="{% static '/self/fonts/linearicons/style.css' %}">
+		
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href="{% static '/self/css/style.css' %}">
+	</head>
+
+	<body>
+
+		<div class="wrapper">
+			<div class="inner">
+				<img src="{% static '/self/images/image-1.png' %}" alt="" class="image-1">
+				<form method="post" action="/self">
+					{% csrf_token %}
+
+					<div class="mt-5 pt-4 p-2 pos-absolute" >
+
+									<div class="clearfix"></div>
+									<img src="{% static '/dentread/assets/img/brand/mainlogo.png' %}" class="ht-80 mb-0" alt="user">
+									<h3 style="text-transform: capitalize;">Enter your details</h3>
+								</div>
+					<div class="form-holder">
+						<span class="lnr lnr-user"></span>
+						<input type="text" name="name" id="name" class="form-control" placeholder="Patient Name" required>
+					</div>
+					<div class="form-holder">
+						<span class="lnr lnr-phone-handset"></span>
+						<input type="text" name="contact" id="contact"  class="form-control" placeholder="Phone Number" required>
+					</div>
+					<div class="form-holder">
+						<span class="lnr lnr-envelope"></span>
+						<input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
+					</div>
+					<div class="form-holder">
+						<span class="lnr lnr-star-empty"></span>
+						<input type="number" name="age" id="age" class="form-control" placeholder="Age" required>
+					</div>
+					<div class="form-holder">
+						<span class="lnr lnr-cog"></span>
+
+							<select type="text" id="gender" name="gender" class="form-control"  required>
+                      <option selected="selected" disabled >Gender</option>
+                           <option value="Male">Male</option>
+                           <option value="Female">Female</option>
+                           <option value="Other">Other</option>
+
+                       </select>
+
+					</div>
+					<button>
+						<span>Register</span>
+					</button>
+				</form>
+				<img src="{% static '/self/images/image-2.png' %}" alt="" class="image-2">
+			</div>
+			
+		</div>
+		
+		<script src="{% static '/self/js/jquery-3.3.1.min.js' %}"></script>
+		<script src="{% static '/self/js/main.js' %}"></script>
+	</body>
+</html>
+{% endif %}

@@ -1,0 +1,127 @@
+{% extends 'clinic_dashbase.html' %}
+{% load static %}
+{% load filename %}
+{% block content %}
+<div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>All Patients</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+
+     <!-- /.container-fluid -->
+
+
+    <!-- Main content -->
+
+        <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead>
+                  <tr>
+                    <th><b>Date</b></th>
+                     <th hidden> Date</th>
+                    <th><b>Name</b></th>
+                    <th><b>Age</b></th>
+                    <th><b>Gender</b></th>
+                      <th><b>Refer to</b></th>
+                      <th><b>Clinical Images</b></th>
+                    <th><b>Refer For</b></th>
+                    <th><b>Status</b></th>
+                      <th><b>DCM Files</b></th>
+
+                       <th><b>Actions</b></th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                   {% for i in refpt %}
+                  <tr>
+
+                    <td>{{ i.rdate|date:'d-m-Y' }}</td>
+                      <td hidden>{{ i.rdate|date:'Y-m-d' }}</td>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.age }}</td>
+                      <td>{{ i.gender }}</td>
+                       <td>{{ i.reforg }}</td>
+                      <td>{% if i.files %}
+                          {% for s in i.files %}
+
+<a href="/download_file/{{ s.refptid }}" target="_blank"><i class="fa fa-picture-o fa-2x" aria-hidden="true"></i></a>
+                          {% endfor %}
+                       {% endif %}  </td>
+                    <td>{{ i.stud }}</td>
+                      <td>{{ i.status }}</td>
+                      <td>{{ i.upload }}</td>
+                     <td>
+                        <a class="{{i.btnstatus}}"  href="/cstptservice_order/{{ i.pid }}" >
+                              <i class="fa fa-eye">
+                              </i>
+
+                          </a>
+                         {% if not i.upload %}
+                         <a class="btn btn-warning btn-sm"  href="/adddcmfiles/{{ i.refptid }}" data-toggle="tooltip" data-placement="top" title="Upload DCM files">
+                              <i class="fa fa-upload">
+                              </i>
+
+                          </a>
+                         {% endif %}
+                          {% if i.upload %}
+                          <a class="btn btn-info btn-sm"  href="/download/{{ i.refptid }}" data-toggle="tooltip" data-placement="top" title="Download DCM files">
+                              <i class="fa fa-download">
+                              </i>
+
+                          </a>
+                            {% endif %}
+                         <a class="btn btn-danger btn-sm"  href="/delete_refpt/{{ i.id }}" data-toggle="tooltip" data-placement="top" title="delete patient">
+                              <i class="fa fa-trash">
+                              </i>
+
+                          </a>
+<!-- ./wrapper --></td>
+                  </tr>
+                {% endfor %}
+                  </tbody>
+
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+      </div>
+
+
+
+
+{%endblock%}

@@ -1,0 +1,183 @@
+
+<!doctype html>
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Refer for Reporting</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+    <!-- Main content -->
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+              	{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+            <div class="card">
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+  <form  method="post" action="/refer_case">
+        {% csrf_token %}
+                <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead >
+                  <tr style="color:white;">
+                    <th>Select</th>
+                    <th>Date</th>
+                      <th hidden>Date</th>
+
+
+                    <th>Name </th>
+                    <th>Age</th>
+                      <th>Study</th>
+                    <th>Report by</th>
+
+                    <th>Status</th>
+                      <th>Case Referred To</th>
+
+                    <th>Prescription</th>
+                      <th>Remark</th>
+                      <th>Actions</th>
+
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                   {% for i in rep %}
+                  <tr>
+                    <td><div  class="icheck-primary d-inline ml-2">
+                      <input type="checkbox" value="{{i.id}}" name="selection" id="{{i.id}}">
+                      <label for="{{i.id}}"></label>
+                    </div></td>
+                    <td>{{ i.date|date:'d-m-Y' }}</td>
+                      <td hidden>{{ i.date|date:'Y-m-d' }}</td>
+
+
+                    <td><small class="{{i.st}}">{{ i.name }}
+                    </td>
+                    <td>{{ i.age }}</td>
+                      <td>{{ i.study }}</td>
+                    <td>{{ i.repby }}</td>
+
+
+                      <td><small class="{{i.badge}}">{{ i.status }}</td>
+                      <td>{{ i.referto }}</td>
+
+
+
+                    <td>{% if i.prescription %}<a href="{{i.prescription}}" target="_blank" style="color:green;"><i class="fa fa-picture-o fa-2x" aria-hidden="true"></i></a>{% endif %}</td>
+
+                       <td>{{ i.remark }}</td>
+                       <td>
+                          {% if not i.upload %}
+                         <a class="btn btn-warning btn-sm"  href="/adddcmfiles_imaging/{{ i.id }}" data-toggle="tooltip" data-placement="top" title="Upload DCM files">
+                              <i class="fa fa-upload">
+                              </i>
+
+                          </a>
+                         {% endif %}
+                          {% if i.upload %}
+                          <a class="btn btn-info btn-sm"  href="/download_imaging/{{ i.id }}" data-toggle="tooltip" data-placement="top" title="Download DCM files">
+                              <i class="fa fa-download">
+                              </i>
+
+                          </a>
+                           {% endif %}</td>
+
+
+
+
+                  </tr>
+                {% endfor %}
+                  </tbody>
+<div class="row">
+<div class="col-6">
+                     <div class="input-group input-group mb-3 col-sm-9">
+                           <div class="input-group-prepend">
+                              <button type="submit" class="btn btn-primary" >
+                                     Opt Service <span class="tx-white tx-bold" id="price"></span>
+                              </button>
+
+                            </div>
+                        <select type="text" id="study" name="study" onchange="getval(this);" class="form-control" required>
+                                  <option selected="selected" disabled value="">Choose Service </option>
+                            {% for i in studies %}
+                             <option  value="{{i.id}}" name="{{i.price}}">{{i.title}}_{{i.maincat}}</option>
+                            {% endfor %}
+
+                        </select>
+
+
+
+                   </div>
+
+</div>
+ 
+</div>
+                    </form>
+</div>
+
+                </table>
+
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+      </div>
+
+<!-- jQuery -->
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+function getval(sel)
+{
+
+    var name = $("#study  option:selected").attr('name');
+    $("#price").text("  Price -"+ name +"/-");
+
+}
+</script>
+
+
+</body>
+{% endif %}
+  {%endblock%}

@@ -1,0 +1,252 @@
+{% extends 'clinic_dashbase.html' %}
+{% load static %}
+{% load filename %}
+{% load has_group %}
+
+{% block content %}
+
+<div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Patient report</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+
+     <!-- /.container-fluid -->
+
+
+    <!-- Main content -->
+
+        <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+
+    <form  method="post" action="/sendmail/{{service_order.id}}">
+        {% csrf_token %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card card-primary">
+            <div class="card-header bg-primary text-white" >
+              <h5 class="card-title">Patient Report</h5>
+
+              <div class="card-tools">
+                   <div class="text-right py-0 align-right">
+
+                       <a id="btn-export" class="btn  bg-warning btn-sm text-white"  href="javascript:void(processPrint());">Print/Save Report</a>
+
+
+                    </div>
+
+
+              </div>
+            </div>
+            <div class="card-body" style="overflow-y: scroll; height:600px;">
+
+                <div class='wrapper'>
+            <div class='header'>
+
+            </div>
+        <div id="printMe">
+          <div class='heading'>
+            <br><br>
+              <br>
+                <br>
+                <br>
+            <b>{{service_order.study}}</b>
+                       <hr class='hrItem' />
+
+
+           <table style="width:100%">
+            <tr>
+                <th style="text-align: left; width:80%;">{{service_order.ptid}}</th>
+                <th style="text-align: centre; width:20%">{{service_order.date}}</th>
+
+            </tr>
+            <tr>
+             <th style="text-align: left; width:80%;">{{service_order.name}}, {{service_order.age}}-{{patient.gender}}</th>
+            <td></td>
+
+            </tr>
+
+            </table>
+             </div>
+             <div >
+
+            {{service_order.text|safe}}
+
+            <img src="/{{service_order.signurl}}" />
+            </div>
+        </div>
+
+            </div>
+            <!-- /.card-body -->
+          </div>
+          </div>
+    <script>
+    function exporteHTML(){
+       var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+            "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+            "xmlns='http://www.w3.org/TR/REC-html40'>"+
+            "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+       var footer = "</body></html>";
+       var sourceHTML = header+document.getElementById("source-html").innerHTML+footer;
+
+       var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+       var fileDownload = document.createElement("a");
+       document.body.appendChild(fileDownload);
+       fileDownload.href = source;
+       fileDownload.download = 'document.doc';
+       fileDownload.click();
+       document.body.removeChild(fileDownload);
+
+    }
+
+</script>
+                <script src="{% static '/html2pdf/dist/html2pdf.bundle.min.js' %}"></script>
+
+<script src="{% static '/src/plugin/jspdf-plugin.js' %}"></script>
+
+<script src="{% static '/html2pdf/dist/html2pdf.min.js' %}"></script>
+
+
+  <script language="javascript">
+    var gAutoPrint = true;
+
+    function processPrint(){
+
+    if (document.getElementById != null){
+    var html = '<HTML>\n<HEAD>\n';
+    if (document.getElementsByTagName != null){
+    var headTags = document.getElementsByTagName("head");
+    if (headTags.length > 0) html += headTags[0].innerHTML;
+    }
+
+    html += '\n</HE' + 'AD>\n<BODY>\n';
+    var printReadyElem = document.getElementById("printMe");
+
+    if (printReadyElem != null) html += printReadyElem.innerHTML;
+    else{
+    alert("Error, no contents.");
+    return;
+    }
+
+    html += '\n</BO' + 'DY>\n</HT' + 'ML>';
+    var printWin = window.open("","processPrint");
+    printWin.document.open();
+    printWin.document.write(html);
+    printWin.document.close();
+
+    if (gAutoPrint) printWin.print();
+    } else alert("Browser not supported.");
+
+    }
+
+</script>
+
+
+
+                    <!-- /.card -->
+        </div>
+        <div class="col-md-6">
+
+          <!-- /.card -->
+          <div class="card card-info">
+            <div class="card-header bg-primary text-white" >
+              <h5 class="card-title">Files</h5>
+
+            </div>
+            <div class="card-body p-0">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>File Name</th>
+
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr>
+                      {% for i in file %}
+                    <td>{{i.file|filename}}</td>
+
+                    <td class="text-right py-0 align-middle">
+
+                        <a href="/{{i.file.url}}" target="_blank" class="btn btn-success btn-sm"><i class="fa fa-download"></i></a>
+
+
+                    </td>
+                  </tr>
+               {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+<div class="row">
+  <div class="col-sm-12">
+               <div class="card card-info">
+            <div class="card-header bg-primary text-white">
+              <h5 class="card-title">DCM Files</h5>
+
+
+            </div>
+
+            <div class="card-body table-responsive p-0">
+              <table class="table  text-nowrap">
+                <thead>
+                  <tr>
+                    <th>File Name</th>
+
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr>
+                       {% for d in dcm %}
+                    <td>{{d.file|filename}}</td>
+
+                    <td class="text-right py-0 align-middle">
+                      <div class="btn-group btn-group-sm">
+                        <a href="{{d.file.url}}" target="_blank" class="btn btn-info"><i class="fas fa-eye"></i></a>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+
+
+    <!-- /.content -->
+  </div>
+</form>
+          </div>
+        </div>
+          </div>
+      </div>
+</div>
+
+{%endblock%}

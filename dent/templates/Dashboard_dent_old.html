@@ -1,0 +1,182 @@
+
+<!doctype html>
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Service Dashboard</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+    <!-- Main content -->
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+  <form  method="post" action="/assign_case_dent">
+        {% csrf_token %}
+               <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead >
+                  <tr >
+                    <th>Select</th>
+                    <th>Date</th>
+                      <th hidden>Date</th>
+
+
+                    <th>Name <small class="badge badge-primary">Repeat Pt.</small></th>
+                    <th>Age</th>
+                      <th>Study</th>
+                    <th>Assign To</th>
+
+                    <th>Status</th>
+                    <th>Clinical Img</th>
+                      <th>Remark</th>
+                      <th>Remark</th>
+                      <th>Hard Copy</th>
+                      <th>Actions</th>
+
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                   {% for i in rep %}
+                  <tr>
+                    <td><div  class="icheck-primary d-inline ml-2">
+                      <input type="checkbox" value="{{i.id}}" name="selection" id="{{i.id}}">
+                      <label for="{{i.id}}"></label>
+                    </div></td>
+                    <td>{{ i.date|date:'d-m-Y' }}</td>
+                      <td hidden>{{ i.date|date:'Y-m-d' }}</td>
+
+
+                      <td><small class="{{i.st}}"></small>{{ i.name }}</td>
+                    <td>{{ i.age }}</td>
+                      <td>{{ i.study }}</td>
+                    <td>{{ i.repby }}</td>
+
+
+                      <td><small class="{{i.badge}}">{{ i.status }}</td>
+
+
+
+                   <td> {% if i.files %}
+                          {% for s in i.files %}
+
+<a href="/download_file_dent/{{ s.refptid }}" target="_blank"><i class="fa fa-picture-o fa-2x" aria-hidden="true"></i></a>
+                          {% endfor %}
+                       {% endif %}  </td>
+                       <td>{{ i.remark }}</td>
+                       <td>{{ i.hardcopy }}</td>
+
+                    <td>
+                          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Upload Files" href="/upload/{{ i.id }}" hidden>
+                              <i class="fas fa-upload">
+                              </i>
+
+
+                          </a>
+
+
+                          <a class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Create/Edit Report" href="/reporting_dent/{{ i.id }}">
+                              <i class="fas fa-pencil-alt">
+                              </i>
+
+                          </a>
+
+
+                     
+                        <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Send Mail" href="/sendmail/{{ i.id }}" hidden>
+                              <i class="fas fa-envelope">
+                              </i>
+
+                          </a>
+
+
+                      </td>
+
+
+                  </tr>
+                {% endfor %}
+                  </tbody>
+<div class="row">
+<div class="col-6">
+                     <div class="input-group input-group mb-3 col-sm-9">
+                           <div class="input-group-prepend">
+                              <button type="submit" class="btn btn-primary" >
+                                     Assign
+                              </button>
+
+                            </div>
+                        <select type="text" id="repby" name="repby" class="form-control">
+                                  <option selected="selected" disabled value="">Choose Radiologist</option>
+                                        {% for i in radio %}
+                                     <option value="{{ i.name }}">{{ i.name }}</option>
+                                     {% endfor %}
+                        </select>
+
+
+
+                   </div>
+</div>
+
+
+
+</div>
+                                      </form>
+</div>
+
+                </table>
+
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+      </div>
+
+
+
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+
+<!-- AdminLTE for demo purposes -->
+
+<!-- Page specific script -->
+
+
+</body>
+{% endif %}
+  {%endblock%}

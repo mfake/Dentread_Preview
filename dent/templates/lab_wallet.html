@@ -1,0 +1,405 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+        font-size: 15px;
+    }
+    *{
+        box-sizing: border-box;
+        /* line-height: 30px; */
+    }
+    .container{
+        margin: 1.5rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .content{
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    .help-text{
+        color: #635f5f;
+        font-size: 13px;
+    }
+    .reload{
+        text-decoration: underline;
+    }
+    .transactions{
+        padding: 0.5rem 0rem 0.5rem 2.5rem;
+        border-left: 1px solid #dfdfe2;
+    }
+    .submit-button{
+        width: 60%;
+        padding: 3px;
+        font-size: 15px;
+        background: #1F3F7F;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        line-height: 24px;
+        margin-top: 4px;
+    }
+    .transaction-card{
+        padding: 1.5rem 1rem 0.75rem 1rem;
+        border-bottom: 1px solid #dfdfe2;
+    }
+    .meta-data{
+        font-size: 13px;
+    }
+    .meta-data>div:first-child{
+        color: grey;
+    }
+    form{
+        margin-top: 1.25rem;
+    }
+    .transaction-container{
+        font-size: 13.35px;
+        line-height: 20px;
+        margin-top: 1.5rem;
+    }
+    .logos{
+        max-width: 40px;
+        padding: 7px 5px;
+        border-radius: 50%;
+        box-shadow: 0.314675509929657px 0 7.411579px 0px #99999942;
+        margin-bottom: 0.5rem;
+        margin-right: 1rem;
+    }
+    .bottom-field{
+        width: 100%;
+        padding-top: 5px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    .pagination{
+        display: flex;
+        width: 15%;
+        overflow: hidden;
+        align-items: center;
+        scroll-behavior: smooth;
+        background: rgba(31, 63, 127, 0.04);
+        box-shadow: inset 1px 4px 8px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    .pagination li{
+        list-style: none;
+        padding: 2px;
+        margin: 4px 5px;
+        flex-shrink: 0;
+        text-align: center;
+        border-radius: 5px;
+        /* border: 1px solid #999; */
+        color: #999;
+    }
+    
+    .pagination li.active{
+        background: white;
+        color: black;
+        border-color: #B0B0B0;
+    }
+    .pagination li a{
+        text-decoration: none;
+        padding: 0 8px;
+        color: inherit;
+        display: block;
+        font-family: sans-serif;
+        font-size: 13px;
+    }
+   
+    .prev, .last{
+        position: absolute;
+        border: 1px solid #999;
+        padding: 0;
+        border: none;
+        box-shadow: 1px 4px 14px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    a#prev, a#last{
+        padding: 0 6px;
+    }
+    .prev{
+        left: 32%;
+    }
+    .last{
+        right: 32%;
+    }
+    #addToWallet{
+        width: max-content;
+        border-color: cornsilk;
+        border-radius: 4px;
+        background: aqua;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-4 text-center d-flex flex-column" style="gap: 1rem;">
+            <header class="header">
+                <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+                <h5  onclick="history.back()" style="cursor: pointer;">Manage Your Wallet</h5>
+            </header>
+            <img src="/static/svg_icons/orgProfile.svg" height="250px" alt="User Registration">
+            <a href="/addToWalletBalance">
+                <button id="addToWallet" class="help-text">
+                    <img src="/static/svg_icons/wallet.svg" height="23px" alt="walleticon" style="margin-right: 6px;">
+                    <span>Add To Wallet</span>
+                </button>
+            </a>
+            <div class="balace"><span style="font-weight: 500;">Available Balace: </span> 
+                <span>
+                    {% if walletInfo %}
+                     Rs {{walletInfo.totalBalance}} /-
+                    {% else %}
+                    Rs 0 /-
+                    {% endif %}
+                </span>
+            </div>
+            <a href="" class="reload"><img src="/static/svg_icons/reload.svg" alt=""> Reload Balance</a>
+        </div>
+        <div class="col-sm-12 col-md-8 transactions">
+            <h5>Transaction History</h5>
+            <form action="/labWalletInfo" method="post" class="form-row">
+                {% csrf_token %}
+                <div class="col-sm-6 col-md-3">
+                    <select name="year" id="year"  class="form-control">
+                        <option value="" selected disabled>Select Year</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <select name="month" id="month"  class="form-control">
+                        <option value=""selected disabled>Select Month</option>
+                        <option value="0" >January</option>
+                        <option value="1" disabled>February</option>
+                        <option value="2" disabled>March</option>
+                        <option value="3" disabled>April</option>
+                        <option value="4" disabled>May</option>
+                        <option value="5" disabled>June</option>
+                        <option value="6" disabled>July</option>
+                        <option value="7" disabled>August</option>
+                        <option value="8" disabled>September</option>
+                        <option value="9" disabled>Octobar</option>
+                        <option value="10" disabled>November</option>
+                        <option value="11" disabled>December</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <button type="submit" class="submit-button offset-md-2">Filter</button>
+                </div>
+            </form>
+            <div class="transaction-container">
+                {% if WalletExp %}
+                {% for i in WalletExp %}
+                    <div class="transaction-card">
+                        <div class="details d-flex">
+                            <img src="{{i.logo}}" class="logos" height="40px" alt="logo">
+                            <div class="info">
+                                <div class="title">{{ i.organisationName }}</div>
+                            </div>
+                            <span class="ml-auto">{{ i.amount }}</span>
+                        </div>
+                        <div class="meta-data d-flex justify-content-between">
+                            <div>{{ i.date }}</div>
+                            <div class="status-text">{{ i.status }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                    <div class="transaction-card">
+                        <h4 id="myText"><i class="fa fa-meh-o" aria-hidden="true"> Oops ! No data available </i></h4>
+                    </div>
+                {% endif %}
+            </div>
+            {% if walletCount != 0 and walletCount != 1 and walletCount != 2 and walletCount != 3 %}
+                <div class="bottom-field">
+                    <ul class="pagination" >
+                        <li class="prev">
+                            <a href="#1" id="prev">
+                                <img src="/static/svg_icons/pagination-left.svg" alt="">
+                            </a>
+                        </li>
+                        <li class="last">
+                            <a href="#1" id="last">
+                                <img src="/static/svg_icons/pagination-left.svg" alt="" style="transform: rotate(180deg);">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let yearlyTarget = document.getElementById('year');
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = currentDate.getMonth();
+
+    document.getElementById('year').addEventListener('change', onYearChange)
+
+    for(let i=currentYear; i >= 2022; i--){
+        let option = document.createElement('option');
+        option.innerText = i;
+        option.value = i;
+        yearlyTarget.appendChild(option);
+    }
+    onYearChange();
+
+    function onYearChange(){
+        if( yearlyTarget.value == currentYear){
+            for(let x of document.querySelectorAll('#month option:not(:first-child)')){
+                if(x.value > currentMonth){
+                    x.disabled = true;
+                }
+                else{
+                    x.disabled = false;
+                }
+            }
+        }
+        else{
+            for(let x of document.querySelectorAll('#month option')){
+                x.disabled = false;
+            }
+        }
+    }
+
+</script>
+
+
+<script>
+    //patient filling here
+    
+    let totalPatients = [];
+
+    totalPatients = document.querySelectorAll('.transaction-card')
+    totalPatients = [...totalPatients];
+    totalPatients.reverse();
+    let allPatients = [...totalPatients]
+
+    // document.querySelector('.result span').innerText = allPatients.length;
+    
+    //cards allowed per page
+    let cardsAllowed = 4;
+
+    function nosPaginationFunction(){
+        return Math.ceil(allPatients.length/cardsAllowed);
+    }
+    let nosPagination = 0;
+    // paginationNumbers here 
+    function paginationNumber(){
+        nosPagination = nosPaginationFunction();
+        for(let i= 1; i<=nosPagination; i++){
+
+            // li creation 
+            let li= document.createElement('li');
+            li.classList.add('list');
+            li.setAttribute('id', "item"+`${i}`);
+
+            // anchor creation 
+            let a= document.createElement('a');
+            a.href= '#1';
+            a.innerText = i;
+
+            // appending anchor to the list item
+            li.appendChild(a);
+            
+
+            // appending li to the ul 
+
+            document.querySelector('.pagination').insertBefore(li, document.querySelector('.last'));
+        }
+    }
+    paginationNumber();
+    
+    //current page: by default 1
+    currentPage = 1;
+    prevActiveLi = document.querySelector('.list');
+    prevActiveLi.classList.add('active');
+
+    // display the page 
+    function displayPage(){
+        document.querySelector('.transaction-container').innerHTML = '';
+        for(let i= 0; i<cardsAllowed; i++){
+            let exNum = allPatients[cardsAllowed*(currentPage-1)+i];
+            if(exNum){
+                document.querySelector('.transaction-container').appendChild(allPatients[cardsAllowed*(currentPage-1)+i]);
+            }
+        }
+        
+    }
+    displayPage();
+
+    // function to activate the list 
+    function liActive(){
+        for(let i of document.querySelectorAll('.list')){
+            console.log('inside liActive(): ', i.innerText);
+            if(i.innerText == currentPage){
+                i.classList.add('active');
+                prevActiveLi.classList.remove('active');
+                prevActiveLi = i;
+                break;
+            }
+            
+        } 
+    }
+
+    let currentPaginatioTarget = currentPage;
+
+    document.querySelector('.pagination').addEventListener('click', e =>{
+        let target = event.target.tagName == 'IMG' ? event.target.parentElement : event.target;
+        if(target.tagName == 'A' && target.getAttribute('id')!= 'prev' && target.getAttribute('id')!= 'last'){
+            currentPage = target.innerText;
+            currentPaginatioTarget = currentPage;
+            liActive();
+            displayPage();
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'prev' ){
+
+            currentPaginatioTarget -= 3;
+            if(currentPaginatioTarget < 1){
+                currentPaginatioTarget = 1;
+            }
+
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'last' ){
+                
+            currentPaginatioTarget = parseInt(currentPaginatioTarget) + 3;
+
+            if(currentPaginatioTarget>nosPagination){
+                currentPaginatioTarget = nosPagination;
+            }
+            
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+    });
+
+
+</script>
+{% endif %}
+
+
+{% endblock %}

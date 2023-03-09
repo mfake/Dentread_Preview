@@ -1,0 +1,107 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Edit Module</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+
+    <!-- Main content -->
+
+
+
+
+
+            <!-- /.card -->
+
+
+
+
+
+    <!-- Main content -->
+
+    <form  method="post" action="/edit_module/{{module.id}}">
+        {% csrf_token %}
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+          <div class="col-md-8">
+
+            <div class="card card-success">
+              <div class="card-header bg-primary text-white" >
+                <h6 class="card-title">Study Details</h6>
+              </div>
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Module Code</label>
+                        <input type="text" class="form-control" id="code" name="code" value="{{module.code}}" placeholder="Module Code" required>
+                      </div>
+
+
+                <!-- phone mask -->
+                <div class="form-group">
+                        <label for="exampleInputPassword1">Module Head</label>
+                        <input type="text" class="form-control" id="head" name="head" value="{{module.head}}" placeholder="Module Head" required>
+                      </div>
+                <!-- /.form group -->
+
+                <!-- phone mask -->
+          <div class="form-group">
+                        <label for="exampleInputPassword1">Module Pack</label>
+                        <input type="text" class="form-control" id="pack" name="pack" value="{{module.pack}}" placeholder="Module Pack" required>
+                      </div>
+                <!-- /.form group -->
+
+
+                <!-- /.form group -->
+
+
+              <!-- /.card-body -->
+
+            <!-- /.card -->
+
+
+
+
+<div class="col-md-12">
+<div class="row">
+
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary ">Update</button>
+                  </div>
+                      <div class="col-sm-6">
+
+                        <button type="reset" value="reset" class="btn btn-block ripple btn-warning" hidden>Reset</button>
+                      </div>
+
+
+     </div>
+      </div>
+              </form>
+   </div>
+          </div>
+      </div>
+ </div>
+</div>
+</div>
+</div>
+</div>
+{% endif %}
+{%endblock%}

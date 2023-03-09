@@ -1,0 +1,183 @@
+<!doctype html>
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+<script src="https://kit.fontawesome.com/9b5093ecd0.js" crossorigin="anonymous"></script>
+
+
+<div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+  <!-- Content Header (Page header) -->
+
+    <div class="container">
+      <div class="inner-body">
+
+        <div class="row row-sm">
+          <div class="col-sm-6 ">
+            <ol class="breadcrumb float-sm-left">
+              <li class="breadcrumb-item"><a href="#"><h5>Service Dashboard</h5></a></li>
+            </ol>
+          </div>
+        </div>
+        <!-- Main content -->
+        <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            {% if message %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong></strong> {{message}}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endif %}
+            <div class="card">
+              <!-- /.card-header -->
+              <div class="card-body">
+                <form  method="post" action="/assignCaseGuide/{{mycat.id}}">
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="input-group input-group mb-3 col-sm-9">
+                        <select type="text" id="repby" name="repby" class="form-control">
+                          <option selected="selected" disabled value="">Choose Technician</option>
+                            {% for i in radio %}
+                              <option value="{{ i.name }}">{{ i.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="input-group-prepend">
+                          <button type="submit" class="btn btn-primary" >
+                            Assign
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap">
+                    <thead >
+                      <tr >
+                        <th style="background-color:#2f6ebb;color:white;">Select</th>
+                        <th style="background-color:#2f6ebb;color:white;">Actions</th>
+                        <th style="background-color:#2f6ebb;color:white;">Service Order Date</th>
+                        <th style="background-color:#2f6ebb;color:white;">Order ID</th>
+                        <th style="background-color:#2f6ebb;color:white;">Patient ID</th>
+                        <th hidden>ID</th>
+                        <th style="background-color:#2f6ebb;color:white;">Patient Name </th>
+                        <th style="background-color:#2f6ebb;color:white;">Age</th>
+                        <th style="background-color:#2f6ebb;color:white;">Service</th>
+                        <th style="background-color:#2f6ebb;color:white;">Assigned To</th>
+                        <th style="background-color:#2f6ebb;color:white;">Status</th>
+                        <th style="background-color:#2f6ebb;color:white;">Referred By</th>
+                      </tr>
+                    </thead>
+
+                    <tbody id="tableBody">
+                      {% for i in rep %}
+                      <tr>
+                        <td>
+                          <div  class="icheck-primary d-inline ml-2">
+                            <input type="checkbox" value="{{i.id}}" name="selection" id="{{i.id}}">
+                            <label for="{{i.id}}"></label>
+                          </div>
+                        </td>
+                        <td style=" text-align: center;">
+                          <a onclick="onActionClick(`{{i.repby}}`, `/case_DetailsGuide/{{ i.id }}/{{mycat.id}}`, this)"  id="viewEditIcon" style="padding: 0;" class="btn action-icon--buttons view-edit-icon" data-toggle="tooltip" title="View" data-placement="top" rel="tooltip" >
+                            <i class="fa-solid fa-eye" style="margin-top: 10px;"></i>
+                          </a>
+                        </td>
+                        <td class="service-order--date"> <span>{{i.date|date:'Ymd'}}</span> {{ i.date|date:'d-m-Y' }}</td>
+                        <td>{{i.order_id}}</td>
+                        <td>{{i.patient_id}}</td>
+                        <td hidden>{{ i.id }}</td>
+                        <td><small class="{{i.st}}"></small>{{ i.name }}</td>
+                        <td>{{ i.age }}</td>
+                        <td>{{ i.refstudy }}</td>
+                        <td class="repby">{{ i.repby }}</td>
+                        <td><small class="{{i.badge}}">{{ i.status }}</td>
+                        <td>{{ i.refby }}</td>
+                        
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  
+                </form>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  
+  <!-- /.content -->
+</div>
+  
+
+<style>
+  #example2_filter{
+    display: flex;
+    justify-content: end;
+  }
+  a.action-icon--buttons.view-edit-icon{
+    color: grey;
+  }
+  a.action-icon--buttons.view-edit-icon:hover{
+    color: #2f6ebb;
+  }
+  .service-order--date span{
+    display: none;
+  }
+</style>
+
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+
+<script>
+  // in case the browser has no 'has' support 
+  document.getElementById('example2').parentElement.style.overflowX='auto';
+
+  function onActionClick(assign, url, target){
+    console.log(assign, url, target);
+    if (assign==""){
+      alert("Please choose the Technician first")
+    }
+    else{
+      target.href=url
+    }
+  }
+    window.alert = (function() {
+        var nativeAlert = window.alert;
+        return function(message) {
+            window.alert = nativeAlert;
+            message.indexOf("DataTables warning") === 0 ?
+                console.warn(message) :
+                nativeAlert(message);
+        }
+    })();
+</script>
+
+<script>
+ $(function () {
+    $("#example2").DataTable({
+
+      "order": [[ 2, "desc" ]],
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      // "responsive": true,
+
+    });
+
+  });
+</script>
+{% endif %}
+{%endblock%}

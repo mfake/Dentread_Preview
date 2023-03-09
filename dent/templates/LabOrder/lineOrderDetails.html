@@ -1,0 +1,714 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+<style>
+    @media screen and (max-width: 992px) {
+        .table-wrapper > div{
+            width: 28px !important;
+        }
+    }
+    
+    .table thead tr th{
+        border-bottom: none;
+        color: blue;
+    }
+    
+    .table{
+        table-layout: auto; 
+        min-width: 100%; 
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+    .table tbody tr:not(.dataApproval, .planApproval) td, 
+    .table tbody tr:not(.dataApproval, .planApproval) th{
+        border: 1px solid #e8e8f7;
+        border-right: none;
+    }
+    
+    .table tbody td:not(:first-child), .table tbody th:not(:first-child){
+        border-left: none !important;
+    }
+
+    .table tbody tr td:last-child{
+        border-right: 1px solid #e8e8f7;
+    }
+
+    .table tbody tr th{
+        white-space: nowrap;
+    }
+
+    /* .orderDetails{
+        display: none;
+    } */
+
+    #tableBody i:not(.timeLineCircle){
+        color: grey;
+        cursor: pointer;
+    }
+
+    #tableBody i:not(.timeLineCircle):hover{
+        color: blue;
+    }
+
+    .timeLineCircle{
+        color: rgb(156, 156, 156);
+    }
+
+    .dataComment{
+        text-align: center;
+    }
+
+    .table-wrapper{
+        position: relative;
+    }
+
+    .table-wrapper > div{
+        position: absolute;
+        width: 23px;
+        top: 7rem;
+        bottom: 4.4rem;
+        height: -webkit-fill-available;
+        border-right: 1px dashed rgb(156, 156, 156);
+    }
+
+    .timeLineCircleIncomplete{
+        animation: lastTimeLineCircleAnimation 2s infinite
+    }
+
+    @keyframes lastTimeLineCircleAnimation {
+        0%{
+            color: red;
+        }
+        50%{
+            color: rgb(156, 156, 156);
+        }
+        100%{
+            color: red;
+        }
+    }
+
+    .dropzone-box form{
+        border: 1px dashed;
+        height: 150px !important; 
+        min-height: 150px !important; 
+        width: 150px !important; 
+        margin-bottom: 0.5rem;
+    }
+    .dropzone .dz-preview .dz-image {
+        width: 150px !important;
+        height: 150px !important;
+    }
+    .dropzone .dz-preview{
+        margin: 0 !important;
+        min-height: 0 !important;
+    }
+    .dropzone .dz-preview.dz-file-preview .dz-image{
+        border-radius: 0 !important;
+    }
+    .dz-details{
+        padding: 0.75rem !important;
+        font-size: 14px !important;
+    }
+    .dropzone .dz-preview .dz-details .dz-size{
+        margin-bottom: 1em !important;
+        font-size: 14px !important;
+    }
+    .dz-progress{
+        height: 10px !important;
+        left: 65% !important;
+        top: 50% !important;
+        width: 50px !important;
+    }
+    .dropzone .dz-preview .dz-success-mark svg, .dropzone .dz-preview .dz-error-mark svg{
+        width: 35px !important;
+        height: 35px !important;
+        margin: 0.5rem 0.75rem !important;
+    }
+    .dropzone-box{     
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .refresh-icon{
+        top: 15px;
+        right: 0;
+        padding: 8px 16px;
+        background: #1f3f7f;
+        border-radius: 5px;
+        color: white;
+    }
+    .refresh-icon i{
+        margin-left: 4px;
+    }
+</style>
+
+<div class="container  position-relative" style=" padding: 2rem 3rem 0 3rem">
+    <div class="table-wrapper" style="padding: 1rem; background-color: white; margin-bottom: 1rem;">
+        <table class="table" >
+            <thead id="tableHead">
+                <tr style="color: blue; text-align: center;">
+                    <th></th>
+                    <th>Status</th>
+                    <th style="width: 45%;">Details</th>
+                    <th>Action</th>
+                    <th style="width: 30%">Comments</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody">
+                     
+                <tr class="orderSubmittedRow">
+                    <td><i class="fa fa-duotone fa-circle timeLineCircle"></i></td>
+                    <th>Submit Order</th>
+                    <td class="orderDetails"><span style="font-weight: 500;">{{usr.name}} </span> from <span style="font-weight: 500;">{{org.orgname}}</span>  submitted a Service Order for  <span style="font-weight: 500;">{{lineItem.service_name}}</span> on <span style="font-weight: 500;">{{lineItem.date}}</span> </td>   
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="dataValidatedRow">
+                    <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                    <th>Validate Data</th>
+                    <td class="orderDetails">
+                        {% if lineItem.status == 'Submit Order' %}
+                            <!-- <span style=""> -->
+                                Data Review Pending by <span style="font-weight: 500;">{{refer_id}}</span>
+                            <!-- </span>  -->
+                        {% endif %}
+                        {% if lineItem.status != 'Submit Order' %}
+                            <span style="font-weight: 500;">{{refer_id}}</span>  has reviewed the shared data
+                        {% endif %}
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                
+                {% if service_order.file %}
+                    <tr class="imageDataApproval">
+                        <td></td>
+                        <td>
+                            {% if service_order.fileStatus %}
+                                {% if service_order.fileStatus == 'Approve'%}
+                                    <span class="badge badge-success ml-2">Approved</span>
+                                {% endif %}
+                                {% if service_order.fileStatus == 'Reject'%}
+                                    <span class="badge badge-warning ml-2">Rejected</span>
+                                {% endif %}
+                                {% if service_order.fileStatus == 'Re-uploaded'%}
+                                    <span class="badge badge-info ml-2">Re-Uploaded</span>
+                                {% endif %}
+
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ service_order.file }} <span class="badge badge-primary ml-2">Dicom 1</span>
+                        </td>
+                        <td class="dataUpload d-flex justify-content-between align-items-center">
+                            {% if service_order.fileStatus == 'Reject' %}
+                                <i class="fa-solid fa-upload" data-toggle="modal" onclick="onDataResubmit(1)" data-target="#dataResubmitModal1"></i>
+                            {% endif %}
+                        </td>
+                        <td class="dataComment text-center">
+                            {% if service_order.fileComment %}
+                                {{service_order.fileComment}}
+                            {% endif %}
+                        </td>   
+                    </tr>
+                {% endif %}
+
+                {% if service_order.file1 %}
+                    <tr class="imageDataApproval">
+                        <td></td>
+                        <td>
+                            {% if service_order.fileStatus1 %}
+                                {% if service_order.fileStatus1 == 'Approve'%}
+                                    <span class="badge badge-success ml-2">Approved</span>
+                                {% endif %}
+                                {% if service_order.fileStatus1 == 'Reject'%}
+                                    <span class="badge badge-warning ml-2">Rejected</span>
+                                {% endif %}
+                                {% if service_order.fileStatus1 == 'Re-uploaded'%}
+                                    <span class="badge badge-info ml-2">Re-Uploaded</span>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ service_order.file1 }} <span class="badge badge-primary ml-2">Dicom 2</span>
+                        </td>
+                        <td class="dataUpload d-flex justify-content-between align-items-center">
+                            {% if service_order.fileStatus1 == 'Reject' %}
+                                <i class="fa-solid fa-upload" data-toggle="modal" onclick="onDataResubmit(2)" data-target="#dataResubmitModal1"></i>
+                            {% endif %}
+                        </td>
+                        <td class="dataComment text-center">
+                            {% if service_order.fileComment1 %}
+                                {{service_order.fileComment1 }}
+                            {% endif %}
+
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if stlFile %}
+                    {% for i in stlFile %}
+                    <tr class="imageDataApproval">
+                        <td></td>
+                        <td>
+                            {% if i.fileStatus %}
+                                {% if i.fileStatus == 'Approve'%}
+                                    <span class="badge badge-success ml-2">Approved</span>
+                                {% endif %}
+                                {% if i.fileStatus == 'Reject'%}
+                                    <span class="badge badge-warning ml-2">Rejected</span>
+                                {% endif %}
+                                {% if i.fileStatus == 'Re-uploaded'%}
+                                    <span class="badge badge-info ml-2">Re-Uploaded</span>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{i.fileName}}  <span class="badge badge-primary ml-2">{{i.site}}</span>
+                        </td>
+                        <td class="dataUpload d-flex justify-content-between align-items-center">
+                            {% if i.fileStatus == 'Reject' %}
+                            <i class="fa-solid fa-upload" data-toggle="modal" onclick="onDataResubmit(3, '{{i.id}}')" data-target="#dataResubmitModal1"></i>
+                            {% endif %}
+                        </td>
+                        <td class="dataComment text-center">
+                            {% if i.fileComment %}
+                                {{i.fileComment}}
+                            {% endif %}
+                        </td>               
+                    </tr>
+                    {% endfor%}
+                {% endif %}
+                <tr class="planSharedRow">
+                    <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                    <th>Share Plan</th>
+                    <td class="orderDetails">
+                        {% if lineItem.GuideUpload == 'Uploaded' %}
+                            <span style="font-weight: 500;">{{refer_id}} </span>has shared the Planning File on <span style="font-weight: 500;">{{lineItem.GuideUploadDate}}</span> Download to review and Approve/Reject .
+            
+                        {% endif %}
+                        {% if lineItem.status == 'Validate Data' and lineItem.GuideUpload != 'Uploaded' %}
+                            <span style="font-weight: 500;">{{refer_id}} </span>is yet to upload the Plan. Kindly wait.
+                        {% endif %}
+                    </td>    
+                    
+                    <td class="d-flex justify-content-between align-items-center" style="border-bottom: none !important;">
+                        {% if lineItem.GuideUpload == 'Uploaded' %}
+                            {% for i in feedFile%}
+                                <a href="/downloadGuidePdf/{{service_order.id}}/{{lineItem.id}}/{{i.id}}" download >
+                                    <i class="fa-solid fa-download"></i>                       
+                                </a>
+                                {% if stlCheck == True %}
+                                    <a style="padding-left: 20px;" href="/requestGuidePlanFile/{{service_order.id}}/{{lineItem.id}}" target="_blank" rel="noopener noreferrer" class="ml-2"><i class="fa-solid fa-eye"></i></a>
+                                {% else %}
+                                    <a style="padding-left: 20px;" href="/downloadGuidePdf/{{service_order.id}}/{{lineItem.id}}/{{i.id}}" target="_blank" rel="noopener noreferrer" class="ml-2"><i class="fa-solid fa-eye"></i></a>
+                                {% endif %}
+                                <br>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td></td>
+                </tr>
+                <tr class="planReviewedRow">
+                    <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                    <th>Review Plan</th>
+                    <td class="orderDetails">
+                        {% if lineItem.status == 'Review Plan' or lineItem.status == 'Order Completed' or lineItem.status == 'Production Complete' or lineItem.status == 'Share Design' or lineItem.status == 'Order Dispatched' or lineItem.status == 'Order Delivered' %}
+                            <span style="font-weight: 500;">{{org.orgname}}</span> has 
+                            {% for i in feedFile %}
+                                {% if i.fileStatus == 'Reject' %}
+                                <span style="font-weight: 500;">Rejected</span> 
+                                {% endif %}
+                                {% if i.fileStatus == 'Approve' %}
+                                <span style="font-weight: 500;">Approved</span> 
+                                {% endif %}
+                                {% if i.fileStatus == 'Re-uploaded' %}
+                                <span style="font-weight: 500;">Re-uploaded</span> 
+                                {% endif %}
+                            {% endfor %}
+                            the plan.
+                        {% endif %}
+                        {% if lineItem.status == 'Share Plan' %}
+                            <span style="font-weight: 500;">{{org.orgname}}</span> yet to Review the Plan.
+                        {% endif %}
+                       
+                    </td>    
+                    <td>
+                        
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+                {% if lineItem.status != 'Submit Order' and lineItem.status != 'Validate Data'  %}
+                <tr class="planApproval">
+                    <td></td>
+                    <th></th>
+                    <td>
+                        {% if feedFile %}
+
+                            {% for i in feedFile %}
+                                {{i.fileName}}
+                                {% if i.fileStatus == 'Approve' %}
+                                    <span class="badge badge-success ml-2">Approved</span>
+                                {% endif %}
+                                {% if i.fileStatus == 'Reject' %}
+                                    <span class="badge badge-warning ml-2">Rejected</span>
+                                {% endif %}
+                                {% if i.fileStatus == 'Re-uploaded' %}
+                                    <span class="badge badge-warning ml-2">Re-uploaded</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% for i in feedFile %}
+                            {% if i.fileStatus == None or i.fileStatus == '' or i.fileStatus == 'Re-uploaded' and lineItem.GuideUpload == 'Uploaded' %}          
+                            <i class="fa-solid fa-file-lines" data-toggle="modal" data-target="#statusModal"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td class="dataComment">
+                        {% for i in feedFile %}
+                        {% if i.fileComment %}
+                            {{i.fileComment}}
+                        {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endif %}
+                <tr class="designSharedRow">
+                    <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                    <th>Share Design</th>
+                    <td class="orderDetails">
+                        {% if lineItem.status == 'Share Design' or  lineItem.status == 'Production Complete'  or lineItem.status == 'Order Completed' or lineItem.status == 'Order Dispatched' or lineItem.status == 'Order Delivered' %}
+                        <span style="font-weight: 500;">{{refer_id}}</span>  has shared the Design on <span style="font-weight: 500;">{{lineItem.designUploadDate}}</span> 
+                        {% endif %}
+                        {% if lineItem.status == 'Review Plan' %}
+                            {% for i in feedFile %}
+                                {% if i.fileStatus == 'Approve' %}
+                                <span style="font-weight: 500;">{{refer_id}}</span> is yet to share the Design.
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    <td class="d-flex justify-content-between align-items-center" style="border-bottom: none !important;">
+                        {% if lineItem.status == 'Share Design' or lineItem.status == 'Production Complete'  or lineItem.status == 'Order Completed' or lineItem.status == 'Order Dispatched' or lineItem.status == 'Order Delivered' %}
+                            {% for i in designFile %}
+                                <a target="_blank" href="/downloaGuideDesign/{{service_order.id}}/{{lineItem.id}}/{{i.id}}"> <i class="fa-solid fa-download"></i> </a>                       
+                                </a>
+                                {% if stlFileCheck == True %}
+                                    <a href="/surgicalGuideFile/{{service_order.id}}/{{lineItem.id}}" target="_blank" rel="noopener noreferrer" class="ml-2"><i class="fa-solid fa-eye"></i></a>
+                                {% else %}
+                                    <a href="/downloaGuideDesign/{{service_order.id}}/{{lineItem.id}}/{{i.id}}" target="_blank" rel="noopener noreferrer" class="ml-2"><i class="fa-solid fa-eye"></i></a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+
+                    </td>
+                    <td></td>
+                </tr>
+                {% if lineItem.output_type == 'Plan + Design (.stl) + Fabrication' %}
+                <tr class="orderCompleted">
+                    <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                    <th>Production Complete</th>
+                    <td class="orderDetails">
+                        {% if lineItem.status == 'Share Design' %}
+                            Production is <span style="font-weight: 500;">In-Process.</span>
+                        {% endif %}
+                        {% if lineItem.status == 'Production Complete' or lineItem.status == 'Order Dispatched' or lineItem.status == 'Order Delivered' or lineItem.status == 'Order Completed' %}
+                            Production has been <span style="font-weight: 500;">Completed.</span>
+                        {% endif %}
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="orderDispatchedRow">
+                    <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                    <th>Order Dispatched</th>
+                    <td class="orderDetails">
+                        {% if lineItem.status == 'Production Complete' %}
+                        {{refer_id}} is yet to dispatch the design.
+                        {% endif %}
+                        {% if lineItem.status == 'Order Dispatched' or lineItem.status == 'Order Delivered' or lineItem.status == 'Order Completed' %}
+                        <span style="font-weight: 500;">{{org.orgname}}</span>  has dispatched the Order at <span style="font-weight: 500;">{{lineItem.DispatchDate}}</span>, via <span style="font-weight: 500;">{{lineItem.shipby}}</span> courier vide tracking ID: <span style="font-weight: 500;">{{lineItem.trackingId}}</span>, to <span style="font-weight: 500;">{{lineItem.DispatchAddress}}</span>.</td> 
+                        {% endif %}
+                        <td></td>
+                    <td></td>
+                </tr>
+                <tr class="orderDeliveredRow">
+                    <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                    <th>Order Delivered</th>
+                    <td class="orderDetails">
+                        {% if lineItem.status == 'Order Dispatched' %}
+                            Your Order is on the way.
+                        {% endif %}
+                        {% if lineItem.status == 'Order Delivered' or lineItem.status == 'Order Completed' %}  
+                            Order was delivered to <span style="font-weight: 500;">{{org.orgname}}</span> , <span style="font-weight: 500;">{{lineItem.DispatchAddress}}</span>  at  <span style="font-weight: 500;">{{lineItem.orderDeliverDate}}</span> </td> 
+                        {% endif %}
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% endif %}
+                <tr class="orderCompleted">
+                    <td><i class="fa fa-thin fa-circle timeLineCircle last"></i></td>
+                    <th>Order Completed</th>
+                    <td class="orderDetails">
+                        {% if lineItem.status == 'Order Completed' %}
+                            The order has been completed.
+                        {% endif %}
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+               
+            </tbody>
+
+            
+        </table>
+        <div>
+
+        </div>
+    </div>
+
+    <a href="#" onclick="window.location.reload(true);" class="position-absolute refresh-icon" >
+        Refresh
+        <i class="fa-solid fa-arrows-rotate"></i>
+    </a>
+
+</div>
+
+<div class="modal fade" id="dataResubmitModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Upload Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="container mt-3">
+                    <div class="dropzone-box">
+                        
+                        <form action="/uploadLabData/{{service_order.id}}/Upper-Jaw" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center" id="firstform">
+                            {% csrf_token %}
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName"></span>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" id="closeButton" style="background: #a3a3a326; border-color: #a3a3a326; color: black; font-weight: 500; margin: 10px 0; margin-right: 1rem; border-radius: 3px; border-width: thin;" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        Dropzone.options.firstform = {
+            acceptedFiles: ".stl, .ply, .zip",
+            maxFiles:1,
+            dictDefaultMessage: '+', 
+            thumbnailHeight: 30, 
+            zoom: 0.4, 
+            init: function() {
+                this.on("processing", function(file) {
+                    this.options.url = getUrl();
+                    console.log(this.options.url);
+                });
+                this.on("complete", function(file) {
+                    location.reload()
+                });
+            },
+            success(file){
+                if (file.previewElement) {
+                    this.element.parentElement.querySelector('.fileName').innerText = file.name;
+                    return file.previewElement.classList.add("dz-success");
+                }
+            },
+        }
+    
+    </script>
+
+</div>
+
+<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Review Plan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="container mt-3">
+                    {% for i in feedFile%}
+                    <form action="/feedFileStatus/{{lineItem.id}}/{{i.id}}" method="post">
+                        {% endfor %}
+                        {% csrf_token %}
+                        <div class="form-group form-inline row">
+                            <label for="selectBox"  class="col-sm-4">Plan Status:</label>
+                            <select id="selectBox" name="status" class="col-sm-6">
+                                <option value="Approve">Approve</option>
+                                <option value="Reject">Reject</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline row">
+                            <label for="comment" class="col-sm-4">Comment:</label>
+                            <textarea name="comment" id="comment" class="col-sm-6" rows="5">
+                            </textarea>
+                        </div>
+                        <div class="form-group form-inline row justify-content-center mt-2">
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                Submit
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" id="closeButton" style="background: #a3a3a326; border-color: #a3a3a326; color: black; font-weight: 500; margin: 10px 0; margin-right: 1rem; border-radius: 3px; border-width: thin;" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    let url = '';
+    function onDataResubmit(num, id){
+        if(num == 1){
+            url = '/uploadGuideDcmFileAgain/{{ service_order.id }}/{{lineItem.id}}';
+    }
+        else if(num == 2){
+            url = '/guideDcmFileUploadSecondAgain/{{service_order.id}}/{{lineItem.id}}';
+        }
+        else{
+            url =  `/uploadGuideDataAgain/${id}/{{lineItem.id}}`;
+        }
+        }
+    function getUrl(){
+        return url;
+    }
+
+function getAjaxCallURL(pk, id1, targettedId){
+    if(targettedId == 'fileNameBody1' ){
+        return `/guideDicomAPI/${pk}/${id1}`;
+    }
+    else if(targettedId == 'fileNameBody2'){
+        return `/guideDicomAPI/${pk}/${id1}`;
+    }
+    else{
+        return `/viewGuideData/${pk}/${id1}`
+    }
+  }
+
+function getFiles(targettedId){
+    let pk ='{{service_order.id}}';
+    let id1 = '{{lineItem.id}}';
+    let csr = $("input[name=csrfmiddlewaretoken]").val();    
+    mydata={'pk': pk,'id1': id1, 'csrfmiddlewaretoken': csr};
+    let f = document.getElementById(targettedId);
+    while (f.hasChildNodes()) {
+      f.removeChild(f.firstChild);
+    }
+
+    $.ajax(
+      {
+        url: getAjaxCallURL(pk, id1, targettedId),
+        // url: `/viewGuideData/${pk}/${id1}`,
+        method:'GET',
+        data: mydata,
+
+        success: function (data) {
+          if(data.length>0){
+            var main_id= data[0]['id'];
+            $( data ).each(function(i) {
+              var fileName1 = data[i]['file'].match(/[ \w-]+\.[\w-]*$/)[0];
+              var table_row= document.createElement('tr');
+              var table_heading= document.createElement('td');
+              var table_heading2= document.createElement('td');
+              table_heading.innerText= fileName1;
+            //   table_heading2.appendChild(anchor);
+              table_row.appendChild(table_heading);
+              table_row.appendChild(table_heading2);
+              f.appendChild(table_row);
+            }); 
+          }
+        }
+    });
+  }
+  
+  
+
+    // to change the colors of the badges 
+
+    {% for i in feedFile %}
+
+        if( '{{i.fileStatus}}'=='Reject'){
+            document.querySelector('.planApproval').style.background='#ffcdcd'
+        }
+        else if( '{{i.fileStatus}}'=='Approve'){
+            document.querySelector('.planApproval').style.background='#c1ffc1'
+        }
+    
+    {% endfor %}
+    
+    // code ends 
+
+    {% if lineItem.status != 'Order Completed' %}
+    document.querySelector('.last').classList.add('timeLineCircleIncomplete');
+    {% endif %}
+
+    if('{{lineItem.output_type}}'=='Prosthetically Driven Planning'){
+       document.querySelector('.designSharedRow').style.display='none';  
+
+    }
+    else if('{{lineItem.output_type}}'=='Plan + Design (.stl)'){ 
+    }
+
+    if('{{lineItem.status}}'!='Submit Order'){
+        for (let x of document.querySelectorAll('.dataApproval')){
+            console.log(x)
+            x.style.display='table-row !important';
+        }
+    }
+    if('{{lineItem.status}}'!='Submit Order' && '{{lineItem.status}}'!='Validate Data' && '{{lineItem.status}}'!='Share Plan'){
+        document.querySelector('.planApproval').style.display='table-row';
+    }
+
+    if('{{lineItem.status}}'=='Design Reviewed' && '{{lineItem.status}}'!=='Order Dispatched' && '{{lineItem.status}}'=='Order Delivered' && '{{lineItem.status}}'=='Order Completed'){
+        document.querySelector('.designApproval').style.display='table-row';
+    }
+
+    if('{{lineItem.status}}'!='Submit Order' && '{{lineItem.status}}'!='Validate Data'){
+        document.querySelector('.planSharedRow i').style.display='inline';
+    }
+
+    
+</script>
+<script>
+    // to provide colors to the circles
+
+    for(let x of document.querySelectorAll('#tableBody tr th')){
+        if(x.previousElementSibling && x.previousElementSibling.querySelector('i')){
+            x.previousElementSibling.querySelector('i').style.color='green';
+        }
+        if(x.innerText =='{{lineItem.status}}'){
+            break;
+        }
+    }
+</script>
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+
+
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .content{
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    .submit-button, .reset-button{
+        background: #1F3F7F;
+        border-radius: 5px;
+        color: white;
+        border: none;
+        padding: 2px 20px;
+    }
+    .content .main-invitation{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        padding: 2rem;
+        border-radius: 8px;
+    }
+    .help-text{
+        margin-top: 3rem;
+        color: #635f5f;
+        font-size: 13px;
+    }
+    #message-alert{
+        background: antiquewhite;
+        border: 1px solid;
+        border-radius: 7px;
+        border-color: aliceblue;
+    }
+    
+</style>
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5  onclick="history.back()" style="cursor: pointer;">Invite Clinic/Lab</h5>
+    </div>
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-12 col-md-6 d-flex justify-content-center">
+                <img src="/static/svg_icons/orgProfile.svg" height="350px" alt="User Registration">
+            </div>
+            <div class="col-sm-12 col-md-6 main-invitation">
+                <form  method="post" action="/clinicInvitation" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        {% if message %}
+                        <div class="form-group col-sm-12 col-md-12">
+                            <div class="alert alert-{{class}} alert-dismissible fade show" id="message-alert" role="alert">
+                                <strong>{{message}}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="form-group col-sm-12 col-md-6">    
+                            <label for="email">Clinic Name</label>
+                            <input type="text" class="form-control" id="name" name="clinic_name" placeholder="Entre Clinic Name" required >
+                        </div>
+                        <div class="form-group col-sm-12 col-md-6">    
+                            <label for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="clinic_email" placeholder="abc@xyz.com" required >
+                        </div>
+                        
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="submit-button">Invite to Dentread</button>
+                    </div>
+                </form>
+                <div class="help-text">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, 
+                    repellendus autem ex, quaerat quos expedita corporis repellat similique 
+                    aperiam quis harum quidem placeat consequatur. Eius molestiae, earum odio.
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+{% endblock %}

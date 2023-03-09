@@ -1,0 +1,273 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    body{
+        background: white;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 20px;
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .search-box{
+        /* float: right; */
+        /* padding: 0.25rem 0.5rem; */
+        border-radius: 0.25rem;
+    }
+    .search-box input, select{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 175px !important;
+    }
+    .search-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+        border: 1px solid #dfe2e9;
+    }
+    .header .form-group{
+        margin-bottom: 0 !important;
+    }
+    .add-button{
+        height: 38px !important;
+        width: 175px !important;
+        background: #1F3F7F;
+        border-radius: 8px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .add-button .add-icon{
+        font-size: 1.5rem;
+    }
+    .user-table{
+        width: 100%;
+        border: 1px solid #dfe2e9;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        text-align: center;
+    }
+    th, td{
+        padding: 0.75rem 1rem;
+    }
+    thead{
+        background-color: #1F3F7F;
+        color: white;
+    }
+    tbody tr{
+        border-bottom: 1px solid #dfe2e9;
+    }
+    .user-table th img{
+        margin-right: 0.5rem
+    }
+    
+</style>
+
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5>Manage Users</h5>
+
+        <div class="search-enclosing" onclick="onSearchAnimate(this)">
+            <img src="/static/svg_icons/ei_search_icon.svg" alt="">
+        </div>
+        <div class="search-box d-none ml-3">
+            <input type="text" placeholder="Search Name here..." class="form-control" id="cardSearch" onkeydown="onNameSearch(this.value)">
+        </div>
+
+        {% if usr.department == 'Admin'%}
+            <form action="/allusers" method="post">
+                {% csrf_token %}
+                <div class="form-group ml-3">
+                    <label class="d-none">Branch</label>
+                    <select class="form-control" name="users" id="users">
+                        <option selected>Select Branch</option>
+                        {% for i in branch %}
+                            <option value="{{i.id}}">{{i.orgname}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        {% endif %}
+
+        <a href="/add_user" class="btn add-button ml-3"> <span class="add-icon">+</span> New User</a>
+        
+    </div>
+
+    <table class="user-table">
+        <thead>
+            <tr>
+                <th><img src="/static/svg_icons/name.svg" alt="name"> Name</th>
+                <th><img src="/static/svg_icons/email.svg" alt="name"> Email</th>
+                <th><img src="/static/svg_icons/contact.svg" alt="name">Contact</th>
+                <th><img src="/static/svg_icons/department.svg" alt="name">Department</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in users %}
+                <tr>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.email }}</td>
+                    <td>{{ i.contact }}</td>
+                    <td>{{ i.department }}</td>
+                    <td>{{ i.status }}
+                    </td>
+                    <td>
+                        <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                            id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                        </button>
+                        
+                        <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                            <a class="dropdown-item" style="cursor: pointer;" href="/edit_user/{{ i.id }}">
+                                Edit
+                            </a>
+                            <a class="dropdown-item" style="cursor: pointer;" href="/delete_user/{{ i.id }}">
+                                Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            
+        </tbody>
+
+    </table>
+</div>
+
+<script>
+    function onSearchAnimate(target){
+        target.parentElement.querySelector('.search-box').classList.toggle('d-none');
+    }
+
+    function onNameSearch(name){
+        for(let x of document.querySelectorAll('tbody tr td:first-child')){
+            if(!x.innerText.toLowerCase().includes(name.toLowerCase())){
+                x.parentElement.classList.add('d-none');
+            }else{
+                x.parentElement.classList.remove('d-none');
+            }
+        }
+        
+    }
+</script>
+
+<!-- 
+  <div class="main-content pt-0 ">
+      <div class="container">
+          <div class="inner-body">
+            <div class="page-header">
+							<div>
+								<h4 class="text-primary" >Manage Users</h4>
+
+							</div>
+							<div class="d-flex">
+								<div class="justify-content-center">
+
+									<a href="/add_user" class="btn btn-primary my-2 btn-icon-text">
+									  <i class="fe fe-plus mr-2"></i> Add New User
+									</a>
+								</div>
+							</div>
+						</div>
+        <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+              <div class="card-body">
+                
+                {% if usr.department == 'Admin'%}
+                  <form action="/allusers" method="post" class="mb-3">
+                    {% csrf_token %}
+                    <div class="form-group mb-2">
+                      <label class="form-control-label">Branch</label>
+                      <select class="form-control col-sm-6 col-md-3" name="users" id="users">
+                        <option selected="selected">Select Branch</option>
+                        {% for i in branch %}
+                        <option value="{{i.id}}">{{i.orgname}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <button class="btn btn-primary btn-sm col-sm-1" type="submit">Filter</button>
+                  </form>
+                {% endif %}
+
+                <div class="col-12 table-responsive">
+                  <table class="table" style="table-layout: auto; width: max-content;">
+                      <thead>
+                        <tr style="background-color: aliceblue;">
+                          <th>Actions</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Contact</th>
+                          <th>username</th>
+                          <th>Department</th>
+                          <th>Status</th>
+                          <th>Signature</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for i in users %}
+                        <tr>
+                            <td>
+                              <div class="dropdown dropleft">
+                                <button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-sm btn-outline-primary" data-toggle="dropdown" id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i></button>
+                                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                                  <a class="dropdown-item" href="/edit_user/{{ i.id }}"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                  <a class="dropdown-item" href="/delete_user/{{ i.id }}" hidden><i class="fas fa-trash"></i> Delete</a>
+                                </div>
+                              </div>
+                            </td>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.email }}</td>
+                            <td>{{ i.contact }}</td>
+                            <td>{{ i.username }}</td>
+                            <td>{{ i.department }}</td>
+                            <td>{{ i.status }}</td>
+                            <td>{% if i.sign %}<img alt="avatar" height="40" src="{{i.sign.url}}">{% endif %}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                  </table>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div> -->
+        
+
+
+
+
+
+{% endif %}
+{%endblock%}
+

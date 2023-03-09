@@ -1,0 +1,192 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="main-content side-content pt-0">
+    <div class="container-fluid">
+
+
+        <div class="inner-body">
+            <div class="page-header">
+                <div>
+                    <h4 class="text-primary">Order Status</h4>
+
+                </div>
+                <div class="d-flex">
+                    <div class="justify-content-center">
+
+                        <a href="/patientdetails/{{patient.id}}" class="btn  ripple btn-primary"><i
+                                class="fa fa-angle-left"></i> Back</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row row-sm">
+                <div class="col-lg-12 col-md-12">
+                    <div class="card custom-card productdesc">
+                        <div class="card-body h-100">
+
+                            <div class="mt-4">
+                                <h5 class="mb-3">Order Details:</h5>
+                                <div class="">
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="table-responsive">
+                                                <table class="table mb-0 border-top table-bordered text-nowrap">
+                                                    <tbody>
+                                                    <tr>
+                                                        <th scope="row" class="bg-light">Region</th>
+                                                        <td>{{pros.tooth}}</td>
+
+                                                        <th scope="row" class="bg-light">Type</th>
+                                                        <td>{{pros.type}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" class="bg-light">Method</th>
+                                                        <td>{{pros.method}}</td>
+                                                        <th scope="row" class="bg-light">Remark</th>
+                                                        <td>{{pros.remark}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" class="bg-light">Case Type</th>
+                                                        <td>{{pros.casetype}}</td>
+
+                                                        <th scope="row" class="bg-light">Data status</th>
+                                                        <td>{{pros.datastatus}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" class="bg-light">Case status</th>
+                                                        <td>{{pros.status}}</td>
+
+                                                        <th scope="row" class="bg-light">Estimated Amount</th>
+                                                        <td>{{pros.est_amount}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" class="bg-light">Final Amount</th>
+                                                        <td>{{pros.final_amount}}</td>
+
+                                                        <th scope="row" class="bg-light">Tracking No</th>
+                                                        <td>{{pros.tracking}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" class="bg-light">Shipped By</th>
+                                                        <td>{{pros.shipby}}</td>
+                                                        <th scope="row" class="bg-light">Invoice</th>
+                                                        <td>{{pros.invoice}}</td>
+                                                    </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 mt-4">
+                                            <div class="card">
+                                                <div class="card-body p-0">
+                                                    <div class="d-flex p-3">
+                                                        <h5 class="float-left main-content-label mb-0 mt-2">All
+                                                            Comments</h5>
+
+                                                    </div>
+                                                    {% for i in comments %}
+                                                    <div class="media mt-0 p-4 border-bottom border-top">
+                                                        <div class="d-flex mr-3">
+                                                            <a href="#"><img
+                                                                    class="media-image avatar avatar-md rounded-circle"
+                                                                    alt="64x64"
+                                                                    src="{% static '/profilepic/propic.jpg' %}"> </a>
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h5 class="mt-0 mb-1 font-weight-semibold tx-16">
+                                                                {{i.name}}
+                                                                <span class="fs-14 ml-0" data-toggle="tooltip"
+                                                                      data-placement="top" title=""
+                                                                      data-original-title="verified"><i
+                                                                        class="fa fa-check-circle-o text-success"></i></span>
+                                                            </h5>
+                                                            <span class="text-muted tx-13">{{i.date}}</span>
+
+                                                            <p class="font-13  mb-2 mt-2">
+                                                                {{i.comment}}</p>
+
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 mt-4">
+                                            <div class="card">
+
+                                                <div class="border-top pl-4 pr-4 pb-2 pt-4">
+                                                    <h5 class="mb-4">Leave Comment</h5>
+
+                                                    <form method="post" action="/post_comment/{{service_order.id}}" multi>
+                                                        {% csrf_token %}
+                                                        <div class="form-group">
+                                                            <div class="mb-3 font-weight-semibold">Your Comment</div>
+                                                            <textarea class="form-control" id="comment"
+                                                                      name="comment"></textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <button class="btn btn-primary mt-3 mb-0" type="submit">Post
+                                                                your comment
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- /.content -->
+
+        <!-- /.content-wrapper -->
+
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<script>
+window.alert = (function() {
+    var nativeAlert = window.alert;
+    return function(message) {
+        window.alert = nativeAlert;
+        message.indexOf("DataTables warning") === 0 ?
+            console.warn(message) :
+            nativeAlert(message);
+    }
+})();
+
+</script>
+<script>
+ $(function () {
+    $("#example2").DataTable({
+
+      "order": [[ 2, "desc" ]],
+      "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+
+    });
+
+  });
+
+</script>
+{% endif %}
+{%endblock%}

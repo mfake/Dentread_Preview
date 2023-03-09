@@ -1,0 +1,684 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+{% comment %} --------------------////////////////NEW/////////////////----------- {% endcomment %}
+
+
+
+<div class="main-content side-content pt-0">
+    <div class="container-fluid">
+        <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#"><h5>{{mycat.topcat}}</h5></a></li>
+                    </ol>
+
+                </div>
+
+            </div>
+
+            <!-- Main content -->
+
+
+<style>
+.image-checkbox
+  {
+    cursor: pointer;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 4px solid transparent;
+    outline: 0;
+  }
+
+.image-checkbox input[type="checkbox"]
+  {
+    display: none;
+  }
+
+.image-checkbox-checked {
+    border-color: #2f6ebb;
+  }
+
+</style>
+
+            <!-- /.card -->
+
+
+            <div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+                    <!-- Main content -->
+
+                    <form method="post" action="/refer_ImageAnalysis/{{service_order.id}}/{{mycat.id}}" id="orderForm" multi>
+                        {% csrf_token %}
+
+
+                        <!-- /.card -->
+
+                        <!-- /.col (left) -->
+                        <div class="col-md-12">
+                            <div class="card card-primary">
+                                <div class="card-header  text-white" style="background-color:#1f3f7f;">
+                                    <h6 class="card-title"> Order Form - Step 1/3</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="main-contact-info-body">
+                                        <div class="media-list">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <div>
+                                                        <label class="form-control-label"><b>Patient Name </b></label> <span class="tx-medium">{{patient.name}}</span>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-control-label"><b>Age </b></label> <span
+                                                            class="tx-medium">{{patient.age}}</span>
+                                                    </div>
+                                                    <div>
+                                                        <label class="form-control-label"><b>Gender</b></label> <span
+                                                            class="tx-medium">{{patient.gender}}</span>
+                                                    </div>
+                                                    <div>
+                                                      <label class="form-control-label"><b>Date</b></label> <span
+                                                          class="tx-medium">{{service_order.date}}</span>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <div class="pt-2 mt-2 delimiter-top">
+                                                <div class="actions-toolbar py-2 mb-4">
+                                                    <h5 class="mb-1">Tooth Selection</h5>
+                                                    <p class="text-sm text-muted mb-0">Please choose region of
+                                                        interest</p>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="col-md-2 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/18.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="18"
+                                                                               value="18"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/17.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="17"
+                                                                               value="17"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/16.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="16"
+                                                                               value="16"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/15.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="15"
+                                                                               value="15"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/14.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="14"
+                                                                               value="14"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/13.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="13"
+                                                                               value="13"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/12.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="12"
+                                                                               value="12"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/11.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="11"
+                                                                               value="11"/>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/21.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="21"
+                                                                               value="18"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/22.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="22"
+                                                                               value="22"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/23.jpg' %}"/>
+                                                                        <input type="checkbox" nname="checks[]" id="23"
+                                                                               value="23"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/24.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="24"
+                                                                               value="24"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/25.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="25"
+                                                                               value="25"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/26.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="26"
+                                                                               value="26"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/27.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="27"
+                                                                               value="27"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/28.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="28"
+                                                                               value="28"/>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+
+                                                                <div class="col-md-2 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/48.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="48"
+                                                                               value="48"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/47.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="47"
+                                                                               value="47"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/46.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="46"
+                                                                               value="46"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/45.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="45"
+                                                                               value="45"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/44.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="44"
+                                                                               value="44"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/43.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="43"
+                                                                               value="43"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/42.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="42"
+                                                                               value="42"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/41.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="41"
+                                                                               value="41"/>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+
+
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/31.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="31"
+                                                                               value="31"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/32.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="32"
+                                                                               value="32"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/33.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="33"
+                                                                               value="33"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/34.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="34"
+                                                                               value="34"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/35.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="35"
+                                                                               value="35"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/36.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="36"
+                                                                               value="36"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/37.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="37"
+                                                                               value="37"/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="col-md-1.5 text-center">
+                                                                    <label class="image-checkbox" title="Italy">
+                                                                        <img src="{% static '/assets/img/tooth/38.jpg' %}"/>
+                                                                        <input type="checkbox" name="checks[]" id="38"
+                                                                               value="38"/>
+                                                                    </label>
+                                                                </div>
+
+
+                                                            </div>
+                                                            <script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+                                                            <script type="text/javascript">
+    jQuery(function ($) {
+        // init the state from the input
+        $(".image-checkbox").each(function () {
+            if ($(this).find('input[type="checkbox"]').first().attr("checked")) {
+                $(this).addClass('image-checkbox-checked');
+            }
+            else {
+                $(this).removeClass('image-checkbox-checked');
+            }
+        });
+
+        // sync the state to the input
+        $(".image-checkbox").on("click", function (e) {
+            if ($(this).hasClass('image-checkbox-checked')) {
+                $(this).removeClass('image-checkbox-checked');
+                $(this).find('input[type="checkbox"]').first().removeAttr("checked");
+            }
+            else {
+                $(this).addClass('image-checkbox-checked');
+                $(this).find('input[type="checkbox"]').first().attr("checked", "checked");
+            }
+
+            e.preventDefault();
+        });
+    });
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Data Type</label>
+                                                    <select class="form-control" name="title" id="title" onchange='onTypeChange()'>
+                                                        <option selected="selected">Select Data Type</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Service Catagory</label>
+                                                    <select class="form-control" name="categ" id="categ" onchange= 'onServiceChange()'>
+                                                        <option selected="selected">Select Category</option>
+                                                        
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Price</label>
+                                                    <input class="form-control" placeholder="price" type="text" value="" name="price" id="price" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <div class="form-group">
+                                                    <label class="form-control-label">Remark</label>
+                                                    <input class="form-control" placeholder="Remark" type="text" name="remark" id="remark">
+                                                </div>
+                                            </div>
+                                            <div class="col-4 mt-1">
+                                                <label class="form-control-label">     </label>
+                                                <button type="submit" class="btn btn-block ripple btn-primary">Add to
+                                                    order
+                                                </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <table id="example2"
+                                                       class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                                                    <thead>
+                                                    <tr>
+                                                        <th style="background-color:#2f6ebb;color:white;">Region</th>
+                                                        <th style="background-color:#2f6ebb;color:white;">Data Type</th>
+                                                        <th style="background-color:#2f6ebb;color:white;">Service Category</th>
+                                                        <th style="background-color:#2f6ebb;color:white;">Price</th>
+                                                        <th style="background-color:#2f6ebb;color:white;">Remark</th>
+                                                        <th style="background-color:#2f6ebb;color:white;">Actions</th>
+                                                        <th style="background-color:#2f6ebb;color:white;">Upload</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for i in image %}
+                                                    <tr>
+                                                        <td>{{ i.tooth }}</td>
+                                                        <td>{{ i.data_type }}</td>
+                                                        <td>{{ i.service_catagory }}</td>
+                                                        <td>{{ i.price }}</td>
+                                                        <td>{{ i.remark }}</td>
+                                                        <td><a href="/delete_ImageAnalysisId/{{i.id}}" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
+                                                        <td>
+                                                            <div class="card-body">
+                                                                <div class="container mt-3">
+                                                                    <form action="/uploadimage/{{service_order.id}}/{{mycat.id}}/{{ i.id }}" method="post" class="dropzone dz"
+                                                                          id="form2">
+                                                                        {% csrf_token %}
+                                                                        <div class="fallback">
+                                                                            <input name="file" id="file2" type="file"/>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="container mt-3">
+                                                                        <form action="/uploadDcmFile/{{ service_order.id }}/{{i.id}}" method="post" class="dropzone dz"
+                                                                              id="recommendationDiv">
+                                                                            {% csrf_token %}
+                                                                            <div class="fallback">
+                                                                                <input name="file" id="file1" type="file" multiple/>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                            <script>
+                                                Dropzone.options.recommendationDiv = {
+                                                acceptedFiles: ".zip",
+                                                maxFiles:1,
+                                                init: function() {
+                                                this.hiddenFileInput.removeAttribute('multiple');
+                                            }
+                                            };
+                                            
+                                            </script>
+                                            <script>
+                                                Dropzone.options.form2 = {
+                                                 acceptedFiles: ".stl",
+                                                maxFiles:1,
+                                                init: function() {
+                                                this.hiddenFileInput.removeAttribute('multiple');
+                                                }
+                                            };
+                                            
+                                            </script>
+                                            <script>
+                                                Dropzone.options.form3 = {
+                                                acceptedFiles: "image/jpeg,image/png,image/gif" ,
+                                                maxFiles:1,
+                                                init: function() {
+                                                this.hiddenFileInput.removeAttribute('multiple');
+                                                }
+                                            };
+                                            
+                                            </script>
+                                            <script>
+                                              Dropzone.options.recommendationDiv = {
+                                                maxFilesize: 500,
+                                                init: function() {
+                                                  this.on("uploadprogress", function(file, progress) {
+                                                    console.log("File progress", progress);
+                                                  })
+                                                }
+                                              };
+                                            
+                                            </script>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+
+                                            </div>
+
+                                            <div class="col-6">
+
+                                                <!-- checkbox -->
+                                                <a href="/review_order/{{service_order.id}}/{{mycat.id}}"
+                                                   class="btn btn-block ripple btn-primary">Review Order</a>
+
+                                            </div>
+
+                                        </div>
+                                </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    const type=[{% for i in studies %} '{{ i.title | escapejs }}', {% endfor %}];
+    const service=[{% for i in studies %} '{{ i.maincat | escapejs }}', {% endfor %}];
+    const prices=[{% for i in studies %} '{{ i.price | escapejs }}', {% endfor %}];
+  
+    console.log(type, service, prices)
+    
+    let main_fetch={};
+    
+    
+   // for loop converts these above mentioned three arrays into an object of arrays and those arrays containing other objects 
+    for(let i=0;i<type.length; i++){
+      
+      let demo1= service[i];
+      let demo2= prices[i];
+      let ob={};
+      ob[demo1]=demo2;
+      let ef= type[i].trim();
+      if(main_fetch[ef]){
+        main_fetch[ef]=[...main_fetch[ef], ob];
+      }
+      else{
+        main_fetch[ef]=[ob];
+      }
+    }
+    //consoling the main_fetch 
+    console.log('Im thhhhhhh', main_fetch);
+    
+    // selecting the 'type' id 
+    const sel1= document.getElementById('title');
+    
+    //picks up the keys from main_fetch
+    let keys= Object.keys(main_fetch);
+    
+    //appends the DOM keys to the select 
+    for(let j=0; j<keys.length; j++){
+      let opt= document.createElement('option');
+      opt.value=keys[j];
+      opt.innerHTML= keys[j];
+      sel1.appendChild(opt);
+    }
+    
+    
+    // function for type change
+    function onTypeChange(){
+        
+      let typeVal= document.getElementById('title').value;
+      
+      let serviceSelect= document.getElementById('categ');
+     
+       while(serviceSelect.options.length>0){
+         serviceSelect.remove(0);
+       }
+       
+       
+      if(typeVal=='CBCT'){
+          let extracted= main_fetch['CBCT'].map(ob=>Object.keys(ob));
+        let opt= document.createElement('option');
+          opt.value='select';
+          opt.innerHTML= 'select';
+          serviceSelect.prepend(opt); 
+        for(let inner of extracted){
+          let opt= document.createElement('option');
+          opt.value=inner;
+          opt.innerHTML= inner;
+          serviceSelect.appendChild(opt);
+        }
+      }
+      else if(typeVal=='X-Ray'){   	
+      let extracted = main_fetch['X-Ray'].map(ob=>Object.keys(ob)[0]);
+      let opt= document.createElement('option');
+          opt.value='select';
+          opt.innerHTML= 'select';
+          serviceSelect.prepend(opt); 
+        for(let inner of extracted){
+        
+         let opt= document.createElement('option');
+          opt.value=inner;
+          opt.innerHTML= inner;
+          serviceSelect.appendChild(opt); 
+        }
+        
+      }
+      else{
+          let p= document.getElementById('price');
+        let op= document.createElement('option');
+        op.value='Select Category';
+        op.innerHTML='Select Catagory';
+        serviceSelect.appendChild(op);
+        p.value=null;
+      }
+    } 
+    
+    //function for service Change
+    function onServiceChange(){
+        let typeVal = document.getElementById('title').value;
+        let serviceVal= document.getElementById('categ').value;
+      let priceSelect= document.getElementById('price');
+      let result=false;
+      for(let obj of main_fetch[typeVal]){
+              if(Object.keys(obj)[0]==serviceVal){
+              priceSelect.value= Object.values(obj)[0];
+            result=true;
+            break;
+          }
+      }
+      if(result==false){
+          priceSelect.value=null;
+      }
+    }
+    </script>
+
+<script>
+window.alert = (function() {
+    var nativeAlert = window.alert;
+    return function(message) {
+        window.alert = nativeAlert;
+        message.indexOf("DataTables warning") === 0 ?
+            console.warn(message) :
+            nativeAlert(message);
+    }
+})();
+
+</script>
+<script>
+ $(function () {
+    $("#example2").DataTable({
+
+       "order": [[ 2, "desc" ]],
+       "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+
+    });
+
+  });
+</script>
+{% endif %}
+{% endblock %}

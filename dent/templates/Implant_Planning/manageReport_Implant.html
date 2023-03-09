@@ -1,0 +1,1100 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    .container{
+        max-width: 1200px;
+        margin-top: 1rem;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .header:last-of-type{
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    .modal--header{
+        padding: 1rem 0 0rem 2rem;
+    }
+    .modal--body{
+        padding-top: 1rem;
+    }
+    .form-edit--pencil{
+        float: right;
+        height: 15px;
+        margin-right: 5px;
+        margin-top: 5px;
+    }
+    .edit-confirm--button{
+        width: 132px; 
+        height: 36px !important; 
+        float: right; 
+        border-radius: 8px; 
+        background-color: #1f3f7f;
+    }
+    .enclosing-row{
+        /* background: aliceblue; */
+        box-shadow: 1px 4px 14px rgba(129, 119, 119, 0.1);
+        border-radius: 5px;
+        padding: 1rem;
+        align-items: center;
+        border: 1px solid #ededed;
+    }
+    .form-row{
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+    .name-heading, .heading{
+        font-size: 18px;
+        font-weight: 500;
+        margin-left: 1rem;
+    }
+    .name-heading{
+        margin-left: 0;
+    }
+    .gender-icon--enclosing{
+
+        background: white;
+        border-radius: 50%;
+        text-align: center;
+        color: white;
+
+    }
+    input + label::before, input + label::after{
+        display: none !important;
+    }
+    .drop-button{
+        text-align: start;
+        padding-left: 1rem;
+        background: white;
+        color: black;
+    }
+    .drop-button::after{
+        position: absolute;
+        right: 1rem;
+        top: 40%;
+    }
+    input, textarea, select, button{
+        font-size: 0.875rem !important;
+        /* letter-spacing: 1px; */
+        border: 1px solid #e8e8f7;
+        color: #a8afc7;;
+        box-shadow: 1px 4px 10px rgba(129, 119, 119, 0.1);
+    }
+    .main-footer{
+        box-shadow: 1px -3px 14px 0px #8177771A;
+    }
+    .form-group{
+        margin-bottom: 1.3rem;
+    }
+    @media (min-width: 576px){    
+        #chatBoxModal > .modal-dialog {
+            max-width: 500px;
+            margin: 6rem 8rem 6rem auto;
+        }
+    }
+    #case-chat{
+        min-height: 100px;
+        max-height: 200px;
+        overflow: auto;
+    }
+    .input-group-append>button{
+        border-color: #e8e8f7;
+    }
+    .input-group-append>button:hover{
+        background: #2f6ebb;
+        color: white;
+    }
+    .floating-date-left{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      left: 5px;
+    }
+    .floating-date-right{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      right: 5px;
+    }
+    .admin-side--comment{
+      font-size: 14px;
+      position: relative;
+      margin: 17px 0;
+      color: black;
+      padding: 3px 10px;
+      width: 60%;
+      border-radius: 4px;
+      margin-left: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+      background: lavender;
+    }
+    .clinic-side--comment{
+      margin-right: 10px;
+      font-size: 14px;
+      position: relative;
+      margin: 17px 0;
+      color: black;
+      padding: 3px 3.2rem 3px 10px;
+      width: 60%;
+      margin-left: auto;
+      border-radius: 4px;
+      margin-right: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+    }
+    .dateEle{
+        text-align: center;
+        background: lavender;
+        font-size: 13px;
+        width: 100px;
+        margin: 2rem auto;
+        border-radius: 10px;
+    }
+    .order-selection--button:hover, .add-order--button{
+        background-color: #1f3f7f;
+        color: white;
+    }
+    .card-header{
+        padding: 0.50rem 1.25rem !important;
+        border-bottom: none !important;
+        background: #1F3F7F;
+        color: white;
+    }
+    .card{
+        margin-bottom: 0.5rem;
+    }
+    .order-modal--content{
+        height: 90vh !important;
+    }
+
+    html {
+        --scrollbarBG: #CFD8DC;
+        --thumbBG: #90A4AE;
+    }
+    div.card-body::-webkit-scrollbar {
+        width: 11px;
+    }
+    div.card-body:not(#dataUploadModal .card-body) {
+        max-height: 200px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+    }
+    .card-body::-webkit-scrollbar-thumb {
+        background-color: var(--thumbBG) ;
+        border-radius: 6px;
+        border: 3px solid white;
+    }
+    div.accordion-parent::-webkit-scrollbar, div.cards-row::-webkit-scrollbar{
+        width: 11px;
+    }
+    div.accordion-parent, div.cards-row{
+        height: 75vh;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #e6e7e7;
+    }
+    div.accordion-parent::-webkit-scrollbar-thumb, div.cards-row::-webkit-scrollbar-thumb{
+        background-color: #e6e7e7;
+        border-radius: 6px;
+        border: 3px solid white;
+    }
+    .head-line{
+        display: flex;
+        font-size: 1.09rem;
+        font-weight: 500;
+        margin-bottom: 0.75rem;
+    }
+    .cards-row{
+        height: 75vh;
+        overflow-y: auto;
+    }
+    .order-card, .accordion-parent .card {
+        box-shadow: 1px 4px 14px 0px #8177771A;
+    }
+    .order-card{
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #ededed;
+    }
+    .order-card h6{
+        margin-bottom: 0.75rem;
+    }
+    .cards-row .order-card:hover{
+        /* color: white; */
+        /* background: #1F3F7F; */
+        cursor: pointer;
+    }
+    .cards-row .order-card:hover *{
+        color: inherit !important;
+    }
+    .order-card-dark{
+        background: #1F3F7F;
+        color: white;
+    }
+    .order-card-dark *{
+        color: inherit !important;
+    }
+    .tooth-number--span, .tooth-number--span-edit{
+        color: #a8afc7;
+    }
+    .tooth-number--span:hover, .tooth-number--span-selected, .tooth-number--span-edit:hover, .tooth-number--span-edit-selected{
+        color: #1f3f7f;
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .order-heading{
+        margin-left: auto;
+        margin-right: 1rem;
+        font-size: initial;
+        margin-bottom: 1rem;
+    }
+
+    .property-box{
+        margin: 0.5rem 0;
+    }
+    .property-box>span:first-child{
+        margin-right: 1rem;
+        font-size: 14px;
+        font-weight: 400;
+    }
+    .property-box>span:last-child{
+        font-size: 15px;
+        font-weight: 500;
+    }
+    .payment-button{
+        float: right;
+        margin-right: 0.5rem;
+        margin-top: 1rem;
+        background: #1f3f7f;
+    }
+    .search-box{
+        float: right;
+        margin-right: 1rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+    }
+    #dropleftMenuButton:hover{
+        background: #1f3f7f;
+    }
+    .upload-button{
+        border-color: #1F3F7F;
+    }
+    .select-order--button{
+        background: #1F3F7F;
+    }
+    .order-confirm--button{
+        position: absolute;
+        bottom: 45px;
+        right: 30px;
+        background: #1F3F7F;
+        padding: 0.5rem 2rem;
+        color: white;
+        border-radius: 12px;
+        font-size: 16px !important;
+    }
+    .icon-image{
+        width: 50px !important;
+    }
+    .dropzone-box form{
+        border: 1px dashed;
+        height: 50px !important; 
+        min-height: 50px !important; 
+        width: 75px !important; 
+        margin-bottom: 0.5rem;
+    }
+    .dropzone .dz-preview .dz-image {
+        width: 100px !important;
+        height: 75px !important;
+    }
+    .dropzone .dz-preview{
+        margin: 0 !important;
+        min-height: 0 !important;
+    }
+    .dropzone .dz-preview.dz-file-preview .dz-image{
+        border-radius: 0 !important;
+    }
+    .dz-details{
+        padding: 0.75rem !important;
+        /* top: 0.5rem !important; */
+        font-size: 12px !important;
+    }
+    .dropzone .dz-preview .dz-details .dz-size{
+        margin-bottom: 1em !important;
+        font-size: 12px !important;
+    }
+    .dz-progress{
+        height: 10px !important;
+        left: 65% !important;
+        top: 50% !important;
+        width: 50px !important;
+    }
+    .dropzone .dz-preview .dz-success-mark svg, .dropzone .dz-preview .dz-error-mark svg{
+        width: 35px !important;
+        height: 35px !important;
+        margin: 0.5rem 0.75rem !important;
+    }
+    .fileName{
+        text-align: center;
+        margin-right: 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100px;
+    }
+    .delete-icon{
+        background: white;
+        padding: 3px 5px;
+        border-radius: 5px;
+    }
+    .delete-icon.position-absolute{
+        top: 25px;
+        right: 0;
+        z-index: 9999;
+    }
+    .delete-icon img{
+        height: 1rem;
+    }
+    .fileName-parent{
+        display: flex; 
+        align-items: center; 
+        margin-top: 1rem;
+        margin-left: -0.5rem;
+    }
+    .footnotes-card{
+        min-width: 250px;
+        text-align: left;
+        margin: 1rem 1rem 1rem 0;
+    }
+    html {
+        --scrollbarBG: #CFD8DC;
+        --thumbBG: #cfdada;
+    }
+    .card-group--enclosing::-webkit-scrollbar {
+        height: 6px;
+    }
+    .card-group--enclosing {
+        /* max-height: 200px;
+        overflow-y: auto; */
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+    }
+    .card-group--enclosing::-webkit-scrollbar-thumb {
+        background-color: var(--thumbBG) ;
+        border-radius: 6px;
+        /* border: 3px solid white; */
+    }
+    .chat-box--button{
+        border: 1px solid #e8e8f7;
+        padding: 7px;
+        border-radius: 5px;
+    }
+    .details-field{
+        margin-top: 10px;
+
+    }
+    html {
+        --scrollbarBG: #CFD8DC;
+        --thumbBG: #90A4AE;
+    }
+    div#case-chat::-webkit-scrollbar, div#service-log::-webkit-scrollbar {
+        width: 11px;
+    }
+    div#case-chat, div#case-chat{
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+    }
+    #case-chat::-webkit-scrollbar-thumb, #service-log::-webkit-scrollbar-thumb{
+        background-color: var(--thumbBG) ;
+        border-radius: 6px;
+        border: 3px solid white;
+    }
+    .details-field span:not(.label-field){
+        margin-left: 0.3rem;
+        font-weight: 500;
+    }
+    .file-area{
+        background-color: rgba(31, 63, 127, 0.1);
+        padding: 2rem;
+        margin-top: 1rem;
+    }
+    .file-box--enclosing{
+        gap: 2rem;
+    }
+    .file-box{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 1rem 0 0 0;
+        background: #FFFFFF;
+        box-shadow: 1px 2px 10px rgb(121 121 121 / 26%);
+        border-radius: 8px;
+    }
+    .file-box img{
+        height: 75px;
+    }
+    .file-box h6{
+        width: 100px;
+        margin-left: auto;
+        margin-right: auto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    .file-box button.kebab-button{
+
+        border: none;
+        color: #1f3f7f;
+        box-shadow: none;
+        position: absolute;
+        margin-right: 0 !important;
+        top: 5px;
+        right: 0;
+
+        width: 20px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        padding: 0.4rem 1rem;
+        line-height: 1.657;
+        border-width: 1px;
+        background-color: transparent;
+        /* color: ; */
+    }
+    .file-box button.kebab-button:hover{
+        background: white !important;;
+
+    }
+    #inputState{
+        font-weight: 500;
+        margin-left: 0.5rem;
+    }
+    .dropdown-item:hover{
+        color: white;
+    }
+    .submit-button{
+        padding: 5px 25px;
+        background-color: #1F3F7F;
+        color: white;
+        border-radius: 4px;
+        width: 100%;
+        cursor: pointer;
+    }
+    form.dropdown-menu{
+        padding: 1rem;
+        background: white;
+        border-radius: 4px;
+        top: 27px;
+        transform: translate3d(-234px, 0px, 0px);
+        min-width: 235px;
+        color: black !important;
+    }
+    form.dropdown-menu h6{
+        font-weight: 400 !important;
+    }
+    form.dropdown-menu input, form.dropdown-menu select{
+        color: black !important;
+    }
+    form.dropdown-menu .form-control{
+        height: 33px !important;
+    }
+    .file-area .share-icon--parent{
+        position: absolute;
+        right: 25px;
+        top: 15px;
+    }
+    .share-icon--parent .share-icon{
+        font-size: 20px;
+        cursor: pointer;
+        color: #1f3f7f;
+    }
+</style>
+
+<div class="container mb-3">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5  onclick="history.back()" style="cursor: pointer;">Order Details</h5>
+    </div>
+    <div class="row m-2 enclosing-row">
+        <div class="col-sm-6 col-md-3 d-flex">
+        <!-- <div class="col-sm-4 col-md-3 p-0 d-flex text-center align-items-center"> -->
+            <div class="gender-icon--enclosing">
+                {% if patient.gender == 'Female' %}
+                <img class="icon-image" src="/static/svg_icons/Female.svg" alt="">
+                {% endif %}
+                {% if patient.gender != 'Female' %}
+                <img class="icon-image" src="/static/svg_icons/Male.svg" alt="">
+                {% endif %}
+            </div>
+            <div class="d-flex flex-column ml-3">
+                <span class="name-heading">{{service_order.name}}</span>
+                <div class="details-field"><span  class="label-field">ID: </span><span>{{patient.pid}}</span></div>
+                
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="details-field"><span class="label-field">Service Date: </span><span>{{service_order.date}}</span></div>
+            <div class="details-field"><span class="label-field">Status: </span><span class="{{service_order.badge}}">{{service_order.status}}</span></div>
+        </div>
+        <div class="col-sm-6 col-md-3 d-flex" style="padding-bottom: 1rem;">
+
+            <div class="form-inline">
+                <label for="inputState">Referred To: </label>
+                <span id="inputState"> Dentread Services</span>
+                <select id="inputState" class="form-control ml-1 d-none" style="width: 100px;">
+                    <option selected>{referred}</option>
+                    
+                </select>
+            </div>
+            
+            <button class="btn btn-sm ml-1 chat-box--button" data-toggle="modal" data-target="#chatBoxModal">
+                
+                <img src="/static/svg_icons/Group 98.svg" width="22px" />
+            </button>
+
+        </div>
+        <div class="col-sm-6 col-md-3">
+        <!-- <div class="col-sm-12 col-md-6 row mt-3 p-3 align-items-center ml-0" style="background-color: aliceblue;"> -->
+            
+            <h6 class="text-center">Upload Scan Images</h6>
+
+            <div class="dropzone-are mt-3 d-flex justify-content-end">
+
+                <div class="dropzone-box position-relative mr-4">
+                    
+                    <form action="/planningDcmFileUpload/{{service_order.id}}" method="post" class="mt-2 dropzone d-flex align-items-center justify-content-center" id="firstform">
+                        {% csrf_token %}
+                    </form>
+                    <span style="font-size: 13px;">CBCT/X-Ray</span>
+                    <h6 class="fileName-parent">
+                        <span class="fileName">
+                            {% if service_order.file %}
+                                {{service_order.file}}
+                            {% endif %}
+                        </span>
+                    </h6>
+                </div>
+                <div class="dropzone-box mr-5 position-relative">
+                    
+                    <form action="/updatePlanningImage/{{service_order.id}}" method="post" class="mt-2 dropzone d-flex align-items-center justify-content-center" id="secondform">
+                        {% csrf_token %}
+                    </form>
+                    <span style="font-size: 13px;">Other Images</span>
+                    <h6 class="fileName-parent">
+                        <span class="fileName">
+                            {% if otherImage %}
+                                {% for i in otherImage %}
+                                    {{i.fileName}}
+                                {% endfor %}
+                            {% endif %}
+                        </span>
+                        {% if otherImage %}
+                            {% for i in otherImage %}
+                                <a class="delete-icon" href="/ios_delete/{{i.id}}">
+                                    <img src="/static/svg_icons/delete.svg" alt="">
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                        
+                    </h6>
+                    <a class="d-none position-absolute delete-icon" href="/ios_delete/{{i.id}}">
+                        <img src="/static/svg_icons/delete.svg" alt="">
+                    </a>
+                    
+                </div>
+                
+            </div>
+            <script>
+                
+                Dropzone.options.firstform = {
+                    acceptedFiles: ".stl, .ply, .zip",
+                    maxFiles:1,
+                    maxFilesize: 900,
+                    dictDefaultMessage: '+', 
+                    thumbnailHeight: 30, 
+                    zoom: 0.4, 
+                    success(file) {
+                        if (file.previewElement) {
+                            this.element.parentElement.querySelector('.fileName').innerText = file.name;
+                            this.element.parentElement.querySelector('a.position-absolute.delete-icon').classList.remove('d-none');
+                            return file.previewElement.classList.add("dz-success");
+                        }
+                    },
+                }
+                Dropzone.options.secondform = {
+                    ...Dropzone.options.firstform, 
+                    maxFilesize: 100,
+                    maxFiles:3,
+                    acceptedFiles: ".png, .jpg, .jpeg", 
+                    success(file){
+                        if (file.previewElement) {
+                            this.element.parentElement.querySelector('.fileName').innerText = file.name;
+                            {% comment %} this.element.parentElement.querySelector('a.position-absolute.delete-icon').classList.remove('d-none'); {% endcomment %}
+                            return file.previewElement.classList.add("dz-success");
+                        }
+                    }
+                };
+            </script>
+            
+        </div>
+    </div>
+
+    {% for item in pros %}
+    
+    <div class="row m-2 mt-4 enclosing-row mb-4">
+        <!-- <h5 class="heading order-heading">
+            Total: <span style="margin-left: 0.5rem;">Rs</span> <span style="font-size: larger; color: #1f3f7f;">{{item.price}}/-</span>
+        </h5> -->
+
+            {% if item.id %}
+                <div class="col-sm-6 col-md-5 property-box">
+                    <span>Order ID: </span>
+                    <span>
+                        <span class="tooth-marks">{{item.item_id}}</span>
+                    </span>
+                </div>
+            {% endif %}
+            {% if item.tooth %}
+                <div class="col-sm-6 col-md-5 property-box">
+                    <span>Tooth Sites: </span>
+                    <span>
+                        <span class="tooth-marks">{{item.tooth}}</span>
+                    </span>
+                </div>
+            {% endif %}
+            {% if item.data_type != '' and item.data_type != 'NULL' and item.data_type != NULL %}
+                <div class="col-sm-6 col-md-5 property-box">
+                    <span>Data Type: </span>
+                    <span>{{item.data_type}}</span>
+                </div>
+            {% endif %}
+
+            {% if item.service_catagory %}
+                <div class="col-sm-6 col-md-5 property-box">
+                    <span>Service Category: </span>
+                    <span>{{item.service_catagory}}</span>
+                </div>
+            {% endif %}
+
+            {% if item.planning_type %}
+                <div class="col-sm-6 col-md-5 property-box">
+                    <span>Planning Type: </span>
+                    <span>{{item.planning_type}}</span>
+                </div>
+            {% endif %}
+            
+            <div class="col-sm-6 col-md-5 property-box">
+                <span>Report Name: </span>
+                <span>{{service_order.refstudy}}</span>
+            </div>
+
+            <div class="col-sm-6 col-md-5 property-box">
+                <span>Report Status: </span>
+                <small class="{{item.badge}}">{{item.status}}</small>
+            </div>
+        
+            {% if item.remark %}
+                <div class="col-sm-12">
+                    <hr>
+                    <span style="margin-right: 1rem;">Clinical Notes: </span>
+                    <span>{{item.remark}}</span>
+                    <hr>
+                </div>
+            {% endif %}
+
+            {% if item.status == 'Report Completed' or item.status == 'Completed' %}
+                
+                <div class="col-sm-12 file-area">
+                    <h6 class="p-0 mb-3">Planning File</h6>
+                    <div class="dropleft share-icon--parent">
+                        <i class="fa-solid fa-share-nodes mr-2 share-icon" data-toggle="dropdown" id="dropdownShare" aria-expanded="false" aria-haspopup="true" ></i>
+                        <form action="sendmail_ImplantPlanning/{{service_order.id}}/{{item.id}}" method="post" aria-labelledby="dropdownShare" class="dropdown-menu">
+                            {% csrf_token %}
+                            <h6>Share</h6>
+                            <select name="data" id="share" class="form-control mb-2">
+                                <option value="report">Report(s)</option>
+                                <option value="image-pdfs">Images PDF(s)</option>
+                                <option value="report-n-image">Report(s) and Image PDF(s)</option>
+                            </select>
+                            <input type="email" name="email" id="email" placeholder="Email" class="form-control mb-2">
+                            <button type="submit" class="submit-button">Send</button>
+                        </form> 
+                    </div>
+                    <div class="file-box--enclosing row m-0">
+                        <div class="file-box d-none">
+                            <button aria-expanded="false" aria-haspopup="true" class="kebab-button" style="margin-right: 12px;" data-toggle="dropdown"
+                                id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                            </button>
+                            
+                            <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+            
+                                <a href="/pdfReport/{{service_order.id}}/{{i.id}}" class="dropdown-item" style="cursor: pointer;" >
+                                    <i class="fa-regular fa-file-lines mr-2"></i> Download
+                                </a>
+                            
+                                <a href="/service_order_print/{{service_order.id}}/{{i.id}}" class="dropdown-item" style="cursor: pointer;" >
+                                    <i class="fa-regular fa-file-lines mr-2"></i> Print
+                                </a>
+                            
+                                <!-- <a href="/manageReportPlanning/{{i.id}}" class="dropdown-item" style="cursor: pointer;" >
+                                    <i class="fa-regular fa-file-lines mr-2"></i> Share
+                                </a> -->
+                                
+                            </div>
+                            <img src="/static/svg_icons/pdf-icon.svg" alt="">
+
+                            <h6 class="text-center mt-2 mb-3" >FileName here</h6>
+                        </div>
+
+                        {% for i in imgFile %}
+                            {% if item.id == i.sodrid %}
+                                <div class="file-box">
+                                    <button aria-expanded="false" aria-haspopup="true" class="kebab-button" style="margin-right: 12px;" data-toggle="dropdown"
+                                        id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                                    </button>
+                                    <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                    
+                                        <a href="{{i.file.url}}" download class="dropdown-item" style="cursor: pointer;" >
+                                            <i class="fa-regular fa-file-lines mr-2"></i> Download
+                                        </a>
+                                    
+                                        <a href="{{i.file.url}}" class="dropdown-item" target="_blank" style="cursor: pointer;" >
+                                            <i class="fa-solid fa-print mr-2"></i> Print
+                                        </a>
+                                    
+                                        <!-- <a href="{{href_here}}" class="dropdown-item" style="cursor: pointer;" >
+                                            <i class="fa-solid fa-share-nodes mr-2"></i> Share
+                                        </a> -->
+                                        
+                                    </div>
+                                    <img src="/static/svg_icons/pdf-icon.svg" alt="">
+                                    <h6 class="text-center mt-2 mb-3" >{{i.fileName}}</h6>
+                                </div>
+                            {% endif %}
+                        {% endfor %} 
+                    </div>
+                    <script>
+                        document.querySelector('.share-icon--parent form').addEventListener('click', onFormClick);
+                        function onFormClick(e){
+                            console.log('trying to stop propgatin')
+                            e.stopPropagation();
+                        }
+                    </script>
+                </div>
+            {% endif %}
+        </div>
+
+    {% endfor %}
+    
+</div>
+
+<!-- Chat box modal -->
+<div class="modal fade" id="chatBoxModal" tabindex="-1" role="dialog" aria-labelledby="chatBoxModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+        
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatBoxTitle">Case Chat</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div id="case-chat"></div>
+                <form class="form-inline" style="margin-top: 1rem" method="post" action="/labOrderComment/{{service_order.id}}/{{mycat.id}}">
+                    {% csrf_token %}
+
+                    <div class="input-group w-100">
+                        <input type="text" class="form-control" name="comment" placeholder="Type your comment here..." aria-label="Type your comment here..." aria-describedby="comment-send">
+                        <div class="input-group-append">
+                          <button  type="submit" class="btn" style="border-color: #e8e8f7;" id="comment-send"><i class="fa fa-sharp fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            
+      
+        </div>
+
+    </div>
+</div>
+
+<!-- <div class="container-div">
+    <div class="card">
+        <h5 class="main-centered--heading">Manage Reports</h5>
+        <button class="back-button" onclick="history.back()"><i class="fa-solid fa-arrow-left" style="font-size: 1.1rem;"></i></button>
+        <div class="table-responsive" style="padding: 0 1rem">
+            <table class="table" style="table-layout: auto; width: 100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Order Line-Item ID</th>
+                        <th>Tooth Site(s)</th>
+                        <th>Data Type</th>
+                        <th>Service Category</th>
+                        <th>Report Name</th>
+                        <th>Report Date-Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in pros %}
+                        <tr>
+                            <td>
+                                <button type="button" class="btn" onclick="plusIconToggle(this, '{{i.id}}')">
+                                    <i class="fa-solid fa-circle-plus" style="color: purple;"></i>
+                                </button>
+                                
+                            </td>
+                            <td>
+                                {{i.item_id}}
+                            </td>
+                            <td>
+                                {{i.tooth}}
+                            </td>
+                            <td>
+                            {{i.data_type}}
+                            </td>
+                            <td>
+                            {{i.service_catagory}}
+                            </td>
+                            <td>
+                                {{i.service_name}}
+                            </td>
+                            <td>
+                                {{i.date}}
+                            </td>
+                            <td><small class="{{i.badge}}">
+                                {{i.status}}
+                            </td>
+                            
+                        </tr>
+                        <tr class="displayNoneClassAgain">
+                            <td></td>
+                            <td>Image Pdf:</td>
+                            
+                        </tr>
+                        
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <form action="/" method="post" class="displayNoneClass" id="form-id">
+            {% csrf_token %}
+            <div>
+              <h5 class="card-title">Sent Mail</h5>
+
+              <div class="card-tools">
+                  <h6 class="badge badge-warning"></h6>
+
+              </div>
+            </div>
+            <div class="form-group">
+                <label for="email" style="margin-top:1rem;">Share With:</label>
+                <input type="email" name="email" id="email" style="margin-left: 0.5rem !important; width:11.3rem !important;"placeholder="example@gmail.com">
+            </div>
+            <div class="form-group">
+                <label for="report-type">Report Type: </label>
+                <select id="report-type" name="data" style="height: 27px;">
+                    <option selected>Select</option>
+                    <option name="image-pdfs" value="Images">Image PDF(s)</option>                    
+                </select>
+            </div>
+            <div style="display: flex;">
+                <button type="submit" class="share-report--button">Share</button>
+            </div>           
+        </form>
+    </div>
+</div>
+<style>
+    .back-button{
+        display: inline-flex;
+        width: 30px;
+        border: none;
+        background: aliceblue;
+        border-radius: 50%;
+        position: absolute;
+        left: 1rem;
+        top: 1.2rem;
+        height: 30px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .back-button:hover{
+        background-color: #2f6ebb;
+        color: white;
+    }
+
+    .share-report--button{  
+        border: #2f6ebb;
+        background-color: #2f6ebb;
+        color: white;
+        margin-left: 1rem;
+        padding: 0 1.7rem;
+        border-radius: 3px;
+    }
+    
+    .share-report--button{
+        padding: 0.3rem 1.5rem;
+        margin: 0 auto;
+        margin-left:7rem;
+        margin-bottom: 1rem;
+    }
+    .container-div{
+        margin-left: 5rem;
+        margin-top: 1rem;
+    }
+    .container-div > .card{
+        margin: 0 5rem;
+    }
+    a.action-icon-buttons, button.action-icon-buttons{
+        color: grey;
+    }
+    a.action-icon-buttons:hover, button.action-icon-buttons:hover{
+        color: #1f3f7f;
+    }
+    .main-centered--heading{
+        text-align: center;
+        margin: 1rem 0;
+    }
+    tr{
+        text-align: left;
+    }
+    table.table{
+        width: 95%;
+        margin: 1rem auto;
+        border: 1px solid #eaedf7;
+        
+    }
+    tr:first-child{
+        background-color: aliceblue;
+    }
+    .displayNoneClass, .displayNoneClassAgain{
+        display: none;
+    }
+    #form-id{
+        width: 95%;
+        margin: 0 auto;
+    }
+</style>
+<script>
+
+    if(document.getElementsByClassName('status-class')[0].innerText == 'Completed'){
+        document.getElementsByClassName('status-class')[0].style.backgroundColor= 'green';
+    } 
+
+    var id1 = {{service_order.id}}
+    function onIconClick(id,sel){
+        document.getElementById('form-id').classList.toggle('displayNoneClass');
+        document.getElementById('form-id').action =`/sendmail_ImplantPlanning/${id1}/${id}`
+        let opt = document.getElementById('report-type')
+        for (let x of opt){
+            if(x.value==sel){
+                opt.value=x.value
+            }
+        }
+    }
+
+    function plusIconToggle(target, lineOrderId){
+        console.log(lineOrderId);
+        
+        let tar= target;
+
+        if(tar.parentElement.parentElement.lastElementChild.innerText =='Completed'){
+
+            
+            // console.log(tar.firstElementChild.classList)
+            if(tar.firstElementChild.classList.contains('fa-circle-plus')){
+                tar.firstElementChild.classList.remove('fa-circle-plus');
+                tar.firstElementChild.classList.add('fa-circle-minus');
+                tar.firstElementChild.style.color='red';
+            }
+            else{
+                tar.firstElementChild.classList.remove('fa-circle-minus');
+                tar.firstElementChild.classList.add('fa-circle-plus');
+                tar.firstElementChild.style.color='purple';
+            }
+            
+            getFiles(lineOrderId, tar.parentElement.parentElement.nextElementSibling);
+
+            tar.parentElement.parentElement.nextElementSibling.classList.toggle('displayNoneClassAgain');
+            let main_target = tar.parentElement.parentElement.nextElementSibling;
+            while(main_target.nextElementSibling && main_target.nextElementSibling.classList.contains('fileElementTr')){
+                main_target.nextElementSibling.classList.toggle('displayNoneClassAgain');
+                main_target = main_target.nextElementSibling;
+            }
+            
+        }
+        else{
+            alert('Report creation is in-progress');
+        }
+    }
+    </script>
+
+<script>
+    // ajax call function 
+    function getFiles(id1, target){
+        let pk = '{{service_order.id}}';
+        console.log(id1);
+        let csr = $("input[name=csrfmiddlewaretoken]").val();    
+        mydata={'pk': pk,'id1': id1, 'csrfmiddlewaretoken': csr};
+        $.ajax(
+        {
+            url: `/ViewPlanningPDF/${pk}/${id1}`,
+            method:'GET',
+            data: mydata,
+            success: function (data) {
+                console.log("this is the data for viewImagePDF: ", data);
+                if(!target.nextElementSibling || !target.nextElementSibling.classList.contains('fileElementTr')){
+                    for(let i of data){
+                        var fileName = i['file'].match(/[ \w-]+\.[\w-]*$/)[0];
+                        let tr = document.createElement('tr');
+                        tr.classList.add('fileElementTr');
+                        tr.innerHTML = `
+                            <td> </td>
+                            <td> ${fileName} </td>
+                            <td>  <a download href="${i['file']}" class="btn action-icon-buttons {{i.down}}" ><i class="fa-solid fa-download"></i></a></td>
+                            <td>  <a href="${i['file']}" class="btn action-icon-buttons {{i.print}}" ><i class="fa-solid fa-print"></i></a></td>
+                            <td>  <button href="" class="btn action-icon-buttons {{i.share}}" onclick="onIconClick('{{i.id}}', 'Images')"><i class="fa-solid fa-share-nodes"></i></button</td> 
+                        `
+                        
+                        target.insertAdjacentElement('afterEnd', tr);
+                        
+                    }
+                }
+            }
+        });
+    }
+
+    </script> -->
+{% endif %}
+{% endblock %}

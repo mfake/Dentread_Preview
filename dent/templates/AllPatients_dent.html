@@ -1,0 +1,160 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>All Patients</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+		<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+                    <form action="/patient_search" method="post">
+					{% csrf_token %}
+                        <div class="input-group">
+                            <input type="search" class="form-control form-control-sm" name="search" id="search" placeholder="Type Patient name, Centre or Registration date ">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-sm btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+     <!-- /.container-fluid -->
+
+
+    <!-- Main content -->
+
+        <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+                <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead>
+                  <tr>
+                      <th>Registration Date</th>
+                      <th hidden> Date</th>
+
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Ref Doctor</th>
+
+
+                    <th>Actions</th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                   {% for i in patient %}
+                  <tr>
+                      <td>{{ i.rdate|date:'d-m-Y' }}</td>
+                      <td hidden>{{ i.rdate|date:'Y-m-d' }}</td>
+
+                    <td>{{ i.pid }}</td>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.gender }}</td>
+                      <td>{{ i.email }}</td>
+                    <td>{{ i.contact }}</td>
+                    <td>{{ i.refdoctor }}</td>
+
+
+
+                    <td>
+                          <a class="btn btn-primary btn-sm" href="/patientdetails_dent/{{ i.id }}" data-toggle="tooltip" data-placement="top" title="View in Detail" >
+                              <i class="fas fa-eye">
+                              </i>
+
+                          </a>
+                          <a class="btn btn-info btn-sm" href="/edit_patient_dent/{{ i.id }}" data-toggle="tooltip" data-placement="top" title="Edit Details">
+                              <i class="fas fa-pencil-alt">
+                              </i>
+
+                          </a>
+                         <a class="btn btn-info btn-sm" href="/addinventory/{{ i.id }}" data-toggle="tooltip" data-placement="top" title="Add Inventory" hidden>
+                              <i class="fa fa-list" aria-hidden="true"></i>
+                              </i>
+
+                          </a>
+                        {% if usr.usertype == 'Admin' %}
+                          <a class="btn btn-danger btn-sm" href="/delete_patient_dent/{{ i.id }}" data-toggle="tooltip" data-placement="top" title="Delete Patient">
+                              <i class="fas fa-trash-alt">
+                              </i>
+
+                          </a>
+                        {% endif %}
+<!-- ./wrapper --></td>
+                  </tr>
+                {% endfor %}
+                  </tbody>
+
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+
+    <!-- /.content -->
+  </div>
+      </div>
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+
+
+<!-- jQuery -->
+
+<!-- Page specific script -->
+<script>
+  $(function () {
+    $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false, "columnDefs" : [{"targets":1, "type":"date"}], "order": [[ 1, "desc" ]],
+      "buttons": [ "excel", "pdf",  "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
+
+
+</body>
+{% endif %}
+{%endblock%}

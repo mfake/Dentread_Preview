@@ -1,0 +1,3308 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    body{
+        background: white;
+    }
+    .modal--header{
+        padding: 1rem 0 0rem 2rem;
+    }
+    .modal--body{
+        padding-top: 1rem;
+    }
+    .form-edit--pencil{
+        float: right;
+        height: 15px;
+        margin-right: 5px;
+        margin-top: 5px;
+    }
+    .edit-confirm--button{
+        width: 132px; 
+        height: 36px !important; 
+        float: right; 
+        border-radius: 8px; 
+        background-color: #1f3f7f;
+    }
+    .enclosing-row{
+        box-shadow: 1px 4px 14px rgba(129, 119, 119, 0.1);
+        border-radius: 5px;
+        padding: 1rem;
+        align-items: center;
+        border: 1px solid #ededed;
+    }
+    .form-row{
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+    .name-heading, .heading{
+        font-size: 18px;
+        font-weight: 500;
+        margin-left: 1rem;
+    }
+    .gender-icon--enclosing{
+        background: white;
+        border-radius: 50%;
+        text-align: center;
+        color: white;
+
+    }
+    input + label::before, input + label::after{
+        display: none !important;
+    }
+    .drop-button{
+        text-align: start;
+        padding-left: 1rem;
+        background: white;
+        color: black;
+    }
+    .drop-button::after{
+        position: absolute;
+        right: 1rem;
+        top: 40%;
+    }
+    input, textarea, select, button{
+        font-size: 0.875rem !important;
+        /* letter-spacing: 1px; */
+        border: 1px solid #e8e8f7;
+        color: #a8afc7;;
+        box-shadow: 1px 4px 10px rgba(129, 119, 119, 0.1);
+    }
+    .main-footer{
+        box-shadow: 1px -3px 14px 0px #8177771A;
+    }
+    .form-group{
+        margin-bottom: 1.3rem;
+    }
+    @media (min-width: 576px){    
+        #chatBoxModal > .modal-dialog {
+            max-width: 500px;
+            margin: 6rem 8rem 6rem auto;
+        }
+    }
+    #case-chat{
+        min-height: 100px;
+        max-height: 200px;
+        overflow: auto;
+    }
+    .input-group-append>button{
+        border-color: #e8e8f7;
+    }
+    .input-group-append>button:hover{
+        background: #2f6ebb;
+        color: white;
+    }
+    .floating-date-left{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      left: 5px;
+    }
+    .floating-date-right{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      right: 5px;
+    }
+    .admin-side--comment{
+      font-size: 14px;
+      position: relative;
+      margin: 17px 0;
+      color: black;
+      padding: 3px 10px;
+      width: 60%;
+      border-radius: 4px;
+      margin-left: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+      background: lavender;
+    }
+    .clinic-side--comment{
+      margin-right: 10px;
+      font-size: 14px;
+      position: relative;
+      margin: 17px 0;
+      color: black;
+      padding: 3px 3.2rem 3px 10px;
+      width: 60%;
+      margin-left: auto;
+      border-radius: 4px;
+      margin-right: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+    }
+    .dateEle{
+        text-align: center;
+        background: lavender;
+        font-size: 13px;
+        width: 100px;
+        margin: 2rem auto;
+        border-radius: 10px;
+    }
+    .order-selection--button:hover, .add-order--button{
+        background-color: #1f3f7f;
+        color: white;
+    }
+    .card-header{
+        padding: 0.50rem 1.25rem !important;
+        border-bottom: none !important;
+        background: #1F3F7F;
+        color: white;
+    }
+    .card{
+        margin-bottom: 0.5rem;
+    }
+    .order-modal--content{
+        height: 90vh !important;
+    }
+
+    html {
+        --scrollbarBG: #CFD8DC;
+        --thumbBG: #90A4AE;
+    }
+    div.card-body::-webkit-scrollbar {
+        width: 11px;
+    }
+    div.card-body:not(#dataUploadModal .card-body) {
+        max-height: 200px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+    }
+    .card-body::-webkit-scrollbar-thumb {
+        background-color: var(--thumbBG) ;
+        border-radius: 6px;
+        border: 3px solid white;
+    }
+    div.accordion-parent::-webkit-scrollbar, div.cards-row::-webkit-scrollbar{
+        width: 11px;
+    }
+    div.accordion-parent, div.cards-row{
+        height: 75vh;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #e6e7e7;
+    }
+    div.accordion-parent::-webkit-scrollbar-thumb, div.cards-row::-webkit-scrollbar-thumb{
+        background-color: #e6e7e7;
+        border-radius: 6px;
+        border: 3px solid white;
+    }
+    .head-line{
+        display: flex;
+        font-size: 1.09rem;
+        font-weight: 500;
+        margin-bottom: 0.75rem;
+    }
+    .cards-row{
+        height: 75vh;
+        overflow-y: auto;
+    }
+    .order-card, .accordion-parent .card {
+        box-shadow: 1px 4px 14px 0px #8177771A;
+    }
+    .order-card{
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #ededed;
+    }
+    .order-card h6{
+        margin-bottom: 0.75rem;
+    }
+    .cards-row .order-card:hover{
+        /* color: white; */
+        /* background: #1F3F7F; */
+        cursor: pointer;
+    }
+    .cards-row .order-card:hover *{
+        color: inherit !important;
+    }
+    .order-card-dark{
+        background: #1F3F7F;
+        color: white;
+    }
+    .order-card-dark *{
+        color: inherit !important;
+    }
+    .tooth-number--span, .tooth-number--span-edit{
+        color: #a8afc7;
+    }
+    .tooth-number--span:hover, .tooth-number--span-selected, .tooth-number--span-edit:hover, .tooth-number--span-edit-selected{
+        color: #1f3f7f;
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .order-heading{
+        margin-left: auto;
+        margin-right: 1rem;
+        font-size: initial;
+        margin-bottom: 1rem;
+    }
+
+    .property-box{
+        margin: 0.5rem 0;
+    }
+    .property-box>span:first-child{
+        margin-right: 1rem;
+        font-size: 14px;
+        font-weight: 400;
+    }
+    .property-box>span:last-child{
+        font-size: 15px;
+    }
+    .payment-button{
+        float: right;
+        margin-right: 0.5rem;
+        margin-top: 1rem;
+        background: #1f3f7f;
+    }
+    .search-box{
+        float: right;
+        margin-right: 1rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+    }
+    #dropleftMenuButton:hover{
+        background: #1f3f7f;
+    }
+    .upload-button{
+        border-color: #1F3F7F;
+    }
+    .select-order--button{
+        background: #1F3F7F;
+    }
+    .order-confirm--button{
+        position: absolute;
+        bottom: 45px;
+        right: 30px;
+        background: #1F3F7F;
+        padding: 0.5rem 2rem;
+        color: white;
+        border-radius: 12px;
+        font-size: 16px !important;
+    }
+    .icon-image{
+        width: 50px !important;
+    }
+    .dropzone-box form{
+        border: 1px dashed;
+        height: 50px !important; 
+        min-height: 50px !important; 
+        width: 75px !important; 
+        margin-bottom: 0.5rem;
+    }
+    .dropzone .dz-preview .dz-image {
+        width: 100px !important;
+        height: 75px !important;
+    }
+    .dropzone .dz-preview{
+        margin: 0 !important;
+        min-height: 0 !important;
+    }
+    .dropzone .dz-preview.dz-file-preview .dz-image{
+        border-radius: 0 !important;
+    }
+    .dz-details{
+        padding: 0.75rem !important;
+        /* top: 0.5rem !important; */
+        font-size: 12px !important;
+    }
+    .dropzone .dz-preview .dz-details .dz-size{
+        margin-bottom: 1em !important;
+        font-size: 12px !important;
+    }
+    .dz-progress{
+        height: 10px !important;
+        left: 65% !important;
+        top: 50% !important;
+        width: 50px !important;
+    }
+    .dropzone .dz-preview .dz-success-mark svg, .dropzone .dz-preview .dz-error-mark svg{
+        width: 35px !important;
+        height: 35px !important;
+        margin: 0.5rem 0.75rem !important;
+    }
+    .fileName{
+        text-align: center;
+        margin-right: 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .delete-icon{
+        background: white;
+        padding: 3px 5px;
+        border-radius: 5px;
+    }
+    .delete-icon.position-absolute{
+        top: 15px;
+        right: 23px;
+        z-index: 9999;
+    }
+    .delete-icon img{
+        height: 1rem;
+    }
+    .fileName-parent{
+        display: flex; 
+        align-items: center; 
+        margin-top: 1rem;
+        margin-left: -1rem;
+    }
+    .footnotes-card{
+        min-width: 250px;
+        text-align: left;
+        margin: 1rem 1rem 1rem 0;
+    }
+    html {
+        --scrollbarBG: #CFD8DC;
+        --thumbBG: #cfdada;
+    }
+    .card-group--enclosing::-webkit-scrollbar {
+        height: 6px;
+    }
+    .card-group--enclosing {
+        /* max-height: 200px;
+        overflow-y: auto; */
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+    }
+    .card-group--enclosing::-webkit-scrollbar-thumb {
+        background-color: var(--thumbBG) ;
+        border-radius: 6px;
+        /* border: 3px solid white; */
+    }
+    .chat-box--button{
+        border: 1px solid #e8e8f7;
+        padding: 7px;
+        border-radius: 5px;
+    }
+    .text-muted {
+        color: #f16d87!important;
+    }
+    .fileName-viewer{
+        margin-right: 4px;
+        padding: 9px 5px 4px 5px;
+        background: aliceblue;
+        border-radius: 5px;
+    }
+    
+    .delete-icon{
+        background: white;
+        padding: 0 5px;
+        border-radius: 5px;
+    }
+    .delete-icon img{
+        height: 1.25rem;
+    }
+    .position-absolute.delete-icon img{
+        height: 1rem;
+    }
+    #inputState{
+        font-weight: 500;
+        margin-left: 0.5rem;
+    }
+</style>
+
+<div class="container mb-3">
+
+    <div class="row m-2 enclosing-row">
+        <div class="col-sm-6 col-md-4 d-flex">
+        <!-- <div class="col-sm-4 col-md-3 p-0 d-flex text-center align-items-center"> -->
+            <div class="gender-icon--enclosing">
+                {% if patient.gender == 'Female' %}
+                <img class="icon-image" src="/static/svg_icons/Female.svg" alt="">
+                {% endif %}
+                {% if patient.gender != 'Female' %}
+                <img class="icon-image" src="/static/svg_icons/Male.svg" alt="">
+                {% endif %}
+            </div>
+            <div class="d-flex flex-column">
+                <span class="name-heading">{{patient.name}}</span>
+                <span class="text-left ml-3">
+                    ID: <span class="">{{patient.pid}}</span>
+                </span>
+                
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-8 d-flex">
+        <!-- <div class="col-sm-6 col-md-3 p-0 d-flex align-items-center justify-content-between"> -->
+
+            <div class="form-inline ml-auto">
+                <label>Referred To : </label>
+                <span id="inputState">Dentread Services</span>
+            </div>
+            
+            <button class="btn btn-sm ml-3 chat-box--button" data-toggle="modal" data-target="#chatBoxModal">
+                
+                <img src="/static/svg_icons/Group 98.svg" width="22px" />
+            </button>
+
+        </div>
+        <div class="col-sm-12 row mt-3 p-3 align-items-center ml-0" style="background-color: aliceblue;">
+            <!-- <div class="col-sm-6"> -->
+                <h6 class="col-sm-12 col-md-2">Upload Data:</h6>
+
+                <div class="dropzone-area row mt-3 col-md-10">
+
+                    <div class="dropzone-box col-2 position-relative">
+                        <span >CBCT/X-Ray (Dicom File 1)</span>
+                        <form action="/guideDcmFileUpload/{{service_order.id}}" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center" id="cbctFirstForm">
+                            {% csrf_token %}
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName">
+                                {% if service_order.file %}
+                                    {{ service_order.file }}
+                                {% endif %}
+                            </span>
+                            <!-- <span class="fileName-viewer">
+                                {% if service_order.file %}
+                                    <a target="_blank" href="http://68.178.166.31:3000/viewer/{{service_order.StudyInstanceUID}}">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                {% endif %}
+                            </span> -->
+                        </h6>
+                    </div>
+                    <div class="dropzone-box col-2 position-relative">
+                        <span>CBCT/X-Ray (Dicom File 2)</span>
+                        <form action="/guideDcmFileUploadSecond/{{service_order.id}}" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center" id="cbctSecondForm">
+                            {% csrf_token %}
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName">
+                                {% if service_order.file1 %}
+                                    {{ service_order.file1 }}
+                                {% endif %}
+                            </span>
+                            <!-- <span class="fileName-viewer">
+                                {% if service_order.file1 %}
+                                    <a target="_blank" href="http://68.178.166.31:3000/viewer/{{service_order.StudyInstanceUID2}}">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                {% endif %}
+                            </span> -->
+                        </h6>
+                    </div>
+
+                    <div class="dropzone-box col-2 position-relative">
+                        <span >Upper Jaw (Scan Image)</span>
+                        <form action="/uploadLabData/{{service_order.id}}/Upper-Jaw" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center" id="firstform">
+                            {% csrf_token %}
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName">
+                                {% if imageUpperJaw %}
+                                    {% for i in imageUpperJaw %}
+                                        {{i.fileName}}
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            <span class="fileName-viewer">
+                                {% if imageUpperJaw %}
+                                    {% for i in imageUpperJaw %}
+                                        <a href="/viewLabStlImage/{{service_order.id}}/Upper-Jaw" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            {% if imageUpperJaw %}
+                                {% for i in imageUpperJaw %}    
+                                <a class="delete-icon" href="/deleteIos/{{service_order.id}}/Upper-Jaw">
+                                    <img src="/static/svg_icons/delete.svg" alt="">
+                                </a>
+                                {% endfor %}
+                            {% endif %}
+                        </h6>
+                        <a class="d-none position-absolute delete-icon" href="/deleteIos/{{service_order.id}}/Upper-Jaw">
+                            <img src="/static/svg_icons/delete.svg" alt="">
+                        </a>
+                    </div>
+                    <div class="dropzone-box col-2 position-relative">
+                        <span>Lower Jaw (Scan Image)</span>
+                        <form action="/uploadLabData/{{service_order.id}}/Lower-Jaw" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center" id="secondform">
+                            {% csrf_token %}
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName">
+                                {% if imageLowerJaw %}
+                                    {% for i in imageLowerJaw %}
+                                        {{i.fileName}}
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            <span class="fileName-viewer">
+                                {% if imageLowerJaw %}
+                                    {% for i in imageLowerJaw %}
+                                        <a href="/viewLabStlImage/{{service_order.id}}/Lower-Jaw" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            {% if imageLowerJaw %}
+                                {% for i in imageLowerJaw %}
+                                    <a class="delete-icon" href="/deleteIos/{{service_order.id}}/Lower-Jaw">
+                                        <img src="/static/svg_icons/delete.svg" alt="">
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
+                            
+                        </h6>
+                        <a class="d-none position-absolute delete-icon" href="/deleteIos/{{service_order.id}}/Lower-Jaw">
+                            <img src="/static/svg_icons/delete.svg" alt="">
+                        </a>
+                        
+                    </div>
+                    <div class="dropzone-box col-2 position-relative">
+                        <span >Left Bite (Scan Image)</span>
+                        <form action="/uploadLabData/{{service_order.id}}/Left-Bite" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center"  id="thirdform">
+                            {% csrf_token %}  
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName">
+                                {% if imageLeftBite %}
+                                    {% for i in imageLeftBite %}
+                                        {{i.fileName}}
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            <span class="fileName-viewer">
+                                {% if imageLeftBite %}
+                                    {% for i in imageLeftBite %}
+                                        <a href="/viewLabStlImage/{{service_order.id}}/Left-Bite" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            {% if imageLeftBite %}
+                                {% for i in imageLeftBite %}
+                                    <a class="delete-icon" href="/deleteIos/{{service_order.id}}/Left-Bite">
+                                        <img src="/static/svg_icons/delete.svg" alt="">
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
+                        </h6>
+                        
+                        <a class="d-none position-absolute delete-icon" href="/deleteIos/{{service_order.id}}/Left-Bite">
+                            <img src="/static/svg_icons/delete.svg" alt="">
+                        </a>
+                    </div>
+                    <div class="dropzone-box col-2 position-relative">
+                        <span >Right Bite (Scan Image)</span>
+                        <form action="/uploadLabData/{{service_order.id}}/Right-Bite" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center" id="fourthform">
+                            {% csrf_token %}
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName">
+                                {% if imageRightBite %}
+                                    {% for i in imageRightBite %}
+                                        {{i.fileName}}
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            <span class="fileName-viewer">
+                                {% if imageRightBite %}
+                                    {% for i in imageRightBite %}
+                                        <a href="/viewLabStlImage/{{service_order.id}}/Right-Bite" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            {% if imageRightBite %}
+                                {% for i in imageRightBite %}
+                                    <a class="delete-icon" href="/deleteIos/{{service_order.id}}/Right-Bite">
+                                        <img src="/static/svg_icons/delete.svg" alt="">
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
+                        </h6>
+                        
+                        <a class="d-none position-absolute delete-icon" href="/deleteIos/{{service_order.id}}/Right-Bite">
+                            <img src="/static/svg_icons/delete.svg" alt="">
+                        </a>
+                    </div>
+                    
+                </div>
+                <script>
+                    
+                    Dropzone.options.firstform = {
+                        acceptedFiles: ".stl, .ply, .zip, .3OXZ",
+                        maxFiles:1,
+                        maxFilesize: 900,
+                        dictDefaultMessage: '+', 
+                        thumbnailHeight: 30, 
+                        zoom: 0.4, 
+                        success(file) {
+                            if (file.previewElement) {
+                                this.element.parentElement.querySelector('.fileName').innerText = file.name;
+                                let s = this.element.parentElement.querySelector('span').innerText
+                                let site = s == 'Upper Jaw (Scan Image)'?'Upper-Jaw' : s == 'Lower Jaw (Scan Image)'?'Lower-Jaw' : s == 'Left Bite (Scan Image)'?'Left-Bite' : 'Right-Bite';
+                                this.element.parentElement.querySelector('.fileName-viewer').innerHTML = 
+                                        `<a href="/viewLabStlImage/{{service_order.id}}/${site}" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>`;
+
+                                this.element.parentElement.querySelector('a.position-absolute.delete-icon').classList.remove('d-none');
+                                
+                                return file.previewElement.classList.add("dz-success");
+                            }
+                        },
+                    }
+                    Dropzone.options.secondform = {...Dropzone.options.firstform};
+                    Dropzone.options.thirdform = {...Dropzone.options.firstform}
+                    Dropzone.options.fourthform = {...Dropzone.options.firstform}
+                    Dropzone.options.cbctFirstForm = {
+                        ...Dropzone.options.firstform, 
+                        acceptedFiles: ".zip", 
+                        success(file){
+                            if (file.previewElement) {
+                                this.element.parentElement.querySelector('.fileName').innerText = file.name;
+                                return file.previewElement.classList.add("dz-success");
+                            }
+                        }
+                    }
+                    Dropzone.options.cbctSecondForm = {...Dropzone.options.cbctFirstForm}
+                </script>
+            <!-- </div> -->
+        </div>
+
+    </div>
+
+    <div class="row m-2 enclosing-row mt-5 pb-4 align-items-start ">
+        <div class="col-12 d-flex mb-3">
+            <span class="heading" style="font-size: 20px;">Order Details</span>
+        </div>
+
+        <div class="col-12 col-xl-6 d-flex justify-content-center position-relative" style="max-width: 531px !important; margin-top: 6rem; flex-direction: column;">
+            <div class="tooth-indexing">
+                <span class="position-absolute tooth-number--span" style="top: 150px; left: 21%;">18</span>
+                <span class="position-absolute tooth-number--span" style="top: 114px; left: 21%;">17</span>
+                <span class="position-absolute tooth-number--span" style="top: 79px; left: 22%;">16</span>
+                <span class="position-absolute tooth-number--span" style="top: 48px; left: 24%;">15</span>
+                <span class="position-absolute tooth-number--span" style="top: 19px; left: 27%;">14</span>
+                <span class="position-absolute tooth-number--span" style="top: -7px; left: 33%;">13</span>
+                <span class="position-absolute tooth-number--span" style="top: -25px; left: 39%;">12</span>
+                <span class="position-absolute tooth-number--span" style="top: -33px; left: 45%;">11</span>
+                
+                <span class="position-absolute tooth-number--span" style="top: -33px; right: 234px;">21</span>
+                <span class="position-absolute tooth-number--span" style="top: -26px; right: 36%;">22</span>
+                <span class="position-absolute tooth-number--span" style="top: -8px; right: 30%;">23</span>
+                <span class="position-absolute tooth-number--span" style="top: 20px; right: 26%;">24</span>
+                <span class="position-absolute tooth-number--span" style="top: 50px; right: 23%;">25</span>
+                <span class="position-absolute tooth-number--span" style="top: 81px; right: 21%;">26</span>
+                <span class="position-absolute tooth-number--span" style="top: 114px; right: 20%;">27</span>
+                <span class="position-absolute tooth-number--span" style="top: 149px; right: 20%;">28</span>
+
+                <span class="position-absolute tooth-number--span" style="bottom: 142px; right: 20%;">38</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 109px; right: 20%;">37</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 78px; right: 21%;">36</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 46px; right: 23%;">35</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 15px; right: 26%;">34</span>
+                <span class="position-absolute tooth-number--span" style="bottom: -13px; right: 31%;">33</span>
+                <span class="position-absolute tooth-number--span" style="bottom: -31px; right: 37%;">32</span>
+                <span class="position-absolute tooth-number--span" style="bottom: -36px; right: 45%;">31</span>
+
+                <span class="position-absolute tooth-number--span" style="bottom: -36px; left: 45%;">41</span>
+                <span class="position-absolute tooth-number--span" style="bottom: -29px; left: 38%;">42</span>
+                <span class="position-absolute tooth-number--span" style="bottom: -9px; left: 32%;">43</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 17px; left: 27%;">44</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 46px; left: 24%;">45</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 78px; left: 22%;">46</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 109px; left: 21%;">47</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 141px; left: 21%;">48</span>
+
+
+                
+            </div>
+            
+            <img src="/static/tooth-images.png" usemap="#image-map" height="400" style="height: 400px !important; width: 219.45px !important; margin: 0 auto;">
+            
+            <map name="image-map" onclick="onToothImageClick(event)">
+                
+                <area target="" alt="18" title="18" href="#/" coords="19.13477537437604,166.22296173044927,27.28785357737105,169.7171381031614,35.77371048252912,167.72046589018302,40.26622296173045,155.74043261231282,37.2712146422629,147.92013311148088,30.116472545757073,143.09484193011647,14.47587354409318,141.93011647254576,8.818635607321132,147.5873544093178,7.820299500831947,157.2379367720466,10.648918469217971,164.7254575707155" shape="poly">
+                <area target="" alt="17" title="17" href="#/" coords="19.800332778702163,115.1414309484193,13.311148086522463,120.13311148086522,11.647254575707155,130.11647254575706,14.64226289517471,136.77204658901832,17.13810316139767,139.76705490848587,34.27620632279534,142.0965058236273,41.26455906821963,133.27787021630616,41.76372712146423,125.45757071547422,32.61231281198003,116.80532445923461"shape="poly">
+                <area target="" alt="16" title="16" href="#/" coords="20.632279534109816,112.81198003327788,34.44259567387687,116.13976705490849,41.43094841930117,114.80865224625624,46.755407653910154,106.4891846921797,44.42595673876872,95.84026622296173,34.94176372712147,92.17970049916805,23.62728785357737,91.51414309484193,18.63560732113145,95.84026622296173,17.13810316139767,105.82362728785358" shape="poly">
+                <area target="" alt="15" title="15" href="#/" coords="28.95174708818636,67.88685524126456,23.793677204658902,71.3810316139767,22.628951747088188,80.03327787021631,26.455906821963396,86.52246256239602,33.44425956738769,90.34941763727122,44.09317803660566,90.18302828618968,51.247920133111485,86.52246256239602,51.74708818635607,76.2063227953411,39.76705490848586,68.71880199667221" shape="poly">
+                <area target="" alt="14" title="14" href="#/" coords="36.7720465890183,49.58402662229617,31.44758735440932,58.23627287853578,36.938435940099836,66.05657237936772,46.089850249584025,70.71547420965058,55.07487520798669,70.04991680532446,58.56905158069884,64.89184692179701,57.90349417637272,58.73544093178037,48.25291181364393,50.41597337770383,41.76372712146423,48.25291181364393" shape="poly">
+                <area target="" alt="13" title="13" href="#/" coords="49.750415973377706,47.42096505823628,61.730449251247926,56.07321131447588,68.38602329450916,55.407653910149754,72.54575707154743,49.750415973377706,72.04658901830283,41.43094841930117,63.56073211314476,31.94675540765391,58.402662229617306,29.45091514143095,51.08153078202995,30.782029950083196,47.75374376039934,36.10648918469218,47.587354409317804,41.930116472545755" shape="poly">
+                <area target="" alt="12" title="12" href="#/" coords="65.3910149750416,31.281198003327788,74.37603993344426,43.09484193011647,79.70049916805324,43.26123128119801,89.01830282861897,37.60399334442596,86.02329450915141,17.637271214642265,81.69717138103162,12.479201331114808,70.88186356073211,14.80865224625624,62.89517470881864,20.798668885191347,62.89517470881864,25.790349417637273" shape="poly">
+                <area target="" alt="11" title="11" href="#/" coords="86.52246256239602,8.48585690515807,86.68885191347754,17.13810316139767,92.51247920133112,34.44259567387687,97.67054908485858,35.44093178036606,108.98502495840266,32.77870216306157,112.97836938435941,11.480865224625624,109.65058236272878,4.825291181364393,98.16971713810317,2.8286189683860234" shape="poly">
+                
+                <area target="" alt="21" title="21" href="#/" coords="113.64392678868553,10.648918469217971,116.97171381031615,31.78036605657238,125.12479201331115,33.94342762063228,133.27787021630616,33.61064891846922,138.9351081530782,17.13810316139767,139.93344425956738,8.48585690515807,130.94841930116473,2.4958402662229617,117.8036605657238,3.4941763727121464" shape="poly">
+                <area target="" alt="22" title="22" href="#/" coords="140.93178036605659,15.307820299500833,137.43760399334442,30.449251247920134,137.43760399334442,36.10648918469218,146.08985024958403,41.930116472545755,150.91514143094844,41.76372712146423,163.7271214642263,27.12146422628952,162.89517470881864,18.96838602329451,155.2412645590682,12.978369384359402,147.5873544093178,11.314475873544094" shape="poly">
+                <area target="" alt="23" title="23" href="#/" coords="167.55407653910152,29.45091514143095,155.74043261231282,37.93677204658902,154.0765391014975,48.41930116472546,157.7371048252912,54.90848585690516,164.55906821963396,56.40599001663894,178.03660565723794,46.92179700499168,180.19966722129783,37.10482529118136,175.04159733777038,30.282861896838604" shape="poly">
+                <area target="" alt="24" title="24" href="#/" coords="180.19966722129783,49.750415973377706,167.72046589018302,58.402662229617306,168.38602329450916,65.72379367720467,173.04492512479203,70.71547420965058,182.52911813643928,70.71547420965058,195.0083194675541,61.064891846921796,195.50748752079866,52.91181364392679,188.35274542429286,48.91846921797005" shape="poly">
+                <area target="" alt="25" title="25" href="#/" coords="188.85191347753744,68.21963394342762,175.20798668885192,75.37437603993345,174.5424292845258,83.52745424292846,176.37271214642263,88.18635607321131,188.85191347753744,91.01497504159734,197.3377703826955,88.35274542429285,203.99334442595674,82.19633943427621,203.1613976705491,71.8801996672213,196.83860232945094,68.38602329450916" shape="poly">
+                <area target="" alt="26" title="26" href="#/" coords="183.36106489184692,93.84359400998336,179.03494176372712,102.32945091514144,182.6955074875208,113.477537437604,189.35108153078204,117.47088186356073,207.32113144758736,113.31114808652246,209.1514143094842,102.32945091514144,206.82196339434276,93.51081530782031,197.67054908485858,89.51747088186356" shape="poly">
+                <area target="" alt="27" title="27" href="#/" coords="193.34442595673877,117.3044925124792,207.32113144758736,116.47254575707156,212.64559068219634,121.13144758735442,213.31114808652248,131.61397670549084,210.31613976705492,140.26622296173045,193.34442595673877,142.26289517470883,188.5191347753744,139.4342762063228,183.86023294509152,129.1181364392679,187.35440931780366,121.29783693843595" shape="poly">
+                <area target="" alt="28" title="28" href="#/" coords="195.84026622296173,143.42762063227954,210.8153078202995,142.0965058236273,217.30449251247921,148.25291181364392,217.63727121464228,156.90515806988353,214.14309484193012,166.22296173044927,205.99001663893512,166.72212978369384,197.50415973377704,170.54908485856905,189.1846921797005,167.55407653910152,185.19134775374377,156.23960066555742,187.68718801996673,147.42096505823628" shape="poly">
+                
+                <area target="" alt="38" title="38" href="#/" coords="199.16805324459236,234.27620632279536,206.65557404326123,238.43594009983363,215.6405990016639,238.43594009983363,218.801996672213,248.91846921797006,217.8036605657238,259.4009983361065,211.64725457570717,265.8901830282862,197.00499168053244,265.05823627287856,191.846921797005,261.73044925124793,186.18968386023295,254.5757071547421,187.02163061564062,244.7587354409318,190.51580698835275,236.60565723793678" shape="poly">
+                <area target="" alt="37" title="37" href="#/" coords="193.5108153078203,265.3910149750416,210.48252911813645,267.8868552412646,215.1414309484193,277.53743760399334,213.477537437604,287.0216306156406,205.82362728785358,292.51247920133113,191.51414309484193,289.85024958402664,184.8585690515807,281.0316139767055,187.02163061564062,270.5490848585691" shape="poly">
+                <area target="" alt="36" title="36" href="#/" coords="185.02495840266224,292.51247920133113,180.03327787021632,303.99334442595676,184.8585690515807,313.477537437604,195.84026622296173,316.6389351081531,203.99334442595674,317.47088186356075,209.1514143094842,311.8136439267887,209.1514143094842,299.16805324459233,204.8252911813644,294.1763727121464,194.17637271214642,291.18136439267886" shape="poly">
+                <area target="" alt="35" title="35" href="#/" coords="175.70715474209652,322.6289517470882,175.87354409317805,330.61564059900167,182.1963394342762,336.2728785357737,191.846921797005,339.7670549084859,197.8369384359401,339.9334442595674,203.6605657237937,335.27454242928457,203.99334442595674,323.6272878535774,194.34276206322795,317.8036605657238,182.6955074875208,317.6372712146423" shape="poly">
+                <area target="" alt="34" title="34" href="#/" coords="169.7171381031614,340.2662229617305,168.0532445923461,348.4193011647255,174.20965058236274,354.74209650582367,186.35607321131448,359.4009983361065,194.0099833610649,355.5740432612313,196.83860232945094,349.7504159733777,194.0099833610649,342.92845257903497,185.52412645590684,337.93677204658906,179.20133111480865,336.6056572379368,174.20965058236274,336.93843594009985" shape="poly">
+                <area target="" alt="33" title="33" href="#/" coords="154.0765391014975,359.06821963394344,155.57404326123128,370.88186356073214,168.5524126455907,381.0316139767055,178.70216306156408,377.7038269550749,181.36439267886857,370.88186356073214,178.53577371048254,361.5640599001664,163.89351081530782,352.5790349417637,158.73544093178037,355.0748752079867" shape="poly">
+                <area target="" alt="32" title="32" href="#/" coords="136.2728785357737,370.7154742096506,149.25124792013312,365.7237936772047,159.73377703826955,379.3677204658902,161.5640599001664,387.18801996672215,153.57737104825293,393.67720465890187,145.09151414309486,395.5074875207987,138.9351081530782,391.0149750415973" shape="poly">
+                <area target="" alt="31" title="31" href="#/" coords="116.97171381031615,374.20965058236277,129.28452579034942,372.0465890183028,132.77870216306158,376.0399334442596,134.77537437603993,382.5291181364393,136.77204658901832,393.84359400998335,128.78535773710482,399.00166389351085,117.63727121464227,397.8369384359401,114.47587354409318,390.84858569051585" shape="poly">
+                
+                <area target="" alt="41" title="41" href="#/" coords="96.33943427620633,371.8801996672213,90.51580698835275,387.8535773710483,90.8485856905158,393.67720465890187,96.83860232945092,398.3361064891847,103.66056572379368,399.00166389351085,111.98003327787022,395.0083194675541,112.81198003327788,388.51913477537437,110.48252911813644,373.8768718801997,104.3261231281198,371.8801996672213" shape="poly">
+                <area target="" alt="42" title="42" href="#/" coords="78.03660565723794,365.7237936772047,68.38602329450916,379.7004991680533,66.55574043261231,386.0232945091514,74.70881863560733,392.67886855241267,83.52745424292846,395.0083194675541,89.6838602329451,388.6855241264559,91.3477537437604,370.7154742096506,85.35773710482529,366.22296173044924" shape="poly">
+                <area target="" alt="43" title="43" href="#/" coords="64.39267886855241,351.91347753743764,50.2495840266223,361.23128119800333,48.75207986688852,369.05158069883527,50.2495840266223,375.540765391015,57.90349417637272,379.3677204658902,65.89018302828619,376.2063227953411,72.54575707154743,370.38269550748754,74.37603993344426,358.9018302828619,70.21630615640599,353.5773710482529," shape="poly">
+                <area target="" alt="44" title="44" href="#/" coords="44.59234608985025,337.43760399334445,35.44093178036606,342.92845257903497,32.27953410981697,349.58402662229616,33.94342762063228,354.24292845257906,40.59900166389351,359.234608985025,49.750415973377706,357.73710482529117,60.06655574043261,349.2512479201331,58.73544093178037,340.2662229617305,53.24459234608985,336.7720465890183" shape="poly">
+                <area target="" alt="45" title="45" href="#/" coords="35.108153078202996,317.6372712146423,49.91680532445923,319.30116472545757,52.57903494176373,325.62396006655575,52.412645590682196,331.61397670549087,46.089850249584025,336.2728785357737,35.60732113144759,340.2662229617305,30.116472545757073,339.9334442595674,24.459234608985025,336.43926788685525,23.12811980033278,327.6206322795341,26.788685524126457,322.2961730449251" shape="poly">
+                <area target="" alt="46" title="46" href="#/" coords="21.464226289517473,295.1747088186356,37.2712146422629,291.3477537437604,44.09317803660566,294.1763727121464,47.75374376039934,302.6622296173045,44.925124792013314,312.47920133111484,34.6089850249584,316.97171381031615,24.792013311148086,317.97004991680535,19.467554076539102,312.14642262895177,17.470881863560734,302.828618968386" shape="poly">
+                <area target="" alt="47" title="47" href="#/" coords="17.3044925124792,267.8868552412646,33.77703826955075,266.22296173044924,40.26622296173045,270.7154742096506,42.09650582362729,276.7054908485857,41.597337770382694,283.1946755407654,35.94009983361065,290.0166389351082,22.96173044925125,292.17970049916806,15.141430948419302,288.35274542429283,12.811980033277871,281.19800332778703,13.311148086522463,274.7088186356073" shape="poly">
+                <area target="" alt="48" title="48" href="#/" coords="11.647254575707155,238.2695507487521,17.803660565723796,238.2695507487521,27.45424292845258,234.27620632279536,36.272878535773714,235.77371048252914,39.76705490848586,244.09317803660568,40.93178036605657,252.24625623960068,36.10648918469218,261.73044925124793,27.78702163061564,265.8901830282862,15.474209650582363,265.55740432612316,9.650582362728786,259.06821963394344,7.653910149750416,249.5840266222962" shape="poly">
+                
+            </map>
+
+            <div class="form-row col-sm-6 position-absolute" style="right: 5rem; bottom: -6.5rem">
+                <!-- <span>Notation: </span>  -->
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" onclick="onNotationChange(this)" checked name="notation" id="fdi" value="FDI">
+                    <label class="form-check-label ml-1" for="fdi">FDI</label>
+                </div>
+
+                <div class="form-check form-check-inline ml-4">
+                    <input class="form-check-input" type="radio" onclick="onNotationChange(this)"  name="notation" id="universal" value="Universal">
+                    <label class="form-check-label ml-1" for="universal">Universal</label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="offset-lg-1 col-12 col-xl-5 mb-5">
+            <form method="post" action="/refer_surgident/{{service_order.id}}/{{mycat.id}}" class="form" onsubmit="return onFormSubmit(event)"  multi>
+                {% csrf_token %}
+
+                <input type="text" name="notation-select" class="d-none" id="notation-select">
+                <input type="text" class="d-none" name="organisationid">
+                <div class="form-group">
+                    <label for="title">Select Data Type 1 <span class="tx-danger">*</span></label>
+                    <select name="data_type1" id="title" class="form-control" required onchange="onDataTypeChange(this, document.getElementById('categ'))">
+                        <option value="select" selected disabled>Select Data Type 1</option>
+                        <option value="Patient CBCT">Patient CBCT</option>
+                        <option value="Patient CBCT with Denture">Patient CBCT with denture</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="categ">Select Data Type 2 <span class="tx-danger">*</span></label>
+                    <select name="data_type2" id="categ" class="form-control" required  >
+                        <option value="Select" selected disabled>Select Data Type 2</option>
+                        <option value="Modal Scan" class="cbct d-none">Modal Scan</option>
+                        <option value="Intra Oral Scan" class="cbct d-none">Intra Oral Scan</option>
+                        {% comment %} <option value="Stone Model" class="cbct d-none">Stone Model</option>
+                        <option value="Silicon Impression" class="cbct d-none">Silicon Impression</option> {% endcomment %}
+                        <option value="Denture Only CBCT" class="denture d-none">Denture Only CBCT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sub-categ">Service Output Type <span class="tx-danger">*</span></label>
+                    <select class="form-control" name="output_type" id="sub-categ" required onchange="onPriceCalculate()">
+                        <option value="Select" selected disabled>Select Output Type</option>
+                        <option value="Prosthetically Driven Planning">Prosthetically Driven Planning</option>
+                        <option value="Plan + Design (.stl)">Plan + Design(.stl)</option>
+                        <option value="Plan + Design (.stl) + Fabrication">Plan + Design(.stl) + Fabrication</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="guide">Service Guide Type <span class="tx-danger">*</span></label>
+                    <select class="form-control" name="guide_type" id="guide" required onchange="onPriceCalculate()">
+                        <option value="Select" selected disabled>Select Guide Type</option>
+                        <option value="1-2 implants">1-2 Implants</option>
+                        <option value="3-5 implants">3-5 Implants</option>
+                        <option value=">6 implants">>=6 Implants</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="planning">Planning Type <span class="tx-danger">*</span></label>
+                    <select class="form-control" name="planning_type" id="planning" required>
+                        <option value="Select" selected disabled>Planning Type</option>
+                        <option value="Site Specific">Site Specific</option>
+                        <option value="All On 4">All On 4</option>
+                        <option value="All On 6">All On 6</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Price">Price</label>
+                    <input type="text" name="price" id="price" class="form-control" placeholder="Enter Price" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="toothSelection">Tooth Sites <span class="tx-danger">*</span></label>
+                    <input type="text" name="checks[]" required class="form-control" id="toothSelection" placeholder="Tooth Sites" readonly>
+                </div>           
+                <div class="form-group">
+                    <label for="clinicalNotes">Clinical Notes</label>
+                    <textarea class="form-control" name="remark" id="clinicalNotes" style="resize: none;" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" style="font-size: 0.95rem;" class="form-control btn float-right w-50 add-order--button"><i class="fa-solid fa-plus mr-1"></i> Add Order</button>
+                </div>
+
+            </form>
+        </div>
+            
+
+    </div>
+
+    {% if prosthetic %}
+        <h5 class="heading mt-3" style="font-size: 1.2rem;">Orders</h5>
+    {% endif %}
+    
+
+    {% for item in prosthetic %}
+
+        <div class="row m-2 enclosing-row lineOrderLevel-heading align-items-start mb-4">
+            <h5 class="heading order-heading">
+                Total: <span style="margin-left: 0.125rem;">Rs.</span> <span style="font-size: larger; color: #1f3f7f;">{{item.price}}/-</span>
+            </h5>
+
+            <div class="col-12 d-flex align-items-center">
+
+                <img src="/static/svg_icons/pointer_icon.svg" alt="">             
+                <div class="heading">Implant Surgical Guide</div>
+                
+                <button aria-expanded="false" aria-haspopup="true"
+                    class="btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                    id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                </button>
+                
+                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                    <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal" data-target="#editOrderModal" onclick="onEditOrderModal( `{{item.id}}`, `{{item.data_type1}}`, `{{item.data_type2}}`, `{{item.output_type}}`, `{{item.guide_type}}`, `{{item.planning_type}}`, `{{item.price}}` , `{{item.tooth}}`, `{{item.remark}}`)">
+                        <img src="/static/svg_icons/pencil_icon.svg" alt=""> Edit
+                    </a>
+                    <a class="dropdown-item" style="cursor: pointer;" href="/delete_GuideId/{{item.id}}">
+                        <img src="/static/svg_icons/delete.svg" alt=""> Delete
+                    </a>
+                </div>
+                
+            </div>
+
+            <div class="col-12 row m-3 mr-7 order-particulars" style="font-weight: 500;">
+                {% if item.data_type1 != '' and item.data_type1 != 'NULL' and item.data_type1 != NULL %}
+                    <div class="col-sm-6 col-md-5 property-box">
+                        <span>Data Type 1: </span>
+                        <span>{{item.data_type1}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.data_type2 != '' and item.data_type2 != 'NULL' and item.data_type2 != NULL %}
+                    <div class="col-sm-6 col-md-5 property-box">
+                        <span>Data Type 2: </span>
+                        <span>{{item.data_type2}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.output_type %}
+                    <div class="col-sm-6 col-md-5 property-box">
+                        <span>Output Type: </span>
+                        <span>{{item.output_type}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.guide_type %}
+                    <div class="col-sm-6 col-md-5 property-box">
+                        <span>Guide Type: </span>
+                        <span>{{item.guide_type}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.planning_type %}
+                    <div class="col-sm-6 col-md-5 property-box">
+                        <span>Planning Type: </span>
+                        <span>{{item.planning_type}}</span>
+                    </div>
+                {% endif %}
+                
+                {% if item.tooth %}
+                    <div class="col-sm-6 col-md-5 property-box">
+                        <span>Tooth Sites: </span>
+                        <span>
+                            <span class="tooth-marks">{{item.tooth}}</span>
+                        </span>
+                    </div>
+                {% endif %}
+                
+                {% if item.remark %}
+                    <div class="col-sm-12">
+                        <hr>
+                        <span style="margin-right: 1rem;">Clinical Notes: </span>
+                        <span>{{item.remark}}</span>
+                        <hr>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    {% if prosthetic %}
+        <a href="/review_GuideOrder/{{service_order.id}}/{{mycat.id}}" style="width: 175px; border-radius: 6px;" class="btn btn-primary payment-button">Proceed to payment</a>        
+    {% endif %}
+    
+</div>
+
+<div class="modal fade" id="editOrderModal" tabindex="-1" role="dialog" aria-labelledby="editOrderModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+           <div class="modal--header">
+                <h5>
+                    Are you sure you want to edit this order?
+                    <button type="button" class="close mr-4" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="font-size: 1.5rem;" >&times;</span>
+                    </button>
+                </h5>
+               
+           </div>
+            <div class="modal-body row modal--body">
+                <div class="col-sm-6 d-flex justify-content-center position-relative"  style="max-width: 531px !important; margin-top: -4rem; flex-direction: column;">
+
+                    <div class="tooth-indexing--edit">
+                        <span class="position-absolute tooth-number--span-edit" style="top: 370px; left: 21%;">18</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 334px; left: 21%;">17</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 299px; left: 22%;">16</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 264px; left: 24%;">15</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 239px; left: 27%;">14</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 213px; left: 33%;">13</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 195px; left: 39%;">12</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 187px; left: 45%;">11</span>
+                        
+                        <span class="position-absolute tooth-number--span-edit" style="top: 187px; right: 234px;">21</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 194px; right: 36%;">22</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 212px; right: 30%;">23</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 240px; right: 26%;">24</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 270px; right: 23%;">25</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 301px; right: 21%;">26</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 334px; right: 20%;">27</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 369px; right: 20%;">28</span>
+        
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 362px; right: 20%;">38</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 329px; right: 20%;">37</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 298px; right: 21%;">36</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 266px; right: 23%;">35</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 235px; right: 26%;">34</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 207px; right: 31%;">33</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 189px; right: 37%;">32</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 184px; right: 45%;">31</span>
+        
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 184px; left: 45%;">41</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 191px; left: 38%;">42</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 211px; left: 32%;">43</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 237px; left: 27%;">44</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 266px; left: 24%;">45</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 298px; left: 22%;">46</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 329px; left: 21%;">47</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 361px; left: 21%;">48</span>
+        
+                    </div>
+                    
+                    <img src="/static/tooth-images.png" usemap="#image-map--edit" height="400" style="height: 400px !important; width: 219.45px !important; margin: 0 auto;">
+                    
+                    <map name="image-map--edit" onclick="onToothImageClickEdit(event)">
+                        
+                        <area target="" alt="18" title="18" href="#/" coords="19.13477537437604,166.22296173044927,27.28785357737105,169.7171381031614,35.77371048252912,167.72046589018302,40.26622296173045,155.74043261231282,37.2712146422629,147.92013311148088,30.116472545757073,143.09484193011647,14.47587354409318,141.93011647254576,8.818635607321132,147.5873544093178,7.820299500831947,157.2379367720466,10.648918469217971,164.7254575707155" shape="poly">
+                        <area target="" alt="17" title="17" href="#/" coords="19.800332778702163,115.1414309484193,13.311148086522463,120.13311148086522,11.647254575707155,130.11647254575706,14.64226289517471,136.77204658901832,17.13810316139767,139.76705490848587,34.27620632279534,142.0965058236273,41.26455906821963,133.27787021630616,41.76372712146423,125.45757071547422,32.61231281198003,116.80532445923461"shape="poly">
+                        <area target="" alt="16" title="16" href="#/" coords="20.632279534109816,112.81198003327788,34.44259567387687,116.13976705490849,41.43094841930117,114.80865224625624,46.755407653910154,106.4891846921797,44.42595673876872,95.84026622296173,34.94176372712147,92.17970049916805,23.62728785357737,91.51414309484193,18.63560732113145,95.84026622296173,17.13810316139767,105.82362728785358" shape="poly">
+                        <area target="" alt="15" title="15" href="#/" coords="28.95174708818636,67.88685524126456,23.793677204658902,71.3810316139767,22.628951747088188,80.03327787021631,26.455906821963396,86.52246256239602,33.44425956738769,90.34941763727122,44.09317803660566,90.18302828618968,51.247920133111485,86.52246256239602,51.74708818635607,76.2063227953411,39.76705490848586,68.71880199667221" shape="poly">
+                        <area target="" alt="14" title="14" href="#/" coords="36.7720465890183,49.58402662229617,31.44758735440932,58.23627287853578,36.938435940099836,66.05657237936772,46.089850249584025,70.71547420965058,55.07487520798669,70.04991680532446,58.56905158069884,64.89184692179701,57.90349417637272,58.73544093178037,48.25291181364393,50.41597337770383,41.76372712146423,48.25291181364393" shape="poly">
+                        <area target="" alt="13" title="13" href="#/" coords="49.750415973377706,47.42096505823628,61.730449251247926,56.07321131447588,68.38602329450916,55.407653910149754,72.54575707154743,49.750415973377706,72.04658901830283,41.43094841930117,63.56073211314476,31.94675540765391,58.402662229617306,29.45091514143095,51.08153078202995,30.782029950083196,47.75374376039934,36.10648918469218,47.587354409317804,41.930116472545755" shape="poly">
+                        <area target="" alt="12" title="12" href="#/" coords="65.3910149750416,31.281198003327788,74.37603993344426,43.09484193011647,79.70049916805324,43.26123128119801,89.01830282861897,37.60399334442596,86.02329450915141,17.637271214642265,81.69717138103162,12.479201331114808,70.88186356073211,14.80865224625624,62.89517470881864,20.798668885191347,62.89517470881864,25.790349417637273" shape="poly">
+                        <area target="" alt="11" title="11" href="#/" coords="86.52246256239602,8.48585690515807,86.68885191347754,17.13810316139767,92.51247920133112,34.44259567387687,97.67054908485858,35.44093178036606,108.98502495840266,32.77870216306157,112.97836938435941,11.480865224625624,109.65058236272878,4.825291181364393,98.16971713810317,2.8286189683860234" shape="poly">
+                        
+                        <area target="" alt="21" title="21" href="#/" coords="113.64392678868553,10.648918469217971,116.97171381031615,31.78036605657238,125.12479201331115,33.94342762063228,133.27787021630616,33.61064891846922,138.9351081530782,17.13810316139767,139.93344425956738,8.48585690515807,130.94841930116473,2.4958402662229617,117.8036605657238,3.4941763727121464" shape="poly">
+                        <area target="" alt="22" title="22" href="#/" coords="140.93178036605659,15.307820299500833,137.43760399334442,30.449251247920134,137.43760399334442,36.10648918469218,146.08985024958403,41.930116472545755,150.91514143094844,41.76372712146423,163.7271214642263,27.12146422628952,162.89517470881864,18.96838602329451,155.2412645590682,12.978369384359402,147.5873544093178,11.314475873544094" shape="poly">
+                        <area target="" alt="23" title="23" href="#/" coords="167.55407653910152,29.45091514143095,155.74043261231282,37.93677204658902,154.0765391014975,48.41930116472546,157.7371048252912,54.90848585690516,164.55906821963396,56.40599001663894,178.03660565723794,46.92179700499168,180.19966722129783,37.10482529118136,175.04159733777038,30.282861896838604" shape="poly">
+                        <area target="" alt="24" title="24" href="#/" coords="180.19966722129783,49.750415973377706,167.72046589018302,58.402662229617306,168.38602329450916,65.72379367720467,173.04492512479203,70.71547420965058,182.52911813643928,70.71547420965058,195.0083194675541,61.064891846921796,195.50748752079866,52.91181364392679,188.35274542429286,48.91846921797005" shape="poly">
+                        <area target="" alt="25" title="25" href="#/" coords="188.85191347753744,68.21963394342762,175.20798668885192,75.37437603993345,174.5424292845258,83.52745424292846,176.37271214642263,88.18635607321131,188.85191347753744,91.01497504159734,197.3377703826955,88.35274542429285,203.99334442595674,82.19633943427621,203.1613976705491,71.8801996672213,196.83860232945094,68.38602329450916" shape="poly">
+                        <area target="" alt="26" title="26" href="#/" coords="183.36106489184692,93.84359400998336,179.03494176372712,102.32945091514144,182.6955074875208,113.477537437604,189.35108153078204,117.47088186356073,207.32113144758736,113.31114808652246,209.1514143094842,102.32945091514144,206.82196339434276,93.51081530782031,197.67054908485858,89.51747088186356" shape="poly">
+                        <area target="" alt="27" title="27" href="#/" coords="193.34442595673877,117.3044925124792,207.32113144758736,116.47254575707156,212.64559068219634,121.13144758735442,213.31114808652248,131.61397670549084,210.31613976705492,140.26622296173045,193.34442595673877,142.26289517470883,188.5191347753744,139.4342762063228,183.86023294509152,129.1181364392679,187.35440931780366,121.29783693843595" shape="poly">
+                        <area target="" alt="28" title="28" href="#/" coords="195.84026622296173,143.42762063227954,210.8153078202995,142.0965058236273,217.30449251247921,148.25291181364392,217.63727121464228,156.90515806988353,214.14309484193012,166.22296173044927,205.99001663893512,166.72212978369384,197.50415973377704,170.54908485856905,189.1846921797005,167.55407653910152,185.19134775374377,156.23960066555742,187.68718801996673,147.42096505823628" shape="poly">
+                        
+                        <area target="" alt="38" title="38" href="#/" coords="199.16805324459236,234.27620632279536,206.65557404326123,238.43594009983363,215.6405990016639,238.43594009983363,218.801996672213,248.91846921797006,217.8036605657238,259.4009983361065,211.64725457570717,265.8901830282862,197.00499168053244,265.05823627287856,191.846921797005,261.73044925124793,186.18968386023295,254.5757071547421,187.02163061564062,244.7587354409318,190.51580698835275,236.60565723793678" shape="poly">
+                        <area target="" alt="37" title="37" href="#/" coords="193.5108153078203,265.3910149750416,210.48252911813645,267.8868552412646,215.1414309484193,277.53743760399334,213.477537437604,287.0216306156406,205.82362728785358,292.51247920133113,191.51414309484193,289.85024958402664,184.8585690515807,281.0316139767055,187.02163061564062,270.5490848585691" shape="poly">
+                        <area target="" alt="36" title="36" href="#/" coords="185.02495840266224,292.51247920133113,180.03327787021632,303.99334442595676,184.8585690515807,313.477537437604,195.84026622296173,316.6389351081531,203.99334442595674,317.47088186356075,209.1514143094842,311.8136439267887,209.1514143094842,299.16805324459233,204.8252911813644,294.1763727121464,194.17637271214642,291.18136439267886" shape="poly">
+                        <area target="" alt="35" title="35" href="#/" coords="175.70715474209652,322.6289517470882,175.87354409317805,330.61564059900167,182.1963394342762,336.2728785357737,191.846921797005,339.7670549084859,197.8369384359401,339.9334442595674,203.6605657237937,335.27454242928457,203.99334442595674,323.6272878535774,194.34276206322795,317.8036605657238,182.6955074875208,317.6372712146423" shape="poly">
+                        <area target="" alt="34" title="34" href="#/" coords="169.7171381031614,340.2662229617305,168.0532445923461,348.4193011647255,174.20965058236274,354.74209650582367,186.35607321131448,359.4009983361065,194.0099833610649,355.5740432612313,196.83860232945094,349.7504159733777,194.0099833610649,342.92845257903497,185.52412645590684,337.93677204658906,179.20133111480865,336.6056572379368,174.20965058236274,336.93843594009985" shape="poly">
+                        <area target="" alt="33" title="33" href="#/" coords="154.0765391014975,359.06821963394344,155.57404326123128,370.88186356073214,168.5524126455907,381.0316139767055,178.70216306156408,377.7038269550749,181.36439267886857,370.88186356073214,178.53577371048254,361.5640599001664,163.89351081530782,352.5790349417637,158.73544093178037,355.0748752079867" shape="poly">
+                        <area target="" alt="32" title="32" href="#/" coords="136.2728785357737,370.7154742096506,149.25124792013312,365.7237936772047,159.73377703826955,379.3677204658902,161.5640599001664,387.18801996672215,153.57737104825293,393.67720465890187,145.09151414309486,395.5074875207987,138.9351081530782,391.0149750415973" shape="poly">
+                        <area target="" alt="31" title="31" href="#/" coords="116.97171381031615,374.20965058236277,129.28452579034942,372.0465890183028,132.77870216306158,376.0399334442596,134.77537437603993,382.5291181364393,136.77204658901832,393.84359400998335,128.78535773710482,399.00166389351085,117.63727121464227,397.8369384359401,114.47587354409318,390.84858569051585" shape="poly">
+                        
+                        <area target="" alt="41" title="41" href="#/" coords="96.33943427620633,371.8801996672213,90.51580698835275,387.8535773710483,90.8485856905158,393.67720465890187,96.83860232945092,398.3361064891847,103.66056572379368,399.00166389351085,111.98003327787022,395.0083194675541,112.81198003327788,388.51913477537437,110.48252911813644,373.8768718801997,104.3261231281198,371.8801996672213" shape="poly">
+                        <area target="" alt="42" title="42" href="#/" coords="78.03660565723794,365.7237936772047,68.38602329450916,379.7004991680533,66.55574043261231,386.0232945091514,74.70881863560733,392.67886855241267,83.52745424292846,395.0083194675541,89.6838602329451,388.6855241264559,91.3477537437604,370.7154742096506,85.35773710482529,366.22296173044924" shape="poly">
+                        <area target="" alt="43" title="43" href="#/" coords="64.39267886855241,351.91347753743764,50.2495840266223,361.23128119800333,48.75207986688852,369.05158069883527,50.2495840266223,375.540765391015,57.90349417637272,379.3677204658902,65.89018302828619,376.2063227953411,72.54575707154743,370.38269550748754,74.37603993344426,358.9018302828619,70.21630615640599,353.5773710482529," shape="poly">
+                        <area target="" alt="44" title="44" href="#/" coords="44.59234608985025,337.43760399334445,35.44093178036606,342.92845257903497,32.27953410981697,349.58402662229616,33.94342762063228,354.24292845257906,40.59900166389351,359.234608985025,49.750415973377706,357.73710482529117,60.06655574043261,349.2512479201331,58.73544093178037,340.2662229617305,53.24459234608985,336.7720465890183" shape="poly">
+                        <area target="" alt="45" title="45" href="#/" coords="35.108153078202996,317.6372712146423,49.91680532445923,319.30116472545757,52.57903494176373,325.62396006655575,52.412645590682196,331.61397670549087,46.089850249584025,336.2728785357737,35.60732113144759,340.2662229617305,30.116472545757073,339.9334442595674,24.459234608985025,336.43926788685525,23.12811980033278,327.6206322795341,26.788685524126457,322.2961730449251" shape="poly">
+                        <area target="" alt="46" title="46" href="#/" coords="21.464226289517473,295.1747088186356,37.2712146422629,291.3477537437604,44.09317803660566,294.1763727121464,47.75374376039934,302.6622296173045,44.925124792013314,312.47920133111484,34.6089850249584,316.97171381031615,24.792013311148086,317.97004991680535,19.467554076539102,312.14642262895177,17.470881863560734,302.828618968386" shape="poly">
+                        <area target="" alt="47" title="47" href="#/" coords="17.3044925124792,267.8868552412646,33.77703826955075,266.22296173044924,40.26622296173045,270.7154742096506,42.09650582362729,276.7054908485857,41.597337770382694,283.1946755407654,35.94009983361065,290.0166389351082,22.96173044925125,292.17970049916806,15.141430948419302,288.35274542429283,12.811980033277871,281.19800332778703,13.311148086522463,274.7088186356073" shape="poly">
+                        <area target="" alt="48" title="48" href="#/" coords="11.647254575707155,238.2695507487521,17.803660565723796,238.2695507487521,27.45424292845258,234.27620632279536,36.272878535773714,235.77371048252914,39.76705490848586,244.09317803660568,40.93178036605657,252.24625623960068,36.10648918469218,261.73044925124793,27.78702163061564,265.8901830282862,15.474209650582363,265.55740432612316,9.650582362728786,259.06821963394344,7.653910149750416,249.5840266222962" shape="poly">
+                        
+                    </map>
+
+                </div>
+                <div class="actual-editable--content col-sm-6">
+                    <form class="form container" method="post" onsubmit="return onEditOrderSubmit();">
+                        {% csrf_token %}
+                        <div class="row">
+
+                            <div class="form-group col-12">
+                                <label for="title-edit">Select Data Type 1</label>
+                                <select name="data_type" id="title-edit" class="form-control" onchange="onDataTypeChange(this, document.getElementById('categ-edit'))">
+                                    <option value="Patient CBCT">Patient CBCT</option>
+                                    <option value="Patient CBCT with Denture">Patient CBCT with denture</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="categ-edit">Select Data Type 2</label>
+                                <select name="data_type2" id="categ-edit" class="form-control" required  >
+                                    <option value="Select" selected disabled>Select Data Type 2</option>
+                                    <option value="Modal Scan" class="cbct d-none">Modal Scan</option>
+                                    <option value="Intra Oral Scan" class="cbct d-none">Intra Oral Scan</option>
+                                    <option value="Stone Model" class="cbct d-none">Stone Model</option>
+                                    <option value="Silicon Impression" class="cbct d-none">Silicon Impression</option>
+                                    <option value="Denture Only CBCT" class="denture d-none">Denture Only CBCT</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="sub-categ-edit">Service Output Type</label>
+                                <select class="form-control" name="output_type" id="sub-categ-edit" required onchange="onPriceCalculate('editable')">
+                                    <option value="Select" selected disabled>Select Output Type</option>
+                                    <option value="Prosthetically Driven Planning">Prosthetically Driven Planning</option>
+                                    <option value="Plan + Design (.stl)">Plan + Design(.stl)</option>
+                                    <option value="Plan + Design (.stl) + Fabrication">Plan + Design(.stl) + Fabrication</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="guide-edit">Service Guide Type</label>
+                                <select class="form-control" name="guide_type" id="guide-edit" required onchange="onPriceCalculate('editable')">
+                                    <option value="Select" selected disabled>Select Guide Type</option>
+                                    <option value="1-2 implants">1-2 Implants</option>
+                                    <option value="3-5 implants">3-5 Implants</option>
+                                    <option value=">6 implants">>=6 Implants</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="planning-edit">Planning Type</label>
+                                <select class="form-control" name="planning_type" id="planning-edit" required>
+                                    <option value="Select" selected disabled>Planning Type</option>
+                                    <option value="Site Specific">Site Specific</option>
+                                    <option value="All On 4">All On 4</option>
+                                    <option value="All On 6">All On 6</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="price-edit">Price</label>
+                                <input type="text" name="price" id="price-edit" class="form-control" placeholder="Enter Price" readonly>
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="toothSelection-edit">Tooth Sites</label>
+                                <input type="text" name="checks[]" required class="form-control" id="toothSelection-edit" placeholder="Tooth Sites" readonly>
+                            </div>           
+                            <div class="form-group col-12">
+                                <label for="remark-edit">Clinical Notes</label>
+                                <textarea class="form-control" name="remark" id="remark-edit" style="resize: none;" rows="3"></textarea>
+                            </div>
+                            
+                        </div>
+
+                        <button type="submit" class="btn btn-primary edit-confirm--button">Confirm</button>
+                    </form>
+                </div>
+
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<!-- Chat box modal -->
+<div class="modal fade" id="chatBoxModal" tabindex="-1" role="dialog" aria-labelledby="chatBoxModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+        
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatBoxTitle">Case Chat</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div id="case-chat"></div>
+                <form class="form-inline" style="margin-top: 1rem" method="post" action="/guideOrderComment/{{service_order.id}}/{{mycat.id}}">
+                    {% csrf_token %}
+
+                    <div class="input-group w-100">
+                        <input type="text" class="form-control" name="comment" placeholder="Type your comment here..." aria-label="Type your comment here..." aria-describedby="comment-send">
+                        <div class="input-group-append">
+                          <button  type="submit" class="btn" style="border-color: #e8e8f7;" id="comment-send"><i class="fa fa-sharp fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            
+      
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+
+    function onNotationChange(target){
+        toothList = [];
+        onToothImageClick();
+        let index = 0;
+        if(target.value == 'Universal'){
+            for( let x of document.querySelector('.tooth-indexing').children){
+                x.innerText= ++index;
+            }
+            index = 0;
+            for(let x of document.getElementsByName('image-map')[0].children){
+                x.setAttribute('title', ++index);
+                x.setAttribute('alt', index);
+            }
+        }
+
+        else if(target.value == 'FDI'){
+            index = 18;
+            for( let x of document.querySelector('.tooth-indexing').children){
+                if( index>=11 && index<=18 ){
+                    x.innerText= index--;
+                    if(index == 10)index= 21
+                }
+                else if(index>=21 && index<=28){
+                    x.innerText= index++;
+                    if(index == 29)index= 38
+                }
+                else if(index>=31 && index<=38){
+                    x.innerText= index--;
+                    if(index == 30)index= 41
+                }
+                else if(index>=41 && index<=48){
+                    x.innerText= index++;
+                }
+            }
+            index = 18;
+            for(let x of document.getElementsByName('image-map')[0].children){
+                if( index>=11 && index<=18 ){
+                    x.setAttribute('title', index--);
+                    x.setAttribute('alt', index);
+                    if(index == 10)index= 21
+                }
+                else if(index>=21 && index<=28){
+                    x.setAttribute('title', index++);
+                    x.setAttribute('alt', index);
+                    if(index == 29)index= 38
+                }
+                else if(index>=31 && index<=38){
+                    x.setAttribute('title', index--);
+                    x.setAttribute('alt', index);
+                    if(index == 30)index= 41
+                }
+                else if(index>=41 && index<=48){
+                    x.setAttribute('title', index++);
+                    x.setAttribute('alt', index);
+                }
+            }
+        }
+    }
+    
+    function getNotation(){
+        
+        let index = 0;
+        if( `{{service_order.tooth_notation}}` == 'Universal'){
+            for( let x of document.querySelector('.tooth-indexing--edit').children){
+                x.innerText= ++index;
+            }
+            index = 0;
+            for(let x of document.getElementsByName('image-map--edit')[0].children){
+                x.setAttribute('title', ++index);
+                x.setAttribute('alt', index);
+            }
+        }
+
+        else if( `{{service_order.tooth_notation}}` == 'FDI'){
+            index = 18;
+            for( let x of document.querySelector('.tooth-indexing--edit').children){
+                if( index>=11 && index<=18 ){
+                    x.innerText= index--;
+                    if(index == 10)index= 21
+                }
+                else if(index>=21 && index<=28){
+                    x.innerText= index++;
+                    if(index == 29)index= 38
+                }
+                else if(index>=31 && index<=38){
+                    x.innerText= index--;
+                    if(index == 30)index= 41
+                }
+                else if(index>=41 && index<=48){
+                    x.innerText= index++;
+                }
+            }
+            index = 18;
+            for(let x of document.getElementsByName('image-map--edit')[0].children){
+                if( index>=11 && index<=18 ){
+                    x.setAttribute('title', index--);
+                    x.setAttribute('alt', index);
+                    if(index == 10)index= 21
+                }
+                else if(index>=21 && index<=28){
+                    x.setAttribute('title', index++);
+                    x.setAttribute('alt', index);
+                    if(index == 29)index= 38
+                }
+                else if(index>=31 && index<=38){
+                    x.setAttribute('title', index--);
+                    x.setAttribute('alt', index);
+                    if(index == 30)index= 41
+                }
+                else if(index>=41 && index<=48){
+                    x.setAttribute('title', index++);
+                    x.setAttribute('alt', index);
+                }
+            }
+        }
+    }
+
+    function emptyDropzone(){
+        let fm1 = Dropzone.forElement("form#firstform");
+        let fm2 = Dropzone.forElement("form#secondform");
+        let fm3 = Dropzone.forElement("form#thirdform");
+        let fm4 = Dropzone.forElement("form#fourthform");
+        
+        fm1.removeAllFiles();
+        fm2.removeAllFiles();
+        fm3.removeAllFiles();
+        fm4.removeAllFiles();
+
+        for(let i of document.querySelectorAll('.fileName')){
+            i.innerText = '';
+        }
+        for(let i of document.querySelectorAll('.position-absolute.delete-icon')){
+            i.classList.add('d-none');
+        }
+    }
+
+    // let editLineOrderId = ''
+    function onEditOrderSubmit(){
+        let regionValue =  document.getElementById('toothSelection-edit').value === '';
+        if(regionValue){
+            return false;
+        }
+        else{
+            document.getElementById('toothSelection-edit').value = `['` + document.getElementById('toothSelection-edit').value + `']`;
+        }
+    }
+
+    let toothListEdit = [];
+    function onEditOrderModal(lineOrderId, data_type1, data_type2, output_type, guide_type, p_type, price, toothSites, remark){
+        // editLineOrderId = lineOrderId;
+        document.querySelector('.actual-editable--content form').action = `/editSurgiOrderItem/{{service_order.id}}/{{mycat.id}}/${lineOrderId}`;
+    
+        document.getElementById('title-edit').value = data_type1;
+        onDataTypeChange(document.getElementById('title-edit'), document.getElementById('categ-edit'));
+        document.getElementById('categ-edit').value = data_type2;
+        document.getElementById('sub-categ-edit').value = output_type;
+        document.getElementById('guide-edit').value = guide_type;
+        document.getElementById('planning-edit').value = p_type;
+       
+        console.log('value of planning type is: ',p_type )
+        document.getElementById('price-edit').value = price;
+        
+        document.getElementById('toothSelection-edit').value = toothSites.slice(2, -2).split(',');
+        
+        toothListEdit = toothSites.slice(2, -2).split(',');
+        if(remark != 'None'){
+            document.getElementById('remark-edit').value = remark;
+        }
+        else{
+            document.getElementById('remark-edit').value = '';
+        }
+        
+        getNotation();
+        onToothImageClickEdit();
+    }
+
+    "{% if messages %}"
+        "{% for message in messages %}"   
+        
+            setTimeout(()=>{
+                alert('{{ message }}')
+            }, 1000);
+        "{% endfor %}"
+    "{% endif %}"
+   
+    function imageUploadBtnClick(id){
+        lineOrderId = id;
+        var fm1 = Dropzone.forElement("form#form1");
+        var fm2 = Dropzone.forElement("form#form2");
+        var fm3 = Dropzone.forElement("form#form3");
+        var fm4 = Dropzone.forElement("form#form4");
+
+        fm1.emit("resetFiles");
+        fm2.emit("resetFiles");
+        fm3.emit("resetFiles");
+        fm4.emit("resetFiles");
+
+        for(let i of document.querySelectorAll('.dz-message')){
+            if(!i.nextElementSibling.nextElementSibling){
+                i.classList.add('d-inline');
+            }
+        }   
+        getFiles();
+    }
+
+    // ajax call function 
+    function getFiles(){
+        
+        let pk =$('#service_orderid').val();
+        let id1 = lineOrderId;
+        let csr = $("input[name=csrfmiddlewaretoken]").val();    
+        mydata={'pk': pk,'id1': id1, 'csrfmiddlewaretoken': csr};
+        let f= document.getElementById('fileNameBody');
+
+        while (f.hasChildNodes()) {
+            f.removeChild(f.firstChild);
+        }
+
+        $.ajax(
+        {
+            url: `/viewLabImage/${pk}/${id1}`,
+            method:'GET',
+            data: mydata,
+            success: function (data) {
+                if(data.length>0){
+                    var main_id= data[0]['id'];
+                    $( data ).each(function(i) {
+                        var fileName1 = data[i]['fileName'];
+                        var table_row= document.createElement('tr');
+                        var table_heading= document.createElement('td');
+                        var table_heading2= document.createElement('td');
+                        table_heading2.innerHTML=`<span class="badge badge-success">${data[i]['site']}</span>`
+                        
+                        table_heading.innerText= fileName1;
+                        table_row.appendChild(table_heading);
+                        table_row.appendChild(table_heading2);
+                        f.appendChild(table_row);
+                    });
+                    
+                }
+            }
+        });
+    
+    }
+        
+    // chat section starts here
+    
+    let parent=  document.getElementById('case-chat')
+    let prevDate = ''
+    '{% for i in comment %}'
+        var ele= document.createElement('div');
+        
+        var date= document.createElement('span');
+        date.innerText=`{{i.date}}`.slice(15);
+        
+        if('{{i.date}}'.slice(0, 13) != prevDate ){
+            prevDate = '{{i.date}}'.slice(0, -11);
+            var dateEle= document.createElement('div');
+            dateEle.innerText = prevDate;
+            dateEle.classList.add('dateEle');
+            parent.appendChild(dateEle);
+        }
+        
+        var text= document.createElement('span');
+        text.innerText= `{{i.comment}}`
+        
+    
+        if(`{{i.orgid}}`=='{{org}}'){
+            
+            date.classList.add('floating-date-right');
+            ele.appendChild(date);
+            ele.appendChild(text);
+            ele.classList.add('clinic-side--comment');
+        }    
+        else{
+            date.classList.add('floating-date-left');
+            ele.appendChild(text);
+            ele.appendChild(date);
+            ele.classList.add('admin-side--comment')
+            
+        }    
+        parent.appendChild(ele);           
+        
+    '{% endfor %}'
+    
+    // chat section ends here
+
+    let toothList = [];
+    
+    // automatic lab selection 
+    {% comment %} for(let x of document.getElementById('inputState').options){
+        if('{{service_order.referTo}}' != 'None'){
+            if(x.value=='{{service_order.referTo}}'){
+                x.selected = 'selected';
+            }
+            else{
+                x.disabled = true;
+            }
+        }
+    } {% endcomment %}
+
+    // tooth images click function 
+    function onToothImageClick(event){
+        
+        if(event){
+            if(!toothList.includes(event.target.title)){
+                toothList.push(event.target.title);
+            }
+            else{
+                toothList.splice(toothList.indexOf(event.target.title), 1);
+            }
+        }
+
+        document.getElementById('toothSelection').value = toothList;
+
+        for(let j of document.querySelectorAll('.tooth-number--span')){
+            
+            if(toothList.includes(j.innerText)){
+                j.classList.add('tooth-number--span-selected')
+            }
+            else{
+                if(j.classList.contains('tooth-number--span-selected')){
+                    j.classList.remove('tooth-number--span-selected')
+                }
+            }
+        }
+        let nota = 'FDI';
+        for(let x of document.getElementsByName('notation')){
+            if(x.checked){
+                nota = x.value
+            }
+        }
+    }
+
+    // tooth images click function 
+    function onToothImageClickEdit(event){
+        
+        if(event){
+            if(!toothListEdit.includes(event.target.title)){
+                toothListEdit.push(event.target.title);
+            }
+            else{
+                toothListEdit.splice(toothListEdit.indexOf(event.target.title), 1);
+            }
+        }
+
+        document.getElementById('toothSelection-edit').value = toothListEdit;
+
+        for(let j of document.querySelectorAll('.tooth-number--span-edit')){
+            
+            if(toothListEdit.includes(j.innerText)){
+                j.classList.add('tooth-number--span-edit-selected')
+            }
+            else{
+                if(j.classList.contains('tooth-number--span-edit-selected')){
+                    j.classList.remove('tooth-number--span-edit-selected')
+                }
+            }
+        }
+        
+    }
+
+    function onFormSubmit(event){
+        console.log('inside onFormSubmit')
+        for(let x of document.getElementsByName('notation')){
+            if(x.checked){
+                console.log('Notation');
+                document.getElementById('notation-select').value = x.value;
+                console.log(document.getElementById('notation-select').value);
+                break;
+            }
+        }
+        let title = document.querySelector('#title').value && document.querySelector('#title').value.toLowerCase() != 'select' 
+        let categ = document.querySelector('#categ').value && document.querySelector('#categ').value.toLowerCase() != 'select' 
+        let sub_categ = document.querySelector('#sub-categ').value && document.querySelector('#sub-categ').value.toLowerCase() != 'select' 
+        let guide = document.querySelector('#guide').value && document.querySelector('#guide').value.toLowerCase() != 'select' 
+        let planning = document.querySelector('#planning').value && document.querySelector('#planning').value.toLowerCase() != 'select' 
+        let toothSites = document.querySelector('#toothSelection').value && document.querySelector('#toothSelection').value != '' && document.querySelector('#toothSelection').value != ' ' 
+        console.log('here are the details, ', title, categ, sub_categ, guide, planning, toothSites);
+        if(title && categ && sub_categ && toothSites && guide && planning && labSelected){
+            document.getElementsByName('organisationid')[0].value = labValue;
+            return true;
+        }
+        alert('Please fill all the details')
+        return false;
+    }
+
+</script>
+
+<script>
+   
+    {% if prosthetic %}
+        for(let x of document.getElementsByName('notation')){
+            if(x.value != '{{service_order.tooth_notation}}'){
+                x.setAttribute('disabled', true);
+            }
+            else{
+                x.setAttribute('checked', true);
+                onNotationChange(x);
+            }
+        }
+    {% endif %}
+    
+</script>
+
+<script>
+  
+    let serviceM = [{% for i in studies %} '{{ i.maincat | escapejs }}', {% endfor %}];
+    let subCategM = [{% for i in studies %} '{{ i.subcat | escapejs }}', {% endfor %}];
+    let pricesM = [];
+    {% if currency == 'price' %}
+        pricesM = [{% for i in studies %} '{{ i.price | escapejs }}', {% endfor %}];
+    {% endif %}
+    {% if currency != 'price' %}
+        pricesM = [{% for i in studies %} '{{ i.dollarPrice | escapejs }}', {% endfor %}];
+    {% endif %}
+    
+    function onDataTypeChange(self, target){
+        let selfVal = self.value;
+        if(selfVal== 'Patient CBCT'){
+            for(let x of target.querySelectorAll('.denture')){
+                x.classList.add('d-none');
+            }
+            for(let x of target.querySelectorAll('.cbct')){
+                x.classList.remove('d-none');
+            }
+            target.querySelector('.cbct').selected = 'selected';
+        }
+        else{
+            for(let x of target.querySelectorAll('.denture')){
+                x.classList.remove('d-none');
+            }
+            for(let x of target.querySelectorAll('.cbct')){
+                x.classList.add('d-none');
+            }
+            target.querySelector('.denture').selected = 'selected';
+        }
+    }
+
+    function onPriceCalculate(isEditable){
+        let firstVal = isEditable? document.getElementById('sub-categ-edit').value : document.getElementById('sub-categ').value;
+        let secondVal = isEditable? document.getElementById('guide-edit').value : document.getElementById('guide').value;
+        let price = 0;
+        pricesM.some((val, index)=>{
+            if(serviceM[index]==firstVal && subCategM[index]==secondVal){
+                price = pricesM[index];
+                return true;
+            }
+            return false;
+        })
+        if(firstVal != 'Select' && secondVal != 'Select'){
+            isEditable? (document.getElementById('price-edit').value = price) : (document.getElementById('price').value = price);
+        }
+    }
+
+
+</script>
+
+<!-- <script src="{% static '/tinymce/tinymce.min.js' %}"></script>
+<div class="main-content side-content pt-0">
+  <div class="container-fluid">
+    <div class="row mt-4">
+
+      <div class="col-sm-10 col-xl-4 ml-auto mr-auto" style="display: flex; flex-direction: column">
+   
+        <fieldset class="scheduler-border" id="patient-fieldset" style="flex: 1 1 auto">
+          <legend class="scheduler-border">Patient Details</legend>
+
+          <table style="table-layout: auto; width: 100%">
+            <tr>
+              <th class="table-heading--style">Patient Name:</th>
+              <td class="table-data--style">{{patient.name}}</td>
+              <th
+                class="table-heading--style"
+                style="padding-left: 2rem !important"
+              >
+                Gender:
+              </th>
+              <td class="table-data--style">{{patient.gender}}</td>
+            </tr>
+            <tr>
+              <th class="table-heading--style">Location:</th>
+              <td class="table-data--style">{{patient.address_1}}</td>
+              <th
+                class="table-heading--style"
+                style="padding-left: 2rem !important"
+              >
+                Age:
+              </th>
+              <td class="table-data--style">{{patient.age}}</td>
+            </tr>
+            <tr>
+              <th class="table-heading--style">Registration Date:</th>
+              <td class="table-data--style">{{patient.rdate}}</td>
+            </tr>
+          </table>
+        </fieldset>
+
+        <fieldset class="scheduler-border" id='summary-fieldset' style="flex: 1 1 auto">
+          <legend class="scheduler-border">Order Summary</legend>
+
+          <table style="table-layout: auto; width: 100%">
+            <tr>
+              <th class="table-heading--style">Status:</th>
+              <td class="table-data--style">New</td>
+              <th
+                class="table-heading--style"
+                style="padding-left: 2rem !important"
+              >
+                Date:
+              </th>
+              <td class="table-data--style">{{service_order.date}}</td>
+            </tr>
+          </table>
+          <div class="row">
+            <div class="table-heading--style col-sm-4 ml-3">Referred to:</div>
+            <div class="table-data--style col-sm-6">
+              <select name="labSelect" id="labSelect">
+                  
+                  <option value="select">Select</option>
+                  {% for i in all_lab %}
+                  <option value="{{i.id}}">{{i.orgname}}</option>
+                  {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <form style="margin-top: 1rem" onsubmit="return validateForm(this)" method="post" action="/guideOrderComment/{{service_order.id}}/{{mycat.id}}">
+            {% csrf_token %}
+            <label
+              for="comment"
+              style="
+                font-weight: 500;
+                padding: 0.75rem 0.5rem 0 0;
+                font-size: 0.82rem;
+              "
+              >Comment:</label
+            >
+            <div class="form-group">
+              <div class="form-row">
+                <div class="col-sm-10">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="comment" name="comment"
+                    placeholder="Type comment, question or feedback"
+                    style="font-size: 0.8rem; margin-top: -5px"
+                  />
+                </div>
+                <div class="col-sm-2" style="margin-top: -5px">
+                  <button type="submit" class="btn btn-primary mb-2">
+                    ADD
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <form style="margin-top: -1rem">
+            <div class="form-group">
+              <label
+                for="case-chat"
+                style="
+                  font-weight: 500;
+                  padding: 0.75rem 0.5rem 0 0;
+                  font-size: 0.82rem;
+                "
+                >Case Chat</label
+              >
+              <div id="case-chat" style='overflow: auto'>
+               
+            </div>
+            </div>
+          </form>
+        </fieldset>
+      </div>
+      <div class="col-sm-10 col-xl-8 ml-auto mr-auto">
+        <fieldset class="scheduler-border" id="order-fieldset">
+          <legend class="scheduler-border">Order Details</legend>
+
+            <div class="inner-body">
+
+
+                <form method="post" action="/refer_surgident/{{service_order.id}}/{{mycat.id}}" id="orderForm" onsubmit="return onFormSubmit();" multi >
+                    {% csrf_token %} 
+
+                        <div class="main-contact-info-body" style="padding: 0 !important;">
+                          
+                            <input type="text" name="organisationid" value="" id = "organisationId" hidden>
+                            
+                            <div class="form-group" style="margin-bottom: 0 !important;">
+                                <div class=" mt-1 delimiter-top">
+                                    <div class="actions-toolbar py-2 mb-2">
+                                        <h6 class="mb-1">Tooth Selection</h6>
+                                    
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-1 offset-sm-2 text-center image-enclosing--div">
+                                                    <label
+                                                        class="image-checkbox  "
+                                                        title="Italy"
+
+                                                    >
+                                                        <img
+                                                        src="{% static '/assets/img/tooth/18.jpg' %}"
+                                                        />
+                                                        <input
+                                                        type="checkbox"
+                                                        name="checks[]"
+                                                        id="18"
+                                                        value="18"
+                                                        />
+                                                    </label>
+                                                    <span class="image-aligned--span">18</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/17.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="17"
+                                                    value="17"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">17</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/16.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="16"
+                                                    value="16"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">16</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/15.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="15"
+                                                    value="15"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">15</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/14.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="14"
+                                                    value="14"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">14</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/13.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="13"
+                                                    value="13"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">13</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/12.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="12"
+                                                    value="12"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">12</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/11.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="11"
+                                                    value="11"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">11</span>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-1 offset-sm-1 text-center  image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/21.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="21"
+                                                    value="18"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">21</span>
+                                                </div>
+                                                <div class="col-md-1 text-center  image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox  "
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/22.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="22"
+                                                    value="22"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">22</span>
+                                                </div>
+                                                <div class="col-md-1 text-center  image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/23.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    nname="checks[]"
+                                                    id="23"
+                                                    value="23"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">23</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/24.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="24"
+                                                    value="24"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">24</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/25.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="25"
+                                                    value="25"
+                                                    />
+                                                </label>
+                                                <span class="image-aligned--span">25</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/26.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="26"
+                                                    value="26"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">26</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/27.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="27"
+                                                    value="27"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">27</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/28.jpg' %}" style="height: 55px !important;"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="28"
+                                                    value="28"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">28</span>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="col-md-6 mt-2">
+                                            <div class="row">
+                                                <div class="col-md-1 offset-sm-2 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/48.jpg' %}" style="height: 60px !important;"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="48"
+                                                    value="48"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">48</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/47.jpg' %}" style="height: 53px !important;"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="47"
+                                                    value="47"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">47</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/46.jpg' %}" style="height: 48px !important;"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="46"
+                                                    value="46"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">46</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/45.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="45"
+                                                    value="45"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">45</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/44.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="44"
+                                                    value="44"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">44</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/43.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="43"
+                                                    value="43"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">43</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/42.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="42"
+                                                    value="42"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">42</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/41.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="41"
+                                                    value="41"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">41</span>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            <div class="col-md-6 mt-2">
+                                            <div class="row">
+                                                <div class="col-md-1 offset-sm-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/31.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="31"
+                                                    value="31"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">31</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/32.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="32"
+                                                    value="32"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">32</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/33.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="33"
+                                                    value="33"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">33</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/34.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="34"
+                                                    value="34"
+                                                    />
+                                                </label>
+                                                <span class="image-aligned--span">34</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/35.jpg' %}"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="35"
+                                                    value="35"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">35</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/36.jpg' %}" style="height: 48px !important;"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="36"
+                                                    value="36"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">36</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/37.jpg' %}" style="height: 49px !important;"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="37"
+                                                    value="37"
+                                                    />
+                                                    </label>
+                                                    <span class="image-aligned--span">37</span>
+                                                </div>
+                                                <div class="col-md-1 text-center image-enclosing--div">
+                                                <label
+                                                    class="image-checkbox"
+                                                    title="Italy"
+                                                >
+                                                    <img
+                                                    src="{% static '/assets/img/tooth/38.jpg' %}" style="height: 55px !important;"
+                                                    />
+                                                    <input
+                                                    type="checkbox"
+                                                    name="checks[]"
+                                                    id="38"
+                                                    value="38"
+                                                    />
+                                                </label>
+                                                <span class="image-aligned--span">38</span>
+                                                </div>
+                                            </div>
+
+                                                <script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+                                                <script type="text/javascript">
+                                                    jQuery(function ($) {
+                                                    // init the state from the input
+                                                    $(".image-checkbox").each(function () {
+                                                        if (
+                                                        $(this)
+                                                            .find('input[type="checkbox"]')
+                                                            .first()
+                                                            .attr("checked")
+                                                        ) {
+                                                        $(this).addClass(
+                                                            "image-checkbox-checked"
+                                                        );
+                                                        } else {
+                                                        $(this).removeClass(
+                                                            "image-checkbox-checked"
+                                                        );
+                                                        }
+                                                    });
+
+                                                    // sync the state to the input
+                                                    $(".image-checkbox").on(
+                                                        "click",
+                                                        function (e) {
+                                                        if (
+                                                            $(this).hasClass(
+                                                            "image-checkbox-checked"
+                                                            )
+                                                        ) {
+                                                            $(this).removeClass(
+                                                            "image-checkbox-checked"
+                                                            );
+                                                            $(this)
+                                                            .find('input[type="checkbox"]')
+                                                            .first()
+                                                            .removeAttr("checked");
+                                                        } else {
+                                                            $(this).addClass(
+                                                            "image-checkbox-checked"
+                                                            );
+                                                            $(this)
+                                                            .find('input[type="checkbox"]')
+                                                            .first()
+                                                            .attr("checked", "checked");
+                                                        }
+
+                                                        e.preventDefault();
+                                                        }
+                                                    );
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none">Data Type 1</label>
+                                        <select class="form-control" name="data_type1" id="dataFirst" onchange="onDataType1Select()">
+                                            <option selected="selected">Select Data Type 1</option>
+                                            <option value='Patient CBCT' >Patient CBCT</option>
+                                            <option value='Patient CBCT with Denture' > Patient CBCT with Denture</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none">Data Type 2</label>
+                                        <select class="form-control" name="data_type2" id="DataSecond" >
+                                            <option selected="selected">Select Data Type 2</option>
+                                            <option value="Model Scan" class="justCbct">Model Scan</option>
+                                            <option value="Intra Oral Scan" class="justCbct">Intra Oral Scan</option>
+                                            <option value="Stone Model" class="justCbct">Stone Model</option>
+                                            <option value="Silicon Impression" class="justCbct">Silicon Impression</option>
+                                            <option value='Denture Only CBCT' class="dentureOnly">Denture Only CBCT</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none">Output Type</label>
+                                        <select class="form-control" name="output_type" id="categ" onchange = 'onServiceChange()'>
+                                            <option selected="selected">Select Output Type</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none">Guide Type</label>
+                                        <select class="form-control" name="guide_type" id="categ2" onchange= 'onServiceChange()'>
+                                            <option selected="selected">Select Guide Type</option>                                                     
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none">Planning Type</label>
+                                        <select class="form-control" name="planning_type" id="title" >
+                                            <option selected="selected">Planning Type</option>
+                                            <option value="Site Specific"> Site Specific </option>
+                                            <option value="All on 4" class="hideOn12implants">All on 4</option>
+                                            <option value="All on 6" class="hideOn12implants">All on 6</option>
+
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none">Price</label>
+                                        <input class="form-control" placeholder="Price" type="text" value="" name="price" id="price" readonly>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                            
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none">Clinical Notes</label>
+                                        <input class="form-control" placeholder="Enter Clinical Notes" type="text" name="remark" id="remark"/>
+                                    </div>
+                                </div>
+                                <div class="col-4 ">
+                                    <label class="form-control-label d-none"> </label>
+                                    <button type="submit" class="btn btn-block ripple btn-primary" id="addToOrderBtn"> 
+                                            Add to Order
+                                    </button>
+                                </div>
+                            </div>
+                        </div>            
+                </form>
+                <div class="row mt-2">
+                    <div class="col-12">
+
+                        <div class="table-responsive" style="height: 150px;">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Actions</th>
+                                            <th>Region</th>
+                                            <th>Data Type 1</th>
+                                            <th>Data Type 2</th>
+                                            <th>Output Type</th>
+                                            <th>Guide Type</th>
+                                            <th>Planning Type</th>
+                                            <th>
+                                              Price
+                                              {% autoescape off %}
+                                              {{icon}}
+                                              {% endautoescape %}
+                                            </th>
+                                            <th>Clinical Notes</th>                                                   
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for i in prosthetic %}
+                                        <tr>
+                                            <td style="width: 1px;">
+                                            <a id="imageUploadBtn"  title="Upload Data" data-toggle="tooltip" data-placement="top" rel="tooltip" style="padding: 0;" type="button" class="btn action-icon--buttons primary-icon" onclick="imageUploadBtnClick('{{i.id}}', '{{ i.data_type2 }}')"  >
+                                                <i class="fa-solid fa-cloud-arrow-up" data-toggle="modal" data-target="#exampleModalCenter" style="margin-top: 10px;"></i>
+                                            </a>
+                                                                    
+                                            <a data-toggle="tooltip" data-placement="top" title="Delete" href="/delete_GuideId/{{i.id}}" style="padding: 0;"  class="btn action-icon--buttons danger-icon" ><i class="fa fa-trash" style="margin-top: 10px; margin-left: 10px;"></i>            
+                                            </a>
+                                            </td>
+                                            <td>{{ i.tooth }}</td>
+                                            <td>{{ i.data_type1 }}</td>
+                                            <td>{{ i.data_type2 }}</td>
+                                            <td>{{ i.output_type }}</td>
+                                            <td>{{ i.guide_type }}</td>
+                                            <td>{{ i.planning_type}}</td>
+                                            <td>{{ i.price }}</td>
+                                            <td>{{ i.remark }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                        </div>
+
+                    </div>
+                    <div class="col-4 offset-sm-8 mt-3">
+                        <a href="/review_GuideOrder/{{service_order.id}}/{{mycat.id}}" class="btn btn-block ripple btn-primary">Review Order</a>        
+                    </div>
+                </div>
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 60vw; " role="document">
+
+                    <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Upload Data</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-sm-12 col-lg-6">
+                                <div class="card card-info">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="card-title">Upload Data Type 1 (Dicom)</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="container mt-3">
+                                            <form action="/" method="post" class="dropzone dz" id="recommendationDiv">
+                                                {% csrf_token %}
+                                                <div class="fallback">
+                                                    <input name="file" id="file1" type="file" multiple/>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-12 col-lg-6">
+                                <div class="card card-info">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="card-title">Upload Data Type 2 (STL/PLY)</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="container mt-3">
+                                            <form action="/" method="post" class="dropzone dz"
+                                                id="form2">
+                                                {% csrf_token %}
+                                                <div class="fallback">
+                                                    <input name="file" id="file2" type="file"/>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <h6 style="
+                        margin-top: 1.5rem;
+                        color: #4b4b54;
+                    "> Uploaded Files are: </h6>
+                    {% comment %} <div id="imgconatiner">
+                        
+                    
+                    </div> {% endcomment %}
+
+                    <div class="table-responsive p-0" >
+                        <table style="width: 100%;">
+                          <thead>
+
+                            <tr>
+                              <th >
+                                Uploaded Data Type 1
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody id='fileNameCbct'>
+                          </tbody>                            
+                          </tr>
+                        </table>
+                      
+                        
+                        <table style="width: 100%;">
+                          <thead>
+
+                            <tr>
+                              <th >
+                                Uploaded Data Type 2
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody id='fileNameBody'>
+                          </tbody>                            
+                          </tr>
+                        </table>
+                        <style>
+                          .floating-date-left{
+                            position: absolute;
+                            font-size: x-small;
+                            color: black;
+                            bottom: -15px;
+                            left: 5px;
+                          }
+                          .floating-date-right{
+                            position: absolute;
+                            font-size: x-small;
+                            color: black;
+                            bottom: -15px;
+                            right: 5px;
+                          }
+                          .admin-side--comment{
+                            font-size: 14px;
+                            position: relative;
+                            margin: 17px 0;
+                            background: #edede9;
+                            border-color: #d0d0d0;
+                            color: black;
+                            padding: 3px 10px;
+                            width: 60%;
+                            border-top-right-radius: 10px;
+                            border-bottom-right-radius: 10px;
+                            border-radius: 10px;
+                            border: 1px solid #d0d0d0;
+                            margin-left: 10px;
+                            overflow-wrap: break-word;
+                            /* display: flex;
+                            justify-content: space-between;
+                            align-items: center; */
+                          }
+                          
+                          .clinic-side--comment{
+                            margin-right: 10px;
+                            font-size: 14px;
+                            position: relative;
+                            margin: 17px 0;
+                            background: #8ecae6;
+                            color: black;
+                            padding: 3px 3px 3px 10px;
+                            width: 60%;
+                            border-top-left-radius: 10px;
+                            border-bottom-left-radius: 10px;
+                            margin-left: auto;
+                            border-radius: 10px;
+                            margin-right: 10px;
+                            border: 1px solid #d0d0d0;
+                            overflow-wrap: break-word;
+                            /* display: flex;
+                            justify-content: space-between;
+                            align-items: center; */
+                          }
+                          tr{
+                            text-align-last: left !important;
+                          }
+                          #case-chat{
+                            height: 190px;
+                            border: 1px solid #d0d0d0;
+                            overflow: auto; 
+                          }
+                          th, td{
+                            padding: 7px 0;
+                          }
+                          table.table.table-striped tr th{
+
+                            text-align: center;
+                          }
+                        </style>
+                          
+                      </div>
+                    </div>
+
+                    <script>
+                        Dropzone.options.recommendationDiv = {
+                        acceptedFiles: ".zip",
+                        maxFiles:1,
+                        init: function() {
+                        this.hiddenFileInput.removeAttribute('multiple');
+                        }
+                        };
+                    
+                    </script>
+                    <script>
+
+                        // function whichFile(){
+                        //     document.query
+                        // }
+                        Dropzone.options.form2 = {
+                        acceptedFiles: ".stl, .ply, .zip",
+                        maxFiles:2,
+                        init: function() {
+                            this.on("processing", function(file) {
+                            this.options.url = getUrl('form2');
+                            });
+                            this.on("success", function(file){
+                            if (file.previewElement) {
+                                
+                                getFiles();
+                                return file.previewElement.classList.add("dz-success");
+                            }
+                            });
+                            this.on('resetFiles', function() {
+                            if(this.files.length != 0){
+                                for(i=0; i<this.files.length; i++){
+                                    this.files[i].previewElement.remove();
+                                }
+                                this.files.length = 0;
+                            }
+                            });
+                            this.hiddenFileInput.removeAttribute('multiple');
+                            }
+                        };
+                    </script>
+                    <script>
+                        Dropzone.options.recommendationDiv = {
+                        maxFilesize: 500,
+                        init: function() {
+                            this.on("processing", function(file) {
+                                this.options.url = getUrl('form1');
+                            });
+                            this.on("uploadprogress", function(file, progress) {
+                                // console.log("File progress", progress);
+                            })
+                            this.on("success", function(file){
+                            if (file.previewElement) {
+                                getDicom();
+                                return file.previewElement.classList.add("dz-success");
+                            }
+                            });
+                            this.on('resetFiles', function() {
+                            if(this.files.length != 0){
+                                for(i=0; i<this.files.length; i++){
+                                    this.files[i].previewElement.remove();
+                                }
+                                this.files.length = 0;
+                            }
+                            });
+                        }
+                        };
+                    
+                    </script>
+
+
+                    <div class="d-flex justify-content-end">
+                      <button type="button" id="closeButton" style="background: #a3a3a326; border-color: #a3a3a326; color: black; font-weight: 500; margin: 10px 0; margin-right: 1rem; border-radius: 3px; border-width: thin;" data-dismiss="modal">Close</button>
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>
+<input id="service_orderid" name="service_orderid" value="{{service_order.id}}" hidden>
+<input id="topcat_id" name="topcat_id" value="{{mycat.id}}" hidden>
+<style>
+  fieldset.scheduler-border {
+    border: 1px groove #ddd !important;
+    padding: 0 1em 1em 1.3em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow: 0px 0px 0px 0px #000;
+    box-shadow: 0px 0px 0px 0px #000;
+    background-color: white;
+  }
+
+  legend.scheduler-border {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+    color: #1f3f7f;
+    border: 1px solid;
+    background: white;
+  }
+
+  .table-heading--style {
+    font-weight: 500;
+    padding: 0.75rem 0.5rem 0 0;
+  }
+
+  .table-data--style {
+    color: #414141;
+    padding: 0.75rem 0 0 0.5rem;
+  }
+
+  #main-header--top{
+    display: none;
+  }
+
+  .image-checkbox {
+    cursor: pointer;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 4px solid transparent;
+    outline: 0;
+  }
+
+  .image-checkbox input[type="checkbox"] {
+    display: none;
+  }
+
+  .image-checkbox-checked {
+    border-color: #2f6ebb;
+  }
+  div label img{
+    max-width: 18px;
+  }
+
+  #example2_info{
+    margin-bottom: 0;
+  }
+
+  table.dataTable thead th{
+    padding: 5px 10px !important;
+  } 
+
+  .table td{
+    padding: 1px 15px !important;
+  }
+
+  .image-enclosing--div{
+    display: flex;
+    /* border: 1px solid black; */
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #example2_filter {
+    display: flex !important;
+    justify-content: end !important;
+    text-align: end;
+  }
+
+  #example2_wrapper>div:nth-child(2) {
+    overflow-x: auto !important;
+  }
+
+  /* th.sorting, td{
+        display:  table-cell !important;
+    } */
+    small, .small{
+        font-size: 14px !important;
+        
+    }
+
+    #example2_filter{
+        display: flex !important;
+        justify-content: end !important;
+        text-align: end;
+    }
+
+    #example2_wrapper>div:nth-child(2) {
+        overflow-x:auto !important;
+    }
+
+    a.action-icon--buttons.primary-icon{
+      color: #8f9cc4;
+    }
+
+    a.action-icon--buttons.primary-icon:hover{
+      color: #1f3f7f;
+    }
+    a.action-icon--buttons.danger-icon:hover{
+      color: red;
+    }
+
+    table.table tr{
+        text-align: center;
+    }
+    table.table{
+        width: 100%;
+        margin: 0 auto 0.5rem auto;
+        border: 1px solid #eaedf7;
+        
+    }
+    div.table-responsive table.table thead tr:first-child{
+      background-color: #2f6ebb;
+      color: white;
+      /* white-space: ; */
+    }
+    div.table-responsive table.table thead tr:first-child th{
+      color: white;
+    }
+
+    div.table-responsive table.table tr, th{
+      white-space: nowrap;
+      /* color: white; */
+    }
+
+  /* #patient-fieldset{
+    height: 25vh;
+  } */
+
+  /* #summary-fieldset{
+    height: 62vh;
+  }
+  #order-fieldset{
+    height: 90vh;
+  } */
+
+</style>
+
+
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    
+    for(let x of document.getElementsByClassName('justCbct')){
+        x.style.display='none';
+    }
+    for(let x of document.getElementsByClassName('dentureOnly')){
+        x.style.display='none';
+    }
+
+    function onDataType1Select(){
+        // console.log('ran first');
+        if(document.getElementById('dataFirst').value=='Patient CBCT'){
+            for(let x of document.getElementsByClassName('justCbct')){
+                x.style.display='block';
+            }
+            for(let x of document.getElementsByClassName('dentureOnly')){
+                x.style.display='none';
+            }
+        }
+        else{
+            for(let x of document.getElementsByClassName('justCbct')){
+                x.style.display='none';
+            }
+            for(let x of document.getElementsByClassName('dentureOnly')){
+                x.style.display='block';
+            }
+        }
+    }
+
+let parent=  document.getElementById('case-chat')
+
+  {% for i in comment %}
+    var ele= document.createElement('div');
+
+    var date= document.createElement('span');
+    date.innerText=`{{i.date}}`;
+
+    
+    var text= document.createElement('span');
+    text.innerText= `{{i.comment}}`
+    
+    // console.log('the elemet created is', ele);
+
+    if(`{{i.orgid}}`=='{{org}}'){
+      date.classList.add('floating-date-right');
+      ele.appendChild(date);
+      ele.appendChild(text);
+      
+      ele.classList.add('clinic-side--comment');
+    
+    }    
+    else{
+      date.classList.add('floating-date-left');
+      ele.appendChild(text);
+      ele.appendChild(date);
+  
+      ele.classList.add('admin-side--comment')
+        
+    }    
+    parent.appendChild(ele);           
+
+  {% endfor %}
+
+  const type=[{% for i in studies %} '{{ i.maincat | escapejs }}', {% endfor %}];
+    const service=[{% for i in studies %} '{{ i.subcat | escapejs }}', {% endfor %}];
+    // const prices=[{% for i in studies %} '{{ i.price | escapejs }}', {% endfor %}];
+
+    let prices = {}
+    {% if currency == 'price' %}
+    prices = [{% for i in studies %} '{{ i.price | escapejs }}', {% endfor %}];
+    {% endif %}
+    {% if currency != 'price' %}
+    prices = [{% for i in studies %} '{{ i.dollarPrice | escapejs }}', {% endfor %}];
+    {% endif %}
+  
+    // {% comment %} console.log(type, service, prices) {% endcomment %}
+    
+    let main_fetch={};
+    let distinct_type = [];
+    let distinct_service = [];
+    {% comment %} let distinct_prices = []; {% endcomment %}
+    for(let x of type){
+        if(!distinct_type.includes(x)){
+            distinct_type.push(x);
+        }
+    }
+    for(let x of service){
+        if(!distinct_service.includes(x)){
+            distinct_service.push(x);
+        }
+    }
+    // console.log(distinct_type, distinct_service)
+
+
+    let out_type = document.getElementById('categ');
+    let ser_type= document.getElementById('categ2');
+    let pric_type= document.getElementById('price');
+
+
+    for( let i= 0; i<distinct_type.length; i++){
+        let ele= document.createElement('option');
+        ele.value= distinct_type[i];
+        ele.innerHTML= distinct_type[i];
+        out_type.append(ele);
+    }
+
+    for( let i= 0; i<distinct_service.length; i++){
+        let ele= document.createElement('option');
+        ele.value= distinct_service[i];
+        ele.innerHTML= distinct_service[i];
+        ser_type.append(ele);
+    }
+
+   function onServiceChange(){
+    if(distinct_type.includes(out_type.value) && distinct_service.includes(ser_type.value)){
+        // console.log('i ram ')
+        {% comment %} pric_type.value= 'sadfxv' {% endcomment %}
+
+        let len= distinct_service.length; 
+        let val1=  distinct_type.indexOf(out_type.value);
+        let val2= distinct_service.indexOf(ser_type.value);
+        // console.log(len, val1, val2)
+
+        let find_index_price= val1*len+ val2;
+        pric_type.value= prices[find_index_price];
+    }
+
+    if(document.getElementById('categ2').value=='1-2 implants'){
+        for(let x of document.getElementsByClassName('hideOn12implants')){
+            x.style.display='none';
+        } 
+    } 
+    else{
+        for(let x of document.getElementsByClassName('hideOn12implants')){
+            x.style.display='block';
+        } 
+    }
+
+   }
+
+  
+
+</script>
+<script src="{% static '/ajax/jquery.js' %}"></script>
+
+<script>
+  var lineOrderId='' ; 
+  var secondMainDataType='';
+  function imageUploadBtnClick(id, dataType2){
+    lineOrderId = id;
+    secondMainDataType= dataType2
+    var fm2 = Dropzone.forElement("form#form2");
+    console.log(fm2);
+    //"resetFiles" Event Call
+    fm2.emit("resetFiles");
+
+    var fm1 = Dropzone.forElement("form#recommendationDiv");
+    console.log(fm1);
+    //"resetFiles" Event Call
+    fm1.emit("resetFiles");
+    if(dataType2=='Denture Only CBCT'){
+        console.log('inside if dataType2')
+        document.getElementById('form2').action=`/guideDcmFileUploadSecond/{{service_order.id}}/${lineOrderId}`;
+        document.getElementById('form2').parentElement.parentElement.parentElement.querySelector('.card-title').innerText='Upload Data Type 2 (Dicom)';
+    } 
+    else{
+        console.log('inside else dataType2')
+        document.getElementById('form2').action=`/uploadGuideData/{{service_order.id}}/${lineOrderId}`;
+        document.getElementById('form2').parentElement.parentElement.parentElement.querySelector('.card-title').innerText='Upload Data Type 2 (STL/PLY)';
+    } 
+    document.querySelectorAll('div.dz-default.dz-message')[0].style.display='block';
+    document.querySelectorAll('div.dz-default.dz-message')[1].style.display='block';
+
+    getFiles();
+    getDicom();
+  }
+
+  function getDataURL2(){
+    if(secondMainDataType=='Denture Only CBCT'){
+        console.log('inside if dataType2')
+        return `/guideDcmFileUploadSecond/{{service_order.id}}/${lineOrderId}`;
+        // document.getElementById('form2').parentElement.parentElement.parentElement.querySelector('.card-title').innerText='Upload Data Type 2 (Dicom)';
+    } 
+    else{
+        console.log('inside else dataType2')
+        return `/uploadGuideData/{{service_order.id}}/${lineOrderId}`;
+        // document.getElementById('form2').parentElement.parentElement.parentElement.querySelector('.card-title').innerText='Upload Data Type 2 (STL/PLY)';
+    } 
+  }
+
+  function getAjaxCallURL(pk, id1){
+    if(secondMainDataType=='Denture Only CBCT'){
+        return `/guideDicomAPI/${pk}/${id1}`;
+    }
+    else{
+        return `/viewGuideData/${pk}/${id1}`
+    }
+  }
+  // ajax call function 
+  function getFiles(){
+    let fileTarget = ''
+    if(secondMainDataType == 'Denture Only CBCT'){
+      fileTarget = 'file1'
+    }
+    else{
+      fileTarget = 'file'
+    }
+    let pk =$('#service_orderid').val();
+    let id1 = lineOrderId;
+    let csr = $("input[name=csrfmiddlewaretoken]").val();    
+    mydata={'pk': pk,'id1': id1, 'csrfmiddlewaretoken': csr};
+    let f= document.getElementById('fileNameBody');
+    while (f.hasChildNodes()) {
+      f.removeChild(f.firstChild);
+    }
+
+    $.ajax(
+      {
+        url: getAjaxCallURL(pk, id1),
+        // url: `/viewGuideData/${pk}/${id1}`,
+        method:'GET',
+        data: mydata,
+
+        success: function (data) {
+            // console.log('the sata is', data)
+          if(data.length>0){
+            // console.log("the data is", data[0]['id'])
+        
+            var main_id= data[0]['id'];
+            $( data ).each(function(i) {
+              var fileName1 = data[i][fileTarget].match(/[ \w-]+\.[\w-]*$/)[0];
+              var table_row= document.createElement('tr');
+              var table_heading= document.createElement('td');
+              var table_heading2= document.createElement('td');
+
+              // var anchor= document.createElement('a');
+              // anchor.classList.add('btn');
+              // anchor.type='button';
+              // anchor.href=`/ios_delete/${main_id}`;
+
+              // var icon= document.createElement('i');
+              // icon.classList.add("fa-solid", "fa-trash");
+              
+              // anchor.appendChild(icon);
+
+              table_heading.innerText= fileName1;
+              // table_heading2.appendChild(anchor);
+              table_row.appendChild(table_heading);
+              table_row.appendChild(table_heading2);
+              f.appendChild(table_row);
+            }); 
+          }
+        }
+    });
+  }
+  
+  
+  function getDicom(){
+    let pk =$('#service_orderid').val();
+    let id1 = lineOrderId;
+    let csr = $("input[name=csrfmiddlewaretoken]").val();    
+    mydata={'pk': pk,'id1': id1, 'csrfmiddlewaretoken': csr};
+    let f= document.getElementById('fileNameCbct');
+    while (f.hasChildNodes()) {
+      f.removeChild(f.firstChild);
+    }
+
+    $.ajax(
+      {
+        url: `/guideDicomAPI/${pk}/${id1}`,
+        method:'GET',
+        data: mydata,
+        success: function (data) {
+        //   console.log('this is the dicom data', data);
+          if(data.length>0){
+            // console.log(data);
+            // console.log("the data is", data[0]['id'])
+            var main_id= data[0]['id'];
+            $( data ).each(function(i) {
+              var fileName1 = data[i]['file'].match(/[ \w-]+\.[\w-]*$/)[0];
+              var table_row= document.createElement('tr');
+              var table_heading= document.createElement('td');
+              var table_heading2= document.createElement('td');
+              
+              // var anchor= document.createElement('a');
+              // anchor.classList.add('btn');
+              // // anchor.type='button';
+              // anchor.href=`/ios_delete/${main_id}`;
+
+              // var icon= document.createElement('i');
+              // icon.classList.add("fa-solid", "fa-trash"); 
+              
+              // anchor.appendChild(icon);
+
+              table_heading.innerText= fileName1;
+              // table_heading2.appendChild(anchor);
+              table_row.appendChild(table_heading);
+              // table_row.appendChild(table_heading2);
+              f.appendChild(table_row);
+            }); 
+          }
+        }
+    });
+  }
+  
+
+  function getUrl(name){
+    if(name=='form2'){
+    //   return `/uploadGuideData/{{service_order.id}}/${lineOrderId}`;
+        var result= getDataURL2();
+        console.log(result)
+        return result;
+    } else{
+      return `/uploadGuideDcmFile/{{ service_order.id }}/${lineOrderId}`;
+    }
+   }
+
+  
+  function onFormSubmit(){
+    let dataFirst = document.getElementById('dataFirst').value == 'Select Data Type 1';
+    let dataSecond = document.getElementById('DataSecond').value == 'Select Data Type 2';
+    let categ = document.getElementById('categ').value == 'Select Output Type';
+    let categ2 = document.getElementById('categ2').value == 'Select Guide Type';
+    let title = document.getElementById('title').value == 'Planning Type';
+    let price = document.getElementById('price').value == 'Price';
+    if(dataFirst == false && dataSecond == false && categ == false && categ2 == false && title == false && price == false ){
+      if(document.getElementById('labSelect').value == 'select'){
+          event.preventDefault();
+          swal('Alert !', 'Please select lab first','info');
+          return false;
+      }
+      else{
+          document.getElementById('organisationId').value=document.getElementById('labSelect').value;
+          return true;
+      }
+      
+    }
+    else{
+      console.log('inside false')
+      alert('Please fill all the required data')
+      return false
+    }
+  }
+  
+  for(let x of document.getElementById('labSelect').options){
+    if('{{service_order.reforgid}}' != 'None'){
+        if(x.value=='{{service_order.reforgid}}'){
+            x.selected = 'selected';
+        }
+        else{
+            x.disabled = true;
+        }
+    }
+  }
+
+</script>
+
+<script>
+  window.alert = (function () {
+    var nativeAlert = window.alert;
+    return function (message) {
+      window.alert = nativeAlert;
+      message.indexOf("DataTables warning") === 0
+        ? console.warn(message)
+        : nativeAlert(message);
+    };
+  })();
+</script>
+<script>
+  $(function () {
+    $("#example2").DataTable({
+      order: [[1, "desc"]],
+      paging: false,
+      lengthChange: false,
+      searching: false,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
+    });
+  });
+
+</script> -->
+{% endif %}
+{% endblock %}

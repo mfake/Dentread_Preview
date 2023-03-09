@@ -1,0 +1,146 @@
+{% extends 'dentreadbase.html' %}
+{% load static %}
+{% block content %}
+<!-- Page -->
+		<div class="page main-signin-wrapper">
+
+			<!-- Row -->
+			<div class="row signpages text-center">
+				<div class="col-md-12">
+					<div class="card">
+                        <div class="container-fluid">
+                        <div class="card-body mt-2 mb-2">
+                        <form action="/domain_reg" method="post">
+							{% csrf_token %}
+                            <img src="{% static '/dentread/assets/img/brand/finallogo.jpg' %}" class="header-brand-img mb-2" alt="logo">
+							<div class="row row-sm  mt-lg-4">
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+
+									</div>
+								</div>
+                            <h3 class="text-center mb-4">Registration</h3>
+                        <div class="row">
+
+							<div class="col-lg-6  col-xs-12 col-sm-12 login_form ">
+
+
+
+
+                                             <p class="mb-3 text-muted tx-13 ml-0 text-left">Organistaion Details</p>
+
+
+												<div class="form-group text-left">
+													<label>Organisation Name<span class="tx-danger"> *</span></label>
+													<input class="form-control" name="orgname" id="orgname" data-parsley-class-handler="#fnWrapper" placeholder="Enter your Organisation Name" type="text" required="">
+												</div>
+												<div class="form-group text-left">
+													<label>Official Email<span class="tx-danger"> *</span></label>
+													<input class="form-control" name="orgemail" id="orgemail" placeholder="Enter your Organisation email" type="email" required>
+												</div>
+												<div class="form-group text-left">
+													<label>Address<span class="tx-danger"> *</span></label>
+													<input class="form-control" name="address" id="address" placeholder="Enter your complete Address" type="text" required>
+												</div>
+                                                <div class="form-group text-left">
+													<label>Contact<span class="tx-danger"> *</span></label>
+													<input class="form-control" name="orgcontact" id="orgcontact" placeholder="Enter your primary Contact" type="number" required>
+												</div>
+                                                <div class="form-group text-left">
+													<label>GSTIN/Reg Number</label>
+													<input class="form-control" name="gstin" id="gstin" placeholder="Enter your office Contact" type="text" >
+												</div>
+
+
+										</div>
+
+
+                            <div class="col-lg-6  col-xs-12 col-sm-12 login_form ">
+
+
+
+                                                <p class="mb-3 text-muted tx-13 ml-0 text-left">Admin Details</p>
+
+                                                <div class="form-group text-left">
+													<label>Name<span class="tx-danger"> *</span></label>
+													<input class="form-control" placeholder="Enter your Name"  type="text" id="name" name="name" required>
+												</div>
+												<div class="form-group text-left">
+													<label>Email<span class="tx-danger"> *</span></label>
+													<input class="form-control" placeholder="Enter your email" type="email" id="email" name="email" required>
+												</div>
+                                                <div class="form-group text-left">
+													<label>Contact<span class="tx-danger" id="message1"> *</span></label>
+													<input class="form-control" placeholder="Enter your Mobile Number" onkeyup="maxlen()" type="number" id="contact" name="contact" required>
+												</div>
+												<div class="form-group text-left">
+													<label>Password<span class="tx-danger"> *</span></label>
+													<input class="form-control" placeholder="Enter your password"   type="password" id="password" name="password" type="password"  required="">
+
+												</div>
+                                                <div class="form-group text-left">
+													<label>Confirm Password<span class="tx-danger" id="message"> *</span></label>
+													<input class="form-control" placeholder="Retype your password" onkeyup="myFunction()"  type="password" name="confirm_password" id="confirm_password"   required="">
+
+
+												</div>
+
+										</div>
+                        </div>
+
+
+
+                        <button type="submit" class="btn ripple btn-main-primary btn-block" >Create Account</button>
+
+											<div class="text-left mt-4 ml-0">
+												<p class="mb-0">Already have an account? <a href="/login_dentread">Sign In</a></p>
+											</div>
+
+                    </form>
+					</div>
+				</div>
+			</div>
+        </div>
+            </div>
+        </div>
+			<!-- End Row -->
+<script>
+function myFunction() {
+  if (document.getElementById('password').value ==
+    document.getElementById('confirm_password').value) {
+    document.getElementById('message').style.color = 'green';
+    document.getElementById('message').innerHTML = ' * passowrd match';
+  } else {
+    document.getElementById('message').style.color = 'red';
+    document.getElementById('message').innerHTML = '* password not matching';
+  }
+}
+</script>
+
+<script>
+function maxlen() {
+    var numlen= document.getElementById('contact').value;
+    var len = numlen.toString().length;
+    if (len > 10 ){
+    document.getElementById('message1').style.color = 'red';
+    document.getElementById('message1').innerHTML = ' * Mobile Number Length Exceeded';
+    }
+    if (len <= 10 ){
+    document.getElementById('message1').style.color = 'green';
+    document.getElementById('message1').innerHTML = ' * ';
+    }
+
+
+}
+</script>
+
+		<!-- End Page -->
+{% endblock %}

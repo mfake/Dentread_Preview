@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>DMD IMAGING | Patient Registration</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static '/MDB/css/mdb.min.css' %}" />
+  </head>
+  <style>
+    .center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 25px;
+  width: 50%;
+}
+  </style>
+  <body>
+    <!-- Start your project here-->
+
+      <section class="vh-100 bg-image" style="background-image: url('{% static '/MDB/img/back1.jpg' %}');">
+  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+          <div class="card" style="border-radius: 15px;">
+            <div class="card-body p-5">
+              <img src="{% static '/MDB/img/DMD Logo.png' %}" class="center" alt="Logo">
+              <h4 class=" text-center mb-4" style="color:#264d60;">Thanks You ! {{self_pt.name}}</h4>
+              <h4 class=" text-center mb-4" style="color:#264d60;">Your Visitor ID - {{self_pt.id}}</h4>
+<div class="d-flex justify-content-center" >
+                 <a class="btn btn-sm bg-primary" href="/self"><i class="fa fa-home"></i></a>
+                </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- End your project here-->
+
+    <!-- MDB -->
+    <script type="text/javascript" src="{% static '/MDB/js/mdb.min.js' %}"></script>
+    <!-- Custom scripts -->
+    <script type="text/javascript"></script>
+  </body>
+</html>

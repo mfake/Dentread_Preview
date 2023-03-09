@@ -1,0 +1,586 @@
+{% comment %} {% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %} {% endcomment %}
+<script src="https://kit.fontawesome.com/ab1f34fcc9.js" crossorigin="anonymous"></script>
+<style>
+    body{
+        margin: 0;
+        font-size: 16px;
+        padding: 1rem 2.5rem;
+    }
+    *{
+        line-height: 26px !important;
+    }
+    .heading{
+        text-align: center;
+        background: #4ABDE5;
+        padding: 0.75rem 0;
+        color: white;
+    }
+    .partner-consumer--heading, .dentread-consumer--heading{
+        color: #1F3F7F;
+        margin-bottom: 1rem;
+    }
+    .business-details{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+    .provider-details{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .business-details img{
+        height: 2rem;
+        margin-top: 1rem;
+        margin-right: 1rem;
+    }
+
+    img{
+        height: 2rem;
+        margin-right: 1rem;
+    }
+    
+    label{
+        font-weight: 600;
+    }
+    .partner-consumer--address, .dentread-consumer--address{
+        display: flex;
+        flex-direction: column;
+        /* gap: 0.3rem; */
+    }
+    .patient-info{
+        display: flex;
+        margin: 1.5rem 0;
+        justify-content: space-between;
+    }
+    .order-table{
+        width: 100%;
+        text-align: center;
+        margin: 1.5rem 0;
+        box-shadow: 1px 4px 14px rgba(129, 119, 119, 0.1);
+        background: rgb(227 227 227 / 10%);
+        border-spacing: 5px;
+    }
+    .table-teader-style{
+        width: 100%;
+        text-align: center;
+        margin: 1.5rem 0;
+        box-shadow: 1px 4px 14px rgba(129, 119, 119, 0.1);
+        background: rgb(227 227 227 / 10%);
+        border-spacing: 5px;
+    }
+    th{
+        background-color: #BAEDFD54;
+        padding: 0.5rem;
+    }
+    td{
+        padding: 0.5rem;
+        background: white;
+    }
+    
+    summary{
+        margin: 2rem 0 1.5rem 0;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .summary div{
+        margin-top: 0.75rem;
+    }
+    .summary span{
+        color: #1F3F7F;
+        float: right;
+        margin-left: 2rem;
+    }
+    
+    .dentread-details, .consumer-details{
+        max-width: 400px;
+        display: flex;
+    }
+    .other-details{
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        margin: 1.5rem 0;
+    }
+    .other-details>div{
+        width: 33%;
+        max-width: 400px;
+    }
+    .notes{
+        margin-top: 4rem;
+        max-width: 60%;
+    }
+    ul{
+        font-size: 12px;
+    }
+    .content>*:not(table){
+        padding: 0 1rem;
+    }
+    .billing-address{
+        max-width: 350px;
+    }
+    .terms-n-conditions{
+        display: none;
+    }
+    .extra-content{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .powered-by{
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-top: 4rem;
+    }
+</style>
+
+<div class="content">
+    <h3 class="heading">
+        INVOICE
+    </h3>
+    <div class="business-details">
+        <div class="dentread-details">
+            <div class="icon-image" >
+                <img src="/static/logo/dentread-svg-logo.svg" alt="">
+            </div>
+            <div class="">
+                <h3 class="dentread-consumer--heading">{{referOrg.orgname}}</h3>
+                <div class="dentread-consumer--address">
+                    <div class="nominal-address">
+                        <label for="address-details">Address: </label>
+                        <span id="address-details">
+                            {{referOrg.address}}
+                        </span>
+                    </div>
+                    <div class="tele-details">
+                        <label for="tele-details">Telephone: </label>
+                        <span id="tele-details">
+                            {{referOrg.contact}}
+                        </span>
+                    </div>
+                    <div class="email-details">
+                        <label for="email-details">Email: </label>
+                        <span id="email-details">
+                            {{referOrg.email}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="consumer-details">
+            <div class="icon-image" >
+                <img src="{{org.logo.url}}" alt="">
+            </div>
+            <div class="">
+                <h3 class="partner-consumer--heading">{{org.orgname}}</h3>
+                <div class="partner-consumer--address">
+                    <div class="nominal-address">
+                        <label for="address-details">Address: </label>
+                        <span id="address-details">
+                            {{org.address}}
+                        </span>
+                    </div>
+                    <div class="tele-details">
+                        <label for="tele-details">Telephone: </label>
+                        <span id="tele-details">
+                            {{org.contact}}
+                        </span>
+                    </div>
+                    <div class="email-details">
+                        <label for="email-details">Email: </label>
+                        <span id="email-details">
+                            {{org.email}}
+                        </span>
+                    </div>
+                    <div class="cin-details">
+                        <label for="cin-details">Reg No: </label>
+                        <span id="cin-details">
+                            {{org.regNo}}
+                        </span>
+                    </div>
+                    <div class="gst--details">
+                        <label for="gst--details">GST No: </label>
+                        <span id="gst--details">
+                            {{org.gstin}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <hr>
+    <div class="other-details">
+        <div class="partner-details">
+            <h3>Business Details</h3>
+            <div class="gst-details">
+                <label for="gst-details">GSTIN: </label>
+                <span id="gst-details">
+                    {{referOrg.gstin}}
+                </span>
+            </div>
+            <div class="state-details">
+                <label for="state-details">State: </label>
+                <span id="state-details">
+                    {{referOrg.state}} 
+                </span>
+            </div>
+            <div class="pan-details">
+                <label for="pan-details">PAN: </label>
+                <span id="pan-details">
+                    {{referOrg.pan}}
+                </span>
+            </div>
+            <div class="cin-details">
+                <label for="cin-details">CIN: </label>
+                <span id="cin-details">
+                    {{referOrg.cin}}
+                </span>
+            </div>
+            <div class="invoice-date">
+                <label for="invoice-date">Invoice Date: </label>
+                <span id="invoice-date">
+                    {{date}}
+                </span>
+            </div>
+            <div class="invoice-number">
+                <label for="invoice-number">Invoice No: </label>
+                <span id="invoice-number">
+                    DNTRED/{{service_order.repid}}
+                </span>
+            </div>
+            <div class="reference-details">
+                <label for="reference-details">Reference: </label>
+                <span id="reference-details">
+                    {{Reference}}
+                </span>
+            </div>
+            
+        </div>
+        <div class="billing-address">
+            <h3>Billing Address</h3>
+            <div class="nominal-address">
+                <label for="address-details">Address: </label>
+                <span id="address-details">
+                    {{org.address}}
+                </span>
+            </div>
+            <div class="tele-details">
+                <label for="tele-details">Telephone: </label>
+                <span id="tele-details">
+                    {{org.contact}}
+                </span>
+            </div>
+            <div class="email-details">
+                <label for="email-details">Email: </label>
+                <span id="email-details">
+                    {{org.email}}
+                </span>
+            </div>
+        </div>
+        <div class="shipping-address">
+            <h3>Shipping Address</h3>
+            <div class="nominal-address">
+                <label for="address-details">Address: </label>
+                <span id="address-details">
+                    {{org.address}}
+                </span>
+            </div>
+            <div class="tele-details">
+                <label for="tele-details">Telephone: </label>
+                <span id="tele-details">
+                    {{org.contact}}
+                </span>
+            </div>
+            <div class="email-details">
+                <label for="email-details">Email: </label>
+                <span id="email-details">
+                    {{org.email}}
+                </span>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="patient-info">
+        <div class="">
+            <label for="patient-name">Patient Name: </label>
+            <span>{{service_order.name}}</span>
+        </div>
+        <div class="">
+            <label for="service-date">Service Date:</label>
+            <span>{{service_order.date}}</span>
+        </div>
+        <div class="">
+            <label for="center">Center:</label>
+            <span>{{service_order.locate}}</span>
+        </div>
+    </div>
+    <hr>
+    <table class="order-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>HSC/SAC</th>
+                <th style = "display: none">Product/Study</th>
+                <th>MRP{% autoescape off %}
+                    {{icon}}
+                {% endautoescape %}</th>
+                <th>Discount(%)</th>
+                <th>GST</th>
+                <th>Net Amount{% autoescape off %}
+                    {{icon}}
+                {% endautoescape %}</th>
+                <th>SGST(%)</th>
+                <th>CGST(%)</th>
+                {% if org.state == 'Uttar Pradesh' or   org.state == 'UP'%}
+                <th>IGST(%)</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{service_order.refstudy}}</td>
+                <td>{{HSC}}</td>
+                <td style = "display: none">{Product}</td>
+                <td>{{service_order.ref_price}}.0</td>
+                <td>{{DiscountPersentage}}</td>
+                <td>{{GST}}</td>
+                <td>{{netAmount}}</td>
+                <td>{{SGST}}</td>
+                <td>{{CGST}}</td>
+                {% if org.state == 'Uttar Pradesh' or   org.state == 'UP'%}
+                <td>{{IGST}}</td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+    {% if service_order.refstudy == 'Digital Lab Services' %}
+    <table class="order-table">
+        <span class="table-teader-style">Order line item details</span>
+        <thead>
+            <tr>
+                <th>Item </th>
+                <th>Type </th>
+                <th>Method</th>
+                <th>Material</th>
+                <th>Warranty</th>
+                <th>Unit</th>
+                <th>Unit Price</th>
+                <th>Price{% autoescape off %}
+                    {{icon}}
+                {% endautoescape %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for i in lineItems %}
+                <td>{{i.item}}</td>
+                <td>{{i.type}}</td>
+                <td>{{i.method}}</td>
+                <td>{{i.material}}</td>
+                <td>{{i.Warranty}}</td>
+                <td>{{i.unit}}</td>
+                <td>{{i.pricePerUnit}}</td>
+                <td>{{i.price}}</td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+    {% if extraLabItem %}
+    <table class="order-table">
+        <span class="table-teader-style">Extra Add-On Items</span>
+        <thead>
+            <tr>
+                <th>Add On Item </th>
+                <th>Unit </th>
+                <th>Unit Price </th>
+                <th>Price{% autoescape off %}
+                    {{icon}}
+                {% endautoescape %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for extra in extraLabItem %}
+                <td>{{extra.addOnService}}</td>
+                <td>{{extra.addOnUnit}}</td>
+                <td>{{extra.unitPrice}}</td>
+                <td>{{extra.addOnPrice}}</td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    {% endif %}
+    {% endif %}
+    {% if service_order.refstudy == 'Implant Surgical Guide' %}
+    <table class="order-table">
+        <span class="table-teader-style">Order line item details</span>
+        <thead>
+            <tr>
+                <th>Data Type First </th>
+                <th>Data Type Second </th>
+                <th>Output Type </th>
+                <th>Guide Type </th>
+                <th>Planning Type </th>
+                <th>Price{% autoescape off %}
+                    {{icon}}
+                {% endautoescape %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for i in lineItems %}
+                <td>{{i.data_type1}}</td>
+                <td>{{i.data_type2}}</td>
+                <td>{{i.output_type}}</td>
+                <td>{{i.guide_type}}</td>
+                <td>{{i.planning_type}}</td>
+                <td>{{i.price}}</td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+    {% endif %}
+    
+    
+    <summary>
+        <div class="bank-details">
+            <h3>Bank Details</h3>
+            <div class="account-no">
+                <label for="account-no">Account Number: </label>
+                <span id="account-no">
+                    {{referOrg.accountNumber}}
+                </span>
+            </div>
+            <div class="ifsc-details">
+                <label for="ifsc-details">IFSC: </label>
+                <span id="ifsc-details">
+                    {{referOrg.ifscCode}}
+                </span>
+            </div>
+            <div class="bank-name">
+                <label for="bank-name">Bank Name: </label>
+                <span id="bank-name">
+                    {{referOrg.bankName}}
+                </span>
+            </div>
+            {% comment %} <div class="branch-name d-none">
+                <label for="branch-name d-none">Branch Name: </label>
+                <span id="branch-name">
+                    {{referOrg.}}
+                </span>
+            </div> {% endcomment %}
+            
+        </div>
+        <div class="summary">
+            <div class="taxable-amount">
+                <label for="taxable-amount">Taxable Amount: </label>
+            <span id="taxable-amount">{% autoescape off %}
+                {{icon}}
+            {% endautoescape %} {{netAmount}}</span>
+            </div>
+            <div class="total-tax">
+                <label for="total-tax">Total Tax: </label>
+                <span id="total-tax">{% autoescape off %}
+                    {{icon}}
+                {% endautoescape %} {{totalTax}}</span>
+            </div>
+            <div class="total-value">
+                <label for="total-value">Total Value: </label>
+                <span id="total-value">{% autoescape off %}
+                    {{icon}}
+                {% endautoescape %} {{netAmount}}</span>
+            </div>
+            <div class="total-value--words">
+                <label for="total-value--words">Total Value(in words): </label>
+                <span id="total-value--words">{Total Value}</span>
+            </div>
+        </div>
+    </summary>
+
+    <div class="extra-content">
+        <div class="notes">
+            <h5 style="line-height: 0 !important;">Notes: </h5>
+            <ul>
+                {% for i in notes%}
+                    <li></li>
+                {% endfor %}
+                <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi mollitia beatae eos perferendis minus similique tenetur, impedit quas laborum hic!</li>
+                <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi mollitia beatae eos perferendis minus similique tenetur, impedit quas laborum hic!</li>
+                <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi mollitia beatae eos perferendis minus similique tenetur, impedit quas laborum hic!</li>
+            </ul>
+        </div>
+        <div class="powered-by">
+            <label for="dentread-logo">Powered By: </label>
+            <img src="/static/logo/DentreadlogoV3cloud30May.png" alt="dentread logo" id="dentread-logo" >
+        </div>
+        
+    </div>
+</div>
+<script>
+    function price_in_words(price) {
+        var sglDigit = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"],
+          dblDigit = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"],
+          tensPlace = ["", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"],
+          handle_tens = function(dgt, prevDgt) {
+            return 0 == dgt ? "" : " " + (1 == dgt ? dblDigit[prevDgt] : tensPlace[dgt])
+          },
+          handle_utlc = function(dgt, nxtDgt, denom) {
+            return (0 != dgt && 1 != nxtDgt ? " " + sglDigit[dgt] : "") + (0 != nxtDgt || dgt > 0 ? " " + denom : "")
+          };
+      
+        var str = "",
+          digitIdx = 0,
+          digit = 0,
+          nxtDigit = 0,
+          words = [];
+        if (price += "", isNaN(parseInt(price))) str = "";
+        else if (parseInt(price) > 0 && price.length <= 10) {
+          for (digitIdx = price.length - 1; digitIdx >= 0; digitIdx--) switch (digit = price[digitIdx] - 0, nxtDigit = digitIdx > 0 ? price[digitIdx - 1] - 0 : 0, price.length - digitIdx - 1) {
+            case 0:
+              words.push(handle_utlc(digit, nxtDigit, ""));
+              break;
+            case 1:
+              words.push(handle_tens(digit, price[digitIdx + 1]));
+              break;
+            case 2:
+              words.push(0 != digit ? " " + sglDigit[digit] + " Hundred" + (0 != price[digitIdx + 1] && 0 != price[digitIdx + 2] ? " and" : "") : "");
+              break;
+            case 3:
+              words.push(handle_utlc(digit, nxtDigit, "Thousand"));
+              break;
+            case 4:
+              words.push(handle_tens(digit, price[digitIdx + 1]));
+              break;
+            case 5:
+              words.push(handle_utlc(digit, nxtDigit, "Lakh"));
+              break;
+            case 6:
+              words.push(handle_tens(digit, price[digitIdx + 1]));
+              break;
+            case 7:
+              words.push(handle_utlc(digit, nxtDigit, "Crore"));
+              break;
+            case 8:
+              words.push(handle_tens(digit, price[digitIdx + 1]));
+              break;
+            case 9:
+              words.push(0 != digit ? " " + sglDigit[digit] + " Hundred" + (0 != price[digitIdx + 1] || 0 != price[digitIdx + 2] ? " and" : " Crore") : "")
+          }
+          str = words.reverse().join("")+' Rupees Only'
+        } else str = "";
+        return str
+      
+      }
+      document.getElementById('total-value--words').innerText = price_in_words({{netAmount}})
+</script>
+{% comment %} {% endif %}
+{%endblock%} {% endcomment %}

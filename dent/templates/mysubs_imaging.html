@@ -1,0 +1,95 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>My Subscription</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+    <!-- Main content -->
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+                 <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead>
+                  <tr>
+                      <th>Date</th>
+                      <th>Pack Type</th>
+                      <th>Pack Amount</th>
+                      <th>Scans</th>
+                      <th>Sacns Consumed</th>
+                      <th>Validity (Days)</th>
+                      <th>Validity (Remaining)</th>
+                      <th>Payment Status</th>
+                      <th>Transaction Date</th>
+                      <th>Transaction ID</th>
+                      <th>Status</th>
+
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                         {% for s in subs %}
+                  <tr>
+                    <td>{{ s.rdate }}</td>
+                      <td>{{ s.type }}</td>
+                    <td>{{ s.price }}</td>
+
+                    <td>{{ s.scans }}</td>
+                      <td>{{ s.consumed }}</td>
+                      <td>{{ s.validity }}</td>
+                      <td>{{ s.validity }}</td>
+                      <td>{{ s.RESPMSG }}</td>
+                      <td>{{ s.TXNDATE }}</td>
+                      <td>{{ s.TXNID }}</td>
+                      <td>{{ s.status }}</td>
+
+                  </tr>
+                {% endfor %}
+                  </tbody>
+
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+
+    <!-- /.content -->
+
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+      </div>
+
+{% endif %}
+{%endblock%}

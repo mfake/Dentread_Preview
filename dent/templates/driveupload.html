@@ -1,0 +1,301 @@
+
+{%extends "dentread_dashbase.html" %}
+{% load static %}
+
+
+{% block content %}
+
+
+<html lang="en" >
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
+
+    <style>
+        #progress-wrp {
+    border: 1px solid #0099CC;
+    padding: 1px;
+    position: relative;
+    height: 30px;
+    border-radius: 10px;
+    margin: 10px;
+    text-align: left;
+    background: #fff;
+    box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  #progress-wrp .progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    background-color: #1f3f7f;
+    width: 0;
+    box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11);
+  }
+
+  #progress-wrp .status {
+    top: 0px;
+    left: 50%;
+    position: relative;
+    display: block;
+    color: #000000;
+  }
+    </style>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+    $(document).ready(function(){
+
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const redirect_uri = "https://cloud.dentread.com/orthanctest" // replace with your redirect_uri;
+    const client_secret = "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";
+    const scope = "https://www.googleapis.com/auth/drive";
+    var access_token= "";
+    var client_id = "390501303746-dbdhedsnulu0govaql8abq966c44pog3.apps.googleusercontent.com";
+
+
+    $.ajax({
+        type: 'POST',
+        url: "https://www.googleapis.com/oauth2/v4/token",
+        data: {code:code
+            ,redirect_uri:redirect_uri,
+            client_secret:client_secret,
+        client_id:client_id,
+        scope:scope,
+        grant_type:"authorization_code"},
+        dataType: "json",
+        success: function(resultData) {
+
+
+           localStorage.setItem("accessToken",resultData.access_token);
+           localStorage.setItem("refreshToken",resultData.refreshToken);
+           localStorage.setItem("expires_in",resultData.expires_in);
+           window.history.pushState({}, document.title, "/orthanctest");
+
+
+
+
+        }
+  });
+
+    function stripQueryStringAndHashFromPath(url) {
+        return url.split("?")[0].split("#")[0];
+    }
+
+    var Upload = function (file) {
+        this.file = file;
+    };
+
+    Upload.prototype.getType = function() {
+        localStorage.setItem("type",this.file.type);
+        return this.file.type;
+    };
+    Upload.prototype.getSize = function() {
+        localStorage.setItem("size",this.file.size);
+        return this.file.size;
+    };
+    Upload.prototype.getName = function() {
+        return this.file.name;
+    };
+    Upload.prototype.doUpload = function () {
+        var that = this;
+        var formData = new FormData();
+
+        // add assoc key values, this will be posts values
+        formData.append("file", this.file, this.getName());
+        formData.append("upload_file", true);
+
+
+        $.ajax({
+            type: "POST",
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", "Bearer" + " " + localStorage.getItem("accessToken"));
+
+            },
+            url: "https://www.googleapis.com/upload/drive/v2/files",
+            data:{
+                uploadType:"resumable",
+
+            },
+
+            xhr: function () {
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) {
+                    myXhr.upload.addEventListener('progress', that.progressHandling, false);
+                }
+                return myXhr;
+            },
+            success: function (data) {
+               console.log(data)
+               let mydata= data;
+                $.ajax({
+                 url: "/driveresp/",
+                 type: "POST",
+                 data: mydata,
+                 dataType: 'json',
+                 success: function (data) {
+
+                    }
+                });
+
+            },
+            error: function (error) {
+                console.log(error);
+
+            },
+            async: true,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            timeout: 6000000
+        });
+    };
+
+    Upload.prototype.progressHandling = function (event) {
+        var percent = 0;
+        var position = event.loaded || event.position;
+        var total = event.total;
+        var progress_bar_id = "#progress-wrp";
+        if (event.lengthComputable) {
+            percent = Math.ceil(position / total * 100);
+        }
+        // update progressbars classes so it fits your code
+        $(progress_bar_id + " .progress-bar").css("width", +percent + "%");
+
+        $(progress_bar_id + " .my").text(percent + "%");
+    };
+
+    $("#upload").on("click", function (e) {
+        var file = $("#files")[0].files[0];
+        var upload = new Upload(file);
+
+        // maby check size or type here with upload.getSize() and upload.getType()
+
+        // execute upload
+        upload.doUpload();
+    });
+
+
+
+
+});</script>
+  </head>
+
+  <body>
+<div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Upload DCM Data</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+
+     <!-- /.container-fluid -->
+
+                  <div class="row">
+
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+
+   <div class="card card-info">
+              <div class="card-header bg-primary text-white">
+                <h5 class="card-title">Upload Scan File (Only.zip )</h5>
+              </div>
+              <div class="card-body">
+
+
+<div class="row">
+                    <div class="col-xl-9" >
+
+           <div class="form-group">
+													<label class=""></label>
+													<div class="custom-file">
+
+                      <input type="file" class="custom-file-input" id="files" type="file" name="files[]" multiple >
+                      <label class="custom-file-label" for="files">Choose file</label>
+
+                    </div>
+                                                    </div>
+       </div>
+     <div class="col-xl-3" >
+         <label class=""></label>
+          <button class="btn ripple btn-block btn-primary " id="upload">Upload</button>
+     </div>
+</div>
+<label class="">Upload Progress {{service_order.id}}</label>
+
+     <div id="progress-wrp">
+
+        <div class="progress-bar"></div>
+
+         <label class="my">0 %</label>
+
+
+    </div>
+
+
+
+   <p id="result">
+
+   </p>
+                    </div>
+    </div>
+
+                  </div>
+
+
+
+    <!-- Main content -->
+
+
+
+             <div class="col-sm-12 col-lg-12 col-xl-6">
+
+   <div class="card card-info">
+
+              <div class="card-body">
+
+
+  <a class="btn ripple btn-main-primary btn-block" href="/showpatients">
+                            Submit Data
+               </a>
+
+
+                  </div>
+               </div>
+
+              </div>
+
+
+
+              </div>
+
+
+              <!-- /.card-body -->
+            </div>
+
+      </div>
+</div>
+<script src="{% static '/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+<script>
+$(function () {
+  bsCustomFileInput.init();
+});
+</script>
+
+
+{% endblock %}
+

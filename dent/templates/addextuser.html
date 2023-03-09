@@ -1,0 +1,118 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Add External User</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+
+    <!-- Main content -->
+
+
+
+
+
+            <!-- /.card -->
+
+
+    <!-- Main content -->
+
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+                    	<div class="row row-sm  mt-lg-4">
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+
+
+									</div>
+								</div>
+<form  method="post" action="/validateuser" >
+        {% csrf_token %}
+          <!-- /.col (left) -->
+          <div class="col-md-8">
+            <div class="card card-primary">
+              <div class="card-header text-white" style="background-color:#1f3f7f;">
+                <h6 class="card-title">User Details</h6>
+              </div>
+              <div class="card-body">
+                  {% if message %}
+								<div class="alert alert-{{alert}} alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+                <!-- Name -->
+  <div class="row">
+
+                  <div class="col-sm-6">
+                     <div class="form-group">
+                        <label for="exampleInputPassword1">Email<span><small class="text-danger"> *</small></span></label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                      </div>
+                  </div>
+       <div class="col-sm-6">
+                     <div class="form-group">
+                        <label for="exampleInputPassword1">Validate</label>
+                       <button href="submit" class="btn btn-block ripple btn-success">Validate</button>
+                      </div>
+                  </div>
+
+  </div>
+
+ </form>
+
+
+               <!-- Email Contact Address -->
+                    <form  method="post" action="/addextuser" >
+        {% csrf_token %}
+                     <div class="row">
+
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Name</label>
+                          <input type="text" class="form-control" id="name" name="name" value="{{checkuser.name}}" placeholder="Name" required readonly>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Contact</label>
+                          <input type="text" class="form-control" id="contact" name="contact" value="{{checkuser.contact}}" placeholder="Contact" required readonly>
+                      </div>
+                  </div>
+                </div>
+ <input type="text" class="form-control" id="username" name="username" value="{{checkuser.username}}" placeholder=""  readonly >
+            <button type="submit" class="btn btn-block ripple btn-primary">Add</button>
+
+
+
+              </div>
+            </div>
+</form>
+   </div>
+      </div>
+ </div>
+</div>
+</div>
+</div>
+
+{% endif %}
+{%endblock%}

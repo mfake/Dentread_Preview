@@ -1,0 +1,108 @@
+{% extends 'dentreadbase.html' %} 
+{% load static %} 
+{% block content %}
+
+<style>
+    body{
+        margin: 0;
+        background: white;
+        --primary-color : #1F3F7F;
+        --secondary-color : white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    a{
+        padding: 8px 25px;
+        background: var(--primary-color);
+        color: var(--secondary-color);
+        border-radius: 4px;
+    }
+    .enclosing-div{
+        text-align: center;
+        padding: 1.5rem 2rem;
+        box-shadow: 1px 2px 10px rgb(121 121 121 / 26%);
+        max-width: 550px;
+    }
+    label{
+        font-weight: 500;
+        margin-right: 3px;
+    }
+    .meta-data, .message, .title{
+        margin-top: 1rem;
+    }
+    .title{
+        margin-bottom: 5px;
+    }
+    .message{
+        margin-bottom: 2rem;
+    }
+    img{
+        height: 40px;
+    }
+</style>
+
+<div class="enclosing-div content">
+    {% if code == 200 %}
+        <img src="/static/svg_icons/shipment-success.svg" alt="success image">
+    {% else %}    
+        <img src="/static/svg_icons/shipment-warning.svg" alt="failure image">
+    {% endif %}
+    <h5 class="title">
+        {% if code == 200 %}
+            Order Placed Successfully!
+        {% else %}   
+            Order Saved
+        {% endif %}
+    </h5>
+
+    <div class="">
+        <label for="">Order ID: </label>
+        <span>{{service_order.order_id}}</span>
+    </div>
+    <div class="meta-data row">
+        {% if code == 200 %}
+            <div class="col-sm-6">
+                <label for="first">Payment Mode: </label>
+                <span class="first">{{service_order.payment_mode}}</span>
+            </div>
+            <div class="col-sm-6">
+                <label for="second">Transaction ID: </label>
+                <span id="second">{{service_order.TXNID}}</span>
+            </div>
+        {% endif %}
+        {% if code == 200 %}
+            <div class="col-sm-6">
+                <label for="third">Shipment ID: </label>
+                <span id="third">{{service_order.shipment_id}}</span>
+            </div>
+            <div class="col-sm-6">
+                <label for="fourth">Logistic Carrier: </label>
+                <span id="fourth">{{service_order.courier_name}}</span>
+            </div>
+        {% endif %}
+        
+    </div>
+    <div class="message">
+        {% if code == 200 %}
+            Dentread will keep you posted about the status of the order via notifications.
+        {% else %}
+            Your Order has been submitted. Unfortunately, were unable to book your shipment right now. Please book your shipment from the Platform --> Ship#ent menu in some-time.
+        {% endif %}
+    </div>
+    {% if code == 200 %}
+        <a href="/index">Done</a>
+    {% else %}
+        <a href="/allShipment">Try Again</a>
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

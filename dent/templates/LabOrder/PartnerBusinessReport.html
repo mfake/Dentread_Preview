@@ -1,0 +1,510 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+
+<style>
+
+    .data-details--unit{
+        color: grey;
+        font-weight: 400;
+    }
+    .setAllignMent{
+        text-align: start;
+    }
+
+    input+label::after, input+label::before{
+        display: none !important;
+    }
+    .container-div{
+        width: 80%;
+        margin: 1rem auto 2rem auto ;
+        background: white;
+    }
+
+    .weekly-heading{
+        text-align: center;
+        padding: 1rem;
+        background: aliceblue;
+        margin-top: 1rem;
+    }
+
+    .milestone-table {
+        table-layout: fixed;
+        width: 360px;
+    }
+
+    .milestone-table td {
+        width: 120px;
+        display: inline-block;
+    }
+
+    .table{
+        border: 1px solid #e8e8f7;
+    }
+
+    .table thead th{
+        vertical-align: middle;
+    }
+
+    .dropdown-menu{
+        min-width: 8rem !important;
+        transform: translate3d(-130px, -20px, 0px) !important;
+    }
+
+    .dropdown-menu-lg{
+        min-width: 10rem !important;
+        transform: translate3d(-157px, -20px, 0px) !important;
+    }
+    .setColor-second{
+        background-color: aliceblue !important;
+    }
+    .setColor-first{
+        background-color: #efe9e9 !important;
+    }
+
+</style>
+
+<div class="container-div">
+    <h5 class="weekly-heading">Business Report</h5>    
+    <div class="container">
+        <div class="row">
+
+            <div class="dropdown dropleft" style="margin: 1rem 1rem 1rem auto">
+                <button class="btn btn-primary btn-sm" aria-expanded="false" aria-haspopup="true"  data-toggle="dropdown" id="dropleftMenuButton"  type="button">
+                    <i class="fa-solid fa-filter"></i>
+                </button>
+
+                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                    <form method="post" action="/partnerBusinessReport" class="form p-3">
+                        {% csrf_token %}
+                        <input type="text" id="dat" name="dat" hidden>
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="radio" name="filterRadios" id="dailyFilter" value="daily" onclick="today()" {{check1}} checked>
+                            <label class="form-check-label" for="dailyFilter">
+                                Daily
+                            </label>
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="radio" name="filterRadios" id="weeklyFilter" value="weekly" onclick="weekly()" {{check2}}>
+                            <label class="form-check-label" for="weeklyFilter">
+                                Weekly
+                            </label>
+                        </div>
+                        
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="radio" name="filterRadios" id="monthlyFilter" value="monthly" onclick="monthly()" {{check3}}>
+                            <label class="form-check-label" for="monthlyFilter">
+                                Monthly
+                            </label>
+                        </div>
+
+                        <div class="form-check mt-3 d-none">
+                            <input class="form-check-input" type="radio" name="filterRadios" id="customFilter" value="custom">
+                            <label class="form-check-label" for="customFilter">
+                                Custom
+                            </label>
+                            {% comment %} <input type="date" class="form-control" id="fromdate" name="fromdate"hidden>
+                            <input type="date" class="form-control" id="todate" name="todate"hidden> {% endcomment %}
+                        </div>
+                        
+                        <script>
+                            function today() {
+                                console.log('today');
+                                document.getElementById("dat").value = 'Today';
+                            };
+                            function weekly() {
+                                console.log('yesterday');
+                                document.getElementById("dat").value = 'Thisweek';
+                            };
+                            function monthly() {
+                                console.log('thismonth');
+                                document.getElementById("dat").value = 'Thismonth';
+                            };
+                        </script>
+
+                        <button class="btn btn-sm btn-primary mt-3" type="submit">
+                            Filter
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="dropdown dropleft" style="margin: 1rem 1rem 1rem 0">
+                <button class="btn btn-primary btn-sm" aria-expanded="false" aria-haspopup="true"  data-toggle="dropdown" id="dropleftMenuButton"  type="button">
+                    <i class="fa fa-lg fa-duotone fa-share-nodes"></i>
+                    Export as
+                </button>
+
+                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+
+                    <form action="" class="form p-3">
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" onchange="generatePDF()" type="radio" name="exportRadios" id="exportPdf" value="pdf" checked>
+                            <label class="form-check-label" for="exportPdf">
+                                Pdf
+                            </label>
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="radio" name="exportRadios" id="exportXls" value="xls">
+                            <label class="form-check-label" for="exportXls">
+                                XLS
+                            </label>
+                        </div>
+                        
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="radio" name="exportRadios" id="share" value="share">
+                            <label class="form-check-label" for="share">
+                                Share
+                            </label>
+                        </div>
+
+                        <button class="btn btn-sm btn-primary mt-3" type="submit">
+                            Export
+
+                        </button>
+                    </form>
+                </div>
+                
+            </div>
+            
+            <div class="col-sm-12 p-3">
+
+                <table class="table w-100 text-center">
+                    <thead>
+                        <tr>
+                            <th class="col-xs-1" style="width: 275px;"></th>
+                            <th class="col-xs-1">Crown and Bridges</th>
+                            <th class="col-xs-1">Implant Specific Section</th>
+                            <th class="col-xs-1">Removable Prosthesis</th>
+                            <th class="col-xs-1">Precision Attachment</th>
+                            <th class = "col-xs-1">Orthodontic and Pedodontic Appliances</th>
+                            <th class="col-xs-1">Miscellaneous</th>
+                            <th class="col-xs-1">Implant Surgical Guide</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="setColor-first">
+                            <th class="setAllignMent">Sales Analysis <br> 
+                                <span class="data-details--unit">
+                                    (Units)
+                                </span> </th>
+                            <td>{{crown_unit}}</td>
+                            <td>{{implant_unit}}</td>
+                            <td>{{removable_unit}}</td>
+                            <td>{{precision_unit}}</td>
+                            <td>{{ortho_unit}}</td>
+                            <td>{{mis_unit}}</td>
+                            <td>{{totalOrder}}</td>
+                        </tr> 
+                        <tr class="setColor-second">
+                            <th class="setAllignMent">Revenue Analysis <br> 
+                                <span class="data-details--unit">
+                                    (currency)
+                                </span> 
+                            </th>
+                            <td>{{total_price_crown}}</td>
+                            <td>{{total_price_implant}}</td>
+                            <td>{{total_price_removable}}</td>
+                            <td>{{total_price_precision}}</td>
+                            <td>{{total_price_ortho}}</td>
+                            <td>{{total_price_mis}}</td>
+                            <td>{{totalRevenue}}</td>                           
+                        </tr>                       
+                        <tr class="setColor-first">
+                            <th class="setAllignMent">Customer Analysis  <br> 
+                                <span class="data-details--unit">
+                                    (Count)
+                                </span>  </th>
+                            <td>{{total_org_crown}}</td>
+                            <td>{{total_org_implant}}</td>
+                            <td>{{total_org_removable}}</td>
+                            <td>{{total_org_implant}}</td>
+                            <td>{{total_org_ortho}}</td>
+                            <td>{{total_org_mis}}</td>
+                            <td>{{customerAnalysis}}</td>
+                        </tr> 
+                        <tr class="setColor-second">
+                            <th class="setAllignMent" >Return/Refund Analysis <br> 
+                                <span class="data-details--unit">
+                                    (Count | currency)
+                                </span> 
+                            </th>
+                            <td>{{cancellationCount_crown}} | {{cancellationAmount_crown}}</td>
+                            <td>{{cancellationCount_implant}} | {{cancellationAmount_implant}}</td>
+                            <td>{{cancellationCount_removable}} | {{cancellationAmount_removable}}</td>
+                            <td>{{cancellationCount_precision}} | {{cancellationAmount_precision}}</td>
+                            <td>{{cancellationCount_ortho}} | {{cancellationAmount_ortho}}</td>
+                            <td>{{cancellationCount_mis}} | {{cancellationAmount_mis}}</td>
+                            <td>{{returnAmount}} | {{refundAmount}}</td>
+                        </tr> 
+                        <tr style="display: none;">
+                            <th class="setAllignMent">Efficiency Analysis <br> 
+                                <span class="data-details--unit">
+                                    (Average time to complete an order)
+                                </span>     
+                            </th>
+                            <td>{number}</td>
+                            <td>{number}</td>
+                            <td>{number}</td>
+                            <td>{number}</td>
+                            <td>{number}</td>
+                            <td>{number}</td>
+                            <td>{number}</td>
+                        </tr>        
+                    </tbody>
+                </table>
+            </div>
+            <div class="dropdown dropleft" style="margin: 1rem 1rem 1rem auto">
+                <button class="btn btn-primary btn-sm d-none" aria-expanded="false" aria-haspopup="true"  data-toggle="dropdown" id="dropleftMenuButton"  type="button">
+                    <i class="fa-solid fa-filter"></i>
+                    Type
+                </button>
+
+                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu dropdown-menu-lg tx-13 d-none">
+
+                    <form class="form p-3" onclick="onTypeFormClick(event)">
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="crownBridge" value="Crown & Bridge" checked>
+                            <label class="form-check-label" for="crownBridge">Crown and Bridges</label>
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="implantCrown" value="Implant Crown">
+                            <label class="form-check-label" for="implantCrown">Implant Specific Section</label>
+                        </div>
+                        
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="customizedAbutment" value="Customized Abutment">
+                            <label class="form-check-label" for="customizedAbutment">Removable Prosthesis</label>
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="denture" value="Denture">
+                            <label class="form-check-label" for="denture">Precision Attachment</label>
+                        </div>
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="denture" value="Denture">
+                            <label class="form-check-label" for="denture">Orthodontic and Pedodontic Appliances / Retainers</label>
+                        </div>
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="denture" value="Denture">
+                            <label class="form-check-label" for="denture">Miscellaneous</label>
+                        </div>
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" id="implantSurgicalGuide" value="Implant Surgical Guide">
+                            <label class="form-check-label" for="implantSurgicalGuide">Implant Surgical Guide</label>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <div class="dropdown dropleft" style="margin: 1rem 1rem 1rem 0">
+                <button class="btn btn-primary btn-sm d-none" aria-expanded="false" aria-haspopup="true"  data-toggle="dropdown" id="dropleftMenuButton"  type="button">
+                    <i class="fa-solid fa-filter"></i>
+                    Analysis
+                </button>
+
+                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+
+                    <form action="" class="form p-3">
+
+                        
+                        <div class="form-check mt-3">
+                            <input class="form-check-input"  type="radio" name="exportRadios" id="sales" value="Sales" checked>
+                            <label class="form-check-label" for="sales">
+                                Sales
+                            </label>
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="radio" name="exportRadios" id="revenue" value="Revenue">
+                            <label class="form-check-label" for="revenue">
+                                Revenue
+                            </label>
+                        </div>
+                        
+                        <div class="form-check mt-3">
+                            <input class="form-check-input"  type="radio" name="exportRadios" id="customer" value="Customer">
+                            <label class="form-check-label" for="customer">
+                                Customer
+                            </label>
+                        </div>
+
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="radio" name="exportRadios" id="return-refund" value="Return/Refund">
+                            <label class="form-check-label" for="return-refund">
+                                Return/Refund
+                            </label>
+                        </div>
+                        
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="radio" name="exportRadios" id="efficiency" value="Efficiency">
+                            <label class="form-check-label" for="efficiency">
+                                Efficiency
+                            </label>
+                        </div>
+                        
+                    </form>
+                </div>
+                
+            </div>
+
+            <div class="col-sm-12 p-3">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generatePDF(){
+        const ele= document.querySelector('.container-div');
+        html2pdf().from(ele).save();
+    }
+    function onPdfSelect(){
+        console.log('pdf selected');
+    }
+
+    const labels = [
+        'Crown and Bridges',
+        'Implant Specific Section',
+        'Removable Prosthesis',
+        'Precision Attachment',
+        'Orthodontic and Pedodontic Appliances',
+        'Miscellaneous',
+        'Surgical Guide'
+    ];
+
+    const DATA_COUNT = 8;
+
+    const NUMBER_CFG = {count: DATA_COUNT, min: -100, max: 100};
+
+    // const labels = Utils.months({count: 7});
+    const data = {
+        labels: labels,
+        datasets: [
+
+            {
+                label: 'Sales',
+                data: [{{crown_unit}}, {{implant_unit}}, {{removable_unit}}, {{precision_unit}}, {{ortho_unit}}, {{mis_unit}}, {{totalOrder}}],
+                borderColor: 'rgb(255, 0, 0)',
+                backgroundColor: 'rgba(255, 0, 0, 50)',
+                yAxisID: 'y',
+                tension: 0.3,
+            },
+            {% comment %} {
+                label: 'Revenue',
+                data: [8, 17, 23, 65, 45, 80, 55, 90],
+                borderColor: 'rgb(255, 165, 0)',
+                backgroundColor: 'rgba(255, 165, 0, 50)',
+                yAxisID: 'y',
+                tension: 0.3,
+                hidden: true, 
+            }, {% endcomment %}
+            {
+                label: 'Customer',
+                data: [{{total_org_crown}}, {{total_org_implant}}, {{total_org_removable}}, {{total_org_implant}}, {{total_org_ortho}}, {{total_org_mis}}, {{customerAnalysis}}],
+                borderColor: 'rgb(255, 255, 0)',
+                backgroundColor: 'rgba(255, 255, 0, 50)',
+                yAxisID: 'y',
+                tension: 0.3,
+                hidden: true, 
+            },
+            {
+                label: 'Return/Refund',
+                data: [{{cancellationCount_crown}}, {{cancellationCount_implant}}, {{cancellationCount_removable}}, {{cancellationCount_precision}}, {{cancellationCount_ortho}}, {{cancellationCount_mis}}, {{returnAmount}}, 85],
+                borderColor: 'rgb(0, 128, 0)',
+                backgroundColor: 'rgba(0, 128, 0, 50)',
+                yAxisID: 'y',
+                tension: 0.3,
+                hidden: true, 
+            },
+            {% comment %} {
+                label: 'Return/Refund Price',
+                data: [51, 54, 21, 84, 62, 30, 75, 35],
+                borderColor: 'rgb(0, 0, 255)',
+                backgroundColor: 'rgba(0, 0, 255, 50)',
+                yAxisID: 'y',
+                tension: 0.3,
+                hidden: true, 
+            },    {% endcomment %}
+        ]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            stacked: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Sales, Customer & Performance Analysis'
+                }
+            },
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    // grid: {
+                    //     display: false,
+                    // }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                    }
+                }
+                    
+            }
+        },
+    };
+
+    const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+
+    function onTypeFormClick(e){
+
+        if(e.target.type == 'checkbox'){
+            console.log('inside if')
+            for(let i of data.datasets){
+                
+                if(e.target.value == i.label){
+                    console.log('inside second if')
+                    console.log(i.hidden);
+                    i.hidden = !i.hidden;
+                    console.log(i.hidden);
+                    myChart.update()
+                    break;
+                }
+            }
+        }
+    }
+</script>
+
+{% endif %}
+{%endblock%}

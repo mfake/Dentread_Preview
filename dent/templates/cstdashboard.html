@@ -1,0 +1,137 @@
+{%extends "cstdashbase.html" %}
+{% load static %}
+{% block content %}
+
+
+
+  <!-- DataTables -->
+
+
+
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Referred Patients</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a >Home</a></li>
+              <li class="breadcrumb-item active">Referred Patients</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th><b>Date</b></th>
+                     <th hidden> Date</th>
+                    <th><b>Name</b></th>
+                    <th><b>Age</b></th>
+                    <th><b>Gender</b></th>
+                    <th><b>Refer For</b></th>
+                    <th><b>Status</b></th>
+
+                       <th><b>Actions</b></th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                   {% for i in refpt %}
+                  <tr>
+
+                    <td>{{ i.rdate|date:'d-m-Y' }}</td>
+                      <td hidden>{{ i.rdate|date:'Y-m-d' }}</td>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.age }}</td>
+                      <td>{{ i.gender }}</td>
+                    <td>{{ i.study }}</td>
+                      <td>{{ i.status }}</td>
+                     <td>
+                        <a class="{{i.btnstatus}}"  href="/refptreport/{{ i.id }}" >
+                              <i class="mdi mdi-tooth">
+                              </i>
+                            See Report
+                          </a>
+
+<!-- ./wrapper --></td>
+                  </tr>
+                {% endfor %}
+                  </tbody>
+
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+      </div>
+
+<!-- jQuery -->
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+
+<!-- AdminLTE for demo purposes -->
+
+<!-- Page specific script -->
+  <script>
+  $(function () {
+    $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false, "columnDefs" : [{"targets":1, "type":"date"}], "order": [[ 1, "desc" ]],
+      "buttons": [ "excel", "pdf",  "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
+
+<script>
+  var myModal = document.getElementById('myModal')
+var myInput = document.getElementById('myInput')
+
+myModal.addEventListener('shown.bs.modal', function () {
+  myInput.focus()
+})
+})
+</script>
+
+
+{%endblock%}

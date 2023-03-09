@@ -1,0 +1,221 @@
+
+{% extends "domain_dashbase.html" %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="page-header">
+							<div>
+								<h2 class="main-content-title tx-22 mg-b-5">Dentread Services Invoices</h2>
+
+							</div>
+							<div class="d-flex">
+								<div class="justify-content-center">
+
+
+								</div>
+							</div>
+						</div>
+             <div class="row row-sm">
+							<div class="col-lg-12 col-md-12">
+								<div class="card custom-card">
+									<div class="card-body">
+                                        <div>
+											<h6 class="tx-18 mb-3">Filter Invoices</h6>
+										</div>
+<form method="post" action="/orginvoices/{{organisation.id}}">
+        {% csrf_token %}
+										<div class="row row-sm mg-b-20">
+											<div class="col-lg-2">
+
+                                                <label class="rdiobox"><input name="rdio" type="radio" value="Today" onclick="today()" {{check1}}> <span>Today</span></label>
+
+											</div><!-- col-4 -->
+											<div class="col-lg-2 mg-t-20 mg-lg-t-0">
+
+                                               <label class="rdiobox"><input name="rdio" type="radio" value="Yesterday" onclick="yesterday()" {{check2}}> <span>Yesterday</span></label>
+
+											</div><!-- col-4 -->
+											<div class="col-lg-2 mg-t-20 mg-lg-t-0">
+
+                                               <label class="rdiobox"><input name="rdio" type="radio" value="Thisweek" onclick="thisweek()" {{check3}}> <span>This Week</span></label>
+
+											</div>
+                                            <div class="col-lg-2 mg-t-20 mg-lg-t-0">
+
+                                                <div class="form-group">
+
+                        <input type="date" class="form-control" id="fromdate" name="fromdate"  >
+                      </div>
+                                                <script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<input type="text" id="dat" name="dat" hidden>
+
+    <script>
+         function today() {
+		document.getElementById("dat").value = 'Today';
+			}
+    </script>
+										<script>
+         function yesterday() {
+		document.getElementById("dat").value = 'Yesterday';
+			}
+    </script>
+										<script>
+         function thisweek() {
+		document.getElementById("dat").value = 'Thisweek';
+			}
+    </script>
+
+                                                </div>
+                                            <div class="col-lg-2 mg-t-20 mg-lg-t-0">
+                                                <div class="form-group">
+
+                        <input type="date" class="form-control" id="todate" name="todate"  >
+                      </div>
+                                            </div>
+                                            <div class="col-lg-2 mg-t-20 mg-lg-t-0">
+
+                                                <button type="submit" class="btn ripple btn-block btn-outline-primary" ><i class="fa fa-search"></i> Search</button>
+                                            </div>
+											</div><!
+    </form>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+    <!-- Main content -->
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+
+
+
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+
+<div class="row">
+
+              <div class="col-sm-4 col-md-2">
+
+
+                <div class="bg-primary color-palette-set" style="text-align: center;color:white;">
+
+                  <div class="mb-2 " ><span style="font-size:25px;">{{total}}</span></div>
+                      <div class="color-palette"><span>Total Amount</span></div>
+                </div>
+              </div>
+              <!-- /.col -->
+              <div class="col-sm-4 col-md-2">
+
+
+                <div class="bg-secondary color-palette-set" style="text-align: center;color:white;" hidden>
+                <div class="mb-2 " ><span style="font-size:25px;">{{cash}}</span></div>
+                      <div class="color-palette"><span>Total Cash</span></div>
+
+                </div>
+              </div>
+              <!-- /.col -->
+              <div class="col-sm-4 col-md-2">
+
+
+                <div class="bg-warning color-palette-set" style="text-align: center;color:white;" hidden>
+
+                  <div class="mb-2 " ><span style="font-size:25px;">{{card}}</span></div>
+                      <div class="color-palette"><span>Total Card</span></div>
+                </div>
+              </div>
+    <div class="col-sm-4 col-md-2">
+
+
+                <div class="bg-info color-palette-set" style="text-align: center;color:white;" hidden>
+
+                  <div class="mb-2 " ><span style="font-size:25px;">{{online}}</span></div>
+                      <div class="color-palette"><span>Total Online</span></div>
+                </div>
+              </div>
+              <!-- /.col -->
+
+              <!-- /.col -->
+
+              <!-- /.col -->
+            </div>
+
+        <hr/>
+                <table id="exportexample" class="table table-bordered table-striped">
+
+
+                  <thead style="background-color:#264d60">
+                  <tr style="color:white;">
+                    <th>Date</th>
+                      <th hidden>Date</th>
+                      <th>Centre</th>
+                    <th>Patient Name</th>
+                    <th>Referred for Study</th>
+                      <th>Refer To</th>
+                      {% if org.orgtype != "Dental Clinic" %}
+                       <th>Ref Doctor</th>
+                      {% endif %}
+
+                    <th>Payable</th>
+
+
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                   {% for i in service_orders %}
+                  <tr>
+                    <td>{{ i.date|date:'d-m-Y' }}</td>
+                      <td hidden>{{ i.id }}</td>
+                    <td>{{ i.locate }}</td>
+                    <td>{{ i.name }}
+                    </td>
+                    <td>{{ i.refstudy }}</td>
+                      <td>{{ i.referto }}</td>
+                      {% if org.orgtype != "Dental Clinic" %}
+                       <td>{{ i.refdoc }}</td>
+                      {% endif %}
+                      <td>{{ i.ref_price }}</td>
+
+
+
+                  </tr>
+                {% endfor %}
+
+                  </tbody>
+
+
+                </table>
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+-->
+  </div>
+  <!-- /.content-wrapper -->
+  </div>
+
+{% endif %}
+
+{%endblock%}

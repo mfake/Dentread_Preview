@@ -1,0 +1,466 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .header img{
+        width: 20px;
+    }
+    .search-box{
+        border-radius: 0.25rem;
+    }
+    .search-box input, select{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 175px !important;
+    }
+    .search-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+        border: 1px solid #dfe2e9;
+    }
+    .header .form-group{
+        margin-bottom: 0 !important;
+    }
+    .add-button{
+        height: 38px !important;
+        width: 175px !important;
+        background: #1F3F7F;
+        border-radius: 8px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .add-button .add-icon{
+        font-size: 1.5rem;
+    }
+    .card-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;;
+        margin-bottom: 1rem;
+        border-left: 5px solid #1F3F7F;
+        padding: 1rem 0rem 1rem 0.5rem;
+    }
+    .row{
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .action-enclosing button{
+        float: right;
+        margin-top: 1rem;
+        margin-right: 2rem;
+    }
+    .main-content{
+        padding-top: 0 !important;
+    }
+    
+    img.icon-enclosing{
+        height: 45px;
+    }
+    .details-enclosing span:not(.patient-name){
+        font-weight: 500;
+        /* margin-left: 0.5rem; */
+    }
+    .patient-name{
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+
+    .bottom-field{
+        width: 100%;
+        padding-top: 5px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+    .pagination{
+        display: flex;
+        width: 11%;
+        overflow: hidden;
+        align-items: center;
+        scroll-behavior: smooth;
+        background: rgba(31, 63, 127, 0.04);
+        box-shadow: inset 1px 4px 8px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    .pagination li{
+        list-style: none;
+        padding: 2px;
+        margin: 4px 5px;
+        flex-shrink: 0;
+        text-align: center;
+        border-radius: 5px;
+        /* border: 1px solid #999; */
+        color: #999;
+    }
+    
+    .pagination li.active{
+        background: white;
+        color: black;
+        border-color: #B0B0B0;
+    }
+    .pagination li a{
+        text-decoration: none;
+        padding: 0 8px;
+        color: inherit;
+        display: block;
+        font-family: sans-serif;
+        font-size: 13px;
+    }
+   
+    .prev, .last{
+        position: absolute;
+        border: 1px solid #999;
+        padding: 0;
+        border: none;
+        box-shadow: 1px 4px 14px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    a#prev, a#last{
+        padding: 0 6px;
+    }
+    .prev{
+        left: 38%;
+    }
+    .last{
+        right: 38%;
+    }
+    .dropdown-item:hover{
+        color: white;
+    }
+</style>
+
+
+<div class="container">
+    <div class="header">
+        <h5>My Orders</h5>
+
+        <div class="search-enclosing" onclick="onSearchAnimate(this)">
+            <img src="/static/svg_icons/ei_search_icon.svg" alt="">
+        </div>
+        <div class="search-box d-none ml-3">
+            <input type="text" placeholder="Search Name here..." class="form-control" id="cardSearch" onkeydown="onNameSearch(this.value)">
+        </div>
+
+        {% if usr.department == 'Admin'%}
+            <form action="/showpatients" method="post">
+                {% csrf_token %}
+                <div class="form-group ml-3">
+                    <label class="d-none">Branch</label>
+                    <select class="form-control" name="users" id="users">
+                        <option selected>Select Branch</option>
+                        {% for i in branch %}
+                            <option value="{{i.id}}">{{i.orgname}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        {% endif %}
+
+    </div>
+
+    <div class="result">Results: <span></span></div>
+    <div class="main-content">
+
+        {% for i in rep %}
+            
+            <div class="card-enclosing row">
+                <!-- <div class="col-sm-1 icon-enclosing d-flex align-items-center"> -->
+                    {% if i.gender == 'Female' %}
+                        <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/female-pink.svg" alt="female icon">
+                    {% endif %}
+                    {% if i.gender != 'Female' %}
+                        <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/Male.svg" alt="male icon">
+                    {% endif %}
+                <!-- </div> -->
+                <div class="col-sm-8 details-enclosing row pl-0 pr-0">
+
+                    <div class="col-sm-3 col-md-3"><span class="patient-name">{{i.name}}</span> </div>
+                
+                    <div class="col-sm-3 col-md-3 p-0"> Date: <span>{{ i.date|date:'d-m-Y' }}</span> </div>
+                
+                    <div class="col-sm-3 col-md-4 p-0">Service: <span>{{i.refstudy}}</span></div>
+
+                    <!-- <div class="col-md-1"></div> -->
+                
+                    <div class="col-sm-2 col-md-2 p-0">Total: <span>{% autoescape off %}{{icon}}{% endautoescape %} {{i.ref_price}}</span></div>
+                    
+                    <div class="col-sm-3 col-md-3">ID: <span>{{i.patient_id}}</span></div>
+                
+                    <div class="col-sm-3 col-md-3 p-0">Age: <span>{{i.age}}</span></div>
+                
+                    <div class="col-sm-3 col-md-4 p-0">Refer To: <span>{{i.reforgid}}</span></div>
+
+                    <!-- <div class="col-md-1"></div> -->
+                
+                    <div class="col-sm-2 col-md-2 p-0">Status: <span><small class="{{i.badge}}">{{ i.status }}</small></span></div>
+                    
+
+                </div>
+                <div class="col-sm-2 ">
+                  {% if i.refstudy != 'Digital Lab Services' and i.refstudy != 'Implant Surgical Guide' %}
+                        {% if i.StudyInstanceUID %}
+                          <a target="_blank" href="http://68.178.166.31:3000/viewer/{{ i.StudyInstanceUID }}" class="text-center d-flex flex-column justify-content-center">
+                              <img src="/static/svg_icons/View-Dicom.svg" height="50px" alt="dicom icon" style="width: 50px; margin-left: 3rem;">
+                              <span style="line-height: 20px;"> View Dicom 
+                              </span>
+                          </a>
+                        {% endif %}
+                  {% elif i.refstudy == 'Implant Surgical Guide' %}
+                      {% if i.StudyInstanceUID %}
+                        <a target="_blank" href="http://68.178.166.31:3000/viewer/{{ i.StudyInstanceUID }}" class="text-center d-flex flex-column justify-content-center">
+                            <img src="/static/svg_icons/View-Dicom.svg" height="50px" alt="dicom icon" style="width: 50px; margin-left: 3rem;">
+                            <span style="line-height: 20px;"> View Dicom
+                            </span>
+                        </a>
+                        {% else %}
+                          {% if checkStl == 'True' %}
+                          <!-- DTL if loop to check for any ios images -->
+                            <a target="_blank" href="/requestForStlFile/{{i.id}}" class="text-center d-flex flex-column justify-content-center">
+                              <img src="/static/svg_icons/View-IOS.svg" height="50px" alt="IOS icon">
+                              <span style="line-height: 20px;"> View IOS </span>
+                            </a>
+                          {% endif %}
+                      {% endif %}
+                  {% else %}
+                      {% if checkStl == 'True' %}
+                      <!-- DTL if loop to check for any ios images -->
+                      <a target="_blank" href="/requestForStlFile/{{i.id}}" class="text-center d-flex flex-column justify-content-center">
+                        <img src="/static/svg_icons/View-IOS.svg" height="50px" alt="IOS icon">
+                        <span style="line-height: 20px;"> View IOS </span>
+                      </a>
+                      {% endif %}
+                    <!-- loop ends here  -->
+                  {% endif %}
+                </div>
+                <div class="col-sm-1 action-enclosing">
+                    <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                        id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                    </button>
+                    
+                    <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+
+                        {% if i.refstudy == "Radiological Report" %}
+                            <a href="/manageReport/{{i.id}}" class="dropdown-item" style="cursor: pointer;" >
+                                <i class="fa-regular fa-file-lines mr-2"></i> Manage Order
+                            </a>
+                        {% endif %}
+                        {% if i.refstudy == "Image Analysis Report" %}
+                            <a href="/manageReportImage/{{i.id}}" class="dropdown-item" style="cursor: pointer;" >
+                                <i class="fa-regular fa-file-lines mr-2"></i> Manage Order
+                            </a>
+                        {% endif %}
+                        {% if i.refstudy == "Implant Planning Report" %}
+                            <a href="/manageReportPlanning/{{i.id}}" class="dropdown-item" style="cursor: pointer;" >
+                                <i class="fa-regular fa-file-lines mr-2"></i> Manage Order
+                            </a>
+                        {% endif %}
+                        {% if i.refstudy == "Implant Surgical Guide" %}
+                            <a href="/manageReportGuide/{{i.id}}" class="dropdown-item" style="cursor: pointer;" >
+                                <i class="fa-regular fa-file-lines mr-2"></i> Manage Order
+                            </a>
+                        {% endif %}
+                        {% if i.refstudy == "Digital Lab Services" %}
+                            <a href="/manageReportDigitalLab/{{i.id}}" class="dropdown-item" style="cursor: pointer;" >
+                                <i class="fa-regular fa-file-lines mr-2"></i> Manage Order
+                            </a>
+                        {% endif %}
+          
+                        {% if i.refstudy != 'Digital Lab Services' and  i.refstudy != 'Implant Surgical Guide'%}
+                            <a href="/requestForInvoice/{{i.name}}/{{i.id}}" id="invoiceId" class="dropdown-item {{i.invoice}}" style="cursor: pointer;" >
+                                <i class="fa-solid fa-indian-rupee-sign mr-2"></i> Print Invoice
+                            </a>
+                        {% endif %}
+                        {% if i.refstudy == 'Digital Lab Services' or  i.refstudy == 'Implant Surgical Guide'%}
+                            <a href="/requestForInvoiceLab/{{i.name}}/{{i.id}}" id="invoiceId" class="dropdown-item {{i.invoice}}" style="cursor: pointer;" >
+                                <i class="fa-solid fa-indian-rupee-sign mr-2"></i> Print Invoice
+                            </a>
+                        {% endif %}
+                    </div>
+                   
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+    <div class="bottom-field">
+        <ul class="pagination" onclick="onPaginationClick(event)">
+            <li class="prev">
+                <a href="#1" id="prev">
+                    <img src="/static/svg_icons/pagination-left.svg" alt="">
+                </a>
+            </li>
+            <li class="last">
+                <a href="#1" id="last">
+                    <img src="/static/svg_icons/pagination-left.svg" alt="" style="transform: rotate(180deg);">
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    //patient filling here
+    
+    let totalPatients = [];
+
+    totalPatients = document.querySelectorAll('.card-enclosing')
+    totalPatients = [...totalPatients];
+    totalPatients.reverse();
+    let allPatients = [...totalPatients]
+
+    document.querySelector('.result span').innerText = allPatients.length;
+    
+    //cards allowed per page
+    let cardsAllowed = 8;
+
+    function nosPaginationFunction(){
+        return Math.ceil(allPatients.length/cardsAllowed);
+    }
+    let nosPagination = 0;
+    // paginationNumbers here 
+    function paginationNumber(){
+        nosPagination = nosPaginationFunction();
+        for(let i= 1; i<=nosPagination; i++){
+
+            // li creation 
+            let li= document.createElement('li');
+            li.classList.add('list');
+            li.setAttribute('id', "item"+`${i}`);
+
+            // anchor creation 
+            let a= document.createElement('a');
+            a.href= '#1';
+            a.innerText = i;
+
+            // appending anchor to the list item
+            li.appendChild(a);
+            
+
+            // appending li to the ul 
+
+            document.querySelector('.pagination').insertBefore(li, document.querySelector('.last'));
+        }
+    }
+    paginationNumber();
+    
+    //current page: by default 1
+    currentPage = 1;
+    prevActiveLi = document.querySelector('.list');
+    prevActiveLi.classList.add('active');
+
+    // display the page 
+    function displayPage(){
+        document.querySelector('.main-content').innerHTML = '';
+        for(let i= 0; i<cardsAllowed; i++){
+            let exNum = allPatients[cardsAllowed*(currentPage-1)+i];
+            if(exNum){
+                document.querySelector('.main-content').appendChild(allPatients[cardsAllowed*(currentPage-1)+i]);
+            }
+        }
+        
+    }
+    displayPage();
+
+    // function to activate the list 
+    function liActive(){
+        for(let i of document.querySelectorAll('.list')){
+            console.log('inside liActive(): ', i.innerText);
+            if(i.innerText == currentPage){
+                i.classList.add('active');
+                prevActiveLi.classList.remove('active');
+                prevActiveLi = i;
+                break;
+            }
+            
+        } 
+    }
+
+    let currentPaginatioTarget = currentPage;
+
+    function onPaginationClick(event){
+        let target = event.target.tagName == 'IMG' ? event.target.parentElement : event.target;
+        
+        if(target.tagName == 'A' && target.getAttribute('id')!= 'prev' && target.getAttribute('id')!= 'last'){
+            currentPage = target.innerText;
+            currentPaginatioTarget = currentPage;
+            liActive();
+            displayPage();
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'prev' ){
+
+            currentPaginatioTarget -= 3;
+            if(currentPaginatioTarget < 1){
+                currentPaginatioTarget = 1;
+            }
+
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'last' ){
+                
+            currentPaginatioTarget = parseInt(currentPaginatioTarget) + 3;
+
+            if(currentPaginatioTarget>nosPagination){
+                currentPaginatioTarget = nosPagination;
+            }
+            
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+    }
+
+    function onSearchAnimate(target){
+        target.parentElement.querySelector('.search-box').classList.toggle('d-none');
+    }
+
+    function onNameSearch(name){
+        allPatients = [];
+        totalPatients.forEach(element => {
+            if(element.querySelector('.patient-name').innerText.toLowerCase().includes(name.toLowerCase())){
+                allPatients.push(element);
+            }
+        });
+        document.querySelector('.result span').innerText = allPatients.length;
+        // console.log(allPatients.length);
+        // console.log(allPatients);
+        for(let x of document.querySelectorAll('.list')){
+            x.remove();
+        }
+        paginationNumber();
+        currentPage = 1;
+        liActive();
+        displayPage();
+    }
+
+</script>
+
+{% endif %}
+{%endblock%}

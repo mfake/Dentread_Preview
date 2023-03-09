@@ -1,0 +1,475 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+  <div class="container">
+    <div class="inner-body" style="margin-top: 1rem">
+      <div class="row row-sm">
+        <div class="col-sm-6">
+          <ol
+            class="breadcrumb float-sm-left"
+            style="background-color: white; border-radius: 0.3rem"
+          >
+            <li class="breadcrumb-item">
+              <a href="#"><h5>My Profile</h5></a>
+            </li>
+          </ol>
+        </div>
+      </div>
+        {% if message %}
+            <div class="alert alert-{{class}} alert-dismissible fade show col-sm-12 col-md-12" style = "background: bisque; margin-top: 1rem;" role="alert">
+                <strong>{{message}}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+      <div class="row mb-2">
+        <div class="col-sm-12 col-md-7 col-xl-12">
+          <div class="card custom-card">
+            <div class="">
+              <div class="main-content-body main-content-body-contacts">
+                <div class="main-contact-info-header pt-3">
+                    <div class="media">
+                        <div class="main-img-user">
+                            {% if usr.propic %}
+                            <img alt="avatar" src="{{usr.propic.url}}" />
+                            {% endif %} {% if not usr.propic %}
+                            <img
+                                alt="avatar"
+                                src="{% static '/profilepic/propic.jpg' %}"
+                            />
+                            {% endif %}
+                        </div>
+                        <div class="media-body">
+                            <h4>{{usr.name}}</h4>
+                            <p>{{usr.department}}</p>
+                            <p>{{org.orgname}}</p>
+                        </div>
+                    </div>
+                    <div class="main-contact-action btn-list pt-3 pr-3 d-none">
+                        <a href="/editUserProfile" class="btn ripple btn-primary text-white btn-icon" data-placement="top" data-toggle="tooltip" title="Edit Profile"><i class="fe fe-edit"></i>
+                        </a>
+                    </div>
+                    <div class="main-contact-action btn-list pt-3" style="margin-right: 4rem;">
+                        <button class="button button-key button-secondary" type="button" title="Change Password" data-toggle="modal" data-target="#pwdResetModalActual">
+                            <img src="/static/svg_icons/key.svg" alt="password key ">
+                        </button>
+                    </div>
+                </div>
+                <form  method="post" action="/editMyProfile/{{usr.id}}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="main-contact-info-body">
+                        <div class="media-list">
+                            <div class="media">
+                                <div class="media-body">
+                                    <div class="form-group col-sm-12 col-md-7">
+                                        <label for="name">Full Name</label>
+                                        <input type="text" class="form-control" id="name" value="{{usr.name}}" name="user-name" placeholder="Full Name" >
+                                    </div>
+                                    <div class="form-group col-sm-12 col-md-7">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" value="{{usr.email}}" name="user-email" placeholder="Email ID" readonly>
+                                    </div>
+                                
+                                    <div class="form-group col-sm-12 col-md-7">
+                                        <label for="mobile">Mobile Number</label>
+                                        <input type='phone' class="form-control" id="mobile" value="{{usr.contact}}" name="user-mobile" placeholder="Mobile Number" readonly>
+                                    </div>
+                                    
+                                </div>
+                                 
+                            </div>
+                            <div class="form-groupcol-sm-12" style="margin-left: 58.5rem;">
+                                <button type="submit" class="btn submit-button">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="pwdResetModalActual" tabindex="-1" role="dialog" aria-labelledby="pwdResetModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="actual-content content row">
+                <h5 class="col-12">Password Reset</h5>
+                <form action="/changeUserPwd" method="post"class="pwdForm col-sm-6">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="New Password">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Re-Enter Password">
+                        <small class="form-text help-text tx-success d-none float-right">Password Matched</small>
+                        <small class="form-text help-text tx-danger d-none float-right">Password Mis-matched</small>
+ 
+                        
+                    </div>
+                    <button class="button button-primary w-25">Save</button>
+                </form>
+                <div class="helping-text col-sm-5 offset-sm-1">
+                    <div class="">Password must include</div>
+                    <div class="helping-text-ind enough-length">
+                        <img src="/static/svg_icons/tick-grey.svg" alt="tick">
+                        <span class="helping-content">6-20 Characters</span>
+                    </div>
+                    <div class="helping-text-ind one-capital">
+                        <img src="/static/svg_icons/tick-grey.svg" alt="tick">
+                        <span class="helping-content">Atleast one capital letter</span>
+                    </div>
+                    <div class="helping-text-ind one-number">
+                        <img src="/static/svg_icons/tick-grey.svg" alt="tick">
+                        <span class="helping-content">Atleast one number</span>
+                    </div>
+                    <div class="helping-text-ind special-char">
+                        <img src="/static/svg_icons/tick-grey.svg" alt="tick">
+                        <span class="helping-content">Atleast one special character</span>
+                    </div>
+                    <div class="helping-text-ind no-spaces">
+                        <img src="/static/svg_icons/tick-grey.svg" alt="tick">
+                        <span class="helping-content">No spaces</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let cndn1 = cndn2 = cndn3 = cndn4 = cndn5 = cndn6 = false;
+    document.querySelector('input[type="password"]').addEventListener('keyup', function (){
+
+        // conditions for a number
+        const re1 = /\d/;
+
+        // conditions for a capital number 
+        const re2 = /[A-Z]/;
+
+        // condtiions for atleast one special character
+        const re3 = /[!@#$%&*()_=|<>?{}~]/;
+
+        if(re1.test(this.value)){
+            cndn1 = true;
+            document.querySelector('.one-number img').src = '/static/svg_icons/tick-green.svg';
+        }
+        else{
+            cndn1 = false;
+            document.querySelector('.one-number img').src = '/static/svg_icons/tick-grey.svg';
+        }
+
+        if(re2.test(this.value)){
+            cndn2 = true;
+            document.querySelector('.one-capital img').src = '/static/svg_icons/tick-green.svg';
+        }
+        else{
+            cndn2 = false;
+            document.querySelector('.one-capital img').src = '/static/svg_icons/tick-grey.svg';
+        }
+
+        if(re3.test(this.value)){
+            cndn3 = true;
+            console.log('oinside the special char image if statement ')
+            document.querySelector('.special-char img').src = '/static/svg_icons/tick-green.svg';
+        }
+        else{
+            cndn3 = false;
+            console.log('oinside the special char image else statement ')
+            document.querySelector('.special-char img').src = '/static/svg_icons/tick-grey.svg';
+        }
+
+        if(!this.value.includes(' ')){
+            cndn4 = true;
+            document.querySelector('.no-spaces img').src = '/static/svg_icons/tick-green.svg';
+        }
+        else{
+            cndn4 = false;
+            document.querySelector('.no-spaces img').src = '/static/svg_icons/tick-grey.svg';
+        }
+
+        if(this.value.length>=6 && this.value.length<=20){
+            cndn5 = true;
+            document.querySelector('.enough-length img').src = '/static/svg_icons/tick-green.svg';
+        }
+        else{
+            cndn5 = false;
+            document.querySelector('.enough-length img').src = '/static/svg_icons/tick-grey.svg';
+        }
+
+
+
+    })
+
+    document.querySelector('.pwdForm input[type = "text"]').addEventListener('keyup', function(){
+        if(this.value == document.querySelector('.pwdForm input[type= "password"]').value){
+            cndn6 = true;
+            document.querySelector('.modal form .tx-success').classList.remove('d-none');
+            document.querySelector('.modal form .tx-danger').classList.add('d-none');
+        }
+        else{
+            cndn6 = false;
+            document.querySelector('.modal form .tx-success').classList.add('d-none');
+            document.querySelector('.modal form .tx-danger').classList.remove('d-none');
+
+        }
+    })
+
+    document.querySelector('.modal form').addEventListener('submit', function (e){
+        if(!(cndn1 && cndn2 && cndn3 && cndn4 && cndn5 && cndn6)){
+            e.preventDefault();
+            alert('Please complete all the password necessities');
+        }
+
+    })
+</script>
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    /* .content{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        padding: 2rem;
+        border-radius: 8px;
+    } */
+    .submit-button, .reset-button{
+        width: 161px;
+        height: 36px;
+        background: #1F3F7F;
+        border-radius: 8px;
+        color: white;
+    }
+    .reset-button{
+        background-color: white;
+        color: #1F3F7F;
+        border: 1px solid #1F3F7F;
+        margin-left: auto;
+    }
+    form>.form-group:not(.modal *){
+        display: flex;
+        margin-top: 1rem;
+        gap: 1.5rem;
+    }
+    .profile-pic{
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+        clip-path: circle(50%);
+    }
+    .diff-section{
+        border-bottom: 2px solid #ABA8A866;
+    }
+    .active{
+        border-bottom: 2px solid #1F3F7F;
+    }
+    .profile-pic{
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+        clip-path: circle(50%);
+    }
+    .category-enclosing--section > *{
+        cursor: pointer;
+    }
+    form{
+        padding: 2rem 0 1rem 0;
+    }
+    textarea{
+        resize: none;
+    }
+    .user-table{
+        width: 100%;
+        border: 1px solid #dfe2e9;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        text-align: center;
+    }
+    th, td{
+        padding: 0.75rem 1rem;
+    }
+    thead{
+        background-color: #1F3F7F;
+        color: white;
+    }
+    tbody tr{
+        border-bottom: 1px solid #dfe2e9;
+    }
+    .user-table th img{
+        margin-right: 0.5rem
+    }
+    .user-section{
+        margin-top: 2rem;
+    }
+    input, textarea, select{
+        color: #6876a3 !important;
+    }
+    .button{
+        /* border: 1px solid ; */
+        border: 1px solid #1F3F7F;
+        padding: 5px 8px;
+        border-radius: 4px;
+    }
+    .button-primary{
+        background: #1F3F7F;
+        color: white;
+    }
+    .button-secondary{
+        background-color: white;
+    }
+    .admin-details-section form{
+        padding-left: 5rem;
+    }
+    .modal-content{
+        padding: 2rem;
+        border-radius: 8px;
+    }
+    .modal-header{
+        padding: 0;
+        border-bottom: none;
+    }
+    .helping-text-ind img{
+        margin-right: 8px;
+    }
+    .modal button{
+        padding: 2px;
+    }
+    .dentread-plan-section>*:not(:first-child, .plan-details){
+        padding: 1.5rem 2rem;
+        margin-bottom: 1.5rem;
+    }
+    .wallet-terms, .payment-terms, .discount-terms{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        border-radius: 8px;
+    }
+    .info-box{
+        padding: 1rem;
+        text-align: center;
+        background: rgba(223, 177, 10, 0.04);
+        border: 0.4px solid #DFB10A;
+        border-radius: 5px;
+    }
+    .dentread-plan-section{
+        font-size: 15px;
+    }
+    .discount-cols>*{
+        background: rgba(255, 0, 127, 0.04);
+        border: 0.5px solid #FF007F;
+        text-align: center;
+        border-radius: 4px;
+        flex: 1;
+        padding: 8px;
+    }
+    .plan-details>*{
+        padding: 1.5rem;
+        border: 1px solid #ABA8A8;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 1rem;
+        cursor: pointer;
+    }
+    .plan-details{
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    .contact{
+        font-weight: 450;
+        color: #E500B2;
+    }
+    .contact a{
+        text-decoration: underline;
+        font-weight: 500;
+        color: #6876a3;
+    }
+    .radio-group{
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+    .radio-group>*{
+        flex: 1;
+        text-align: center;
+        padding: 6px 0 0 0;
+        border: 0.5px solid grey;
+        border-radius: 21px;
+    }
+    .inclusions img{
+        margin-right: 0.5rem;
+    }
+    div.button{
+        max-width: 200px;
+        text-align: center;
+        color: #1F3F7F;
+        border-radius: 21px;
+    }
+    .category-enclosing--section{
+        font-size: 16px;
+    }
+    .selected-plan{
+        background: rgba(31, 63, 127, 0.05);
+    }
+    .form input:checked+label:after,form input:checked+label:after {
+        content: "";
+        width: 20px;
+        height: 20px;
+        line-height: 17px;
+        border-color: #1f3f7f #1f3f7f transparent;
+        border-style: solid;
+        border-width: 0 35px 35px 0;
+        display: none !important;
+        position: absolute;
+        top: 0;
+        right: 0
+    }
+    .add-button{
+        height: 38px !important;
+        width: 175px !important;
+        background: #1F3F7F;
+        border-radius: 8px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .add-button .add-icon{
+        font-size: 1.5rem;
+    }
+</style>
+{% endif %} 
+{% endblock %}

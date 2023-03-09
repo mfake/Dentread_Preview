@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>DMD IMAGING | Patient Registration</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static '/MDB/css/mdb.min.css' %}" />
+  </head>
+  <style>
+    .center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 25px;
+  width: 35%;
+}
+  </style>
+  <body>
+    <!-- Start your project here-->
+
+      <section class="vh-100 bg-image" style="background-image: url('{% static '/MDB/img/back1.jpg' %}');">
+          <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-sm-9">
+
+
+
+        <div class="card" style="border-radius: 15px;">
+          <div class="card-body">
+              <form action="/self" method="post">
+                  {% csrf_token %}
+              <img src="{% static '/MDB/img/DMD Logo.png' %}" class="center" alt="Logo" >
+              <h4 class=" text-center mb-4" style="color:#264d60;">Fill Your Details</h4>
+
+            <div class="row align-items-center pt-4 pb-3">
+
+              <div class="col-md-12 pe-5">
+
+               <input type="text" id="name" name="name" class="form-control form-control-lg" placeholder="Your full name" required/>
+
+              </div>
+            </div>
+
+
+
+            <div class="row align-items-center py-3">
+
+              <div class="col-md-12 pe-5">
+
+               <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Your email address" required/>
+
+              </div>
+            </div>
+
+
+
+            <div class="row align-items-center py-3">
+
+              <div class="col-md-12 pe-5">
+
+                <input type="number" id="contact" name="contact" class="form-control form-control-lg" placeholder="Mobile number" required/>
+
+              </div>
+            </div>
+
+
+            <div class="row align-items-center py-3">
+
+              <div class="col-md-12 pe-5">
+
+                <input type="number" id="age" name="age" class="form-control form-control-lg" placeholder="Your age" required/>
+
+              </div>
+            </div>
+
+
+            <hr class="mx-n3">
+
+            <div class="d-flex justify-content-center" >
+                  <button type="submit" class="btn  btn-block btn-lg gradient-custom-4 text-body" style="background-color:#264d60;"><div style="color:#FFFFFF;"> Submit</div></button>
+                </div>
+</form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+</section>
+
+
+    <!-- End your project here-->
+
+    <!-- MDB -->
+    <script type="text/javascript" src="{% static '/MDB/js/mdb.min.js' %}"></script>
+    <!-- Custom scripts -->
+    <script type="text/javascript"></script>
+  </body>
+</html>

@@ -1,0 +1,599 @@
+
+{% extends "domain_dashbase.html" %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 0 auto 1rem auto;
+        max-width: 1200px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin: 1rem auto;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .profile-pic{
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+        clip-path: circle(50%);
+    }
+    .header h4{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .content{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+    .submit-button, .reset-button{
+        width: 161px;
+        height: 36px;
+        background: #1F3F7F;
+        border-radius: 8px;
+        color: white;
+    }
+    .reset-button{
+        background-color: white;
+        color: #1F3F7F;
+        border: 1px solid #1F3F7F;
+        margin-left: auto;
+    }
+    form>.form-group{
+        display: flex;
+        margin-top: 1rem;
+        gap: 1.5rem;
+    }
+    .user-table{
+        width: 100%;
+        border: 1px solid #dfe2e9;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        text-align: left;
+        margin-bottom: 1.5rem;
+        table-layout: auto;
+    }
+    th, td{
+        padding: 0.75rem;
+    }
+    thead{
+        background-color: #1F3F7F;
+        color: white;
+    }
+    tbody tr{
+        border-bottom: 1px solid #dfe2e9;
+    }
+    .user-table th img{
+        margin-right: 0.5rem
+    }
+    .search-box{
+        border-radius: 0.25rem;
+    }
+    .search-box input{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 175px !important;
+    }
+    .search-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+        border: 1px solid #dfe2e9;
+        padding: 5px;
+        margin-bottom: 0.5rem;
+    }
+    .price-save--button{
+        background: #1f3f7f;
+        border: 0px solid #1f3f7f;
+        color: white;
+        border-radius: 5px;
+        font-size: 12px;
+        padding: 0px 12px;
+        margin-left: 0.5rem;
+    }
+    .small-date{
+        font-size: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h4  onclick="history.back()" style="cursor: pointer;">Dentread Service Invoices</h4>
+    </div>
+
+    
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-12 mb-3">
+                <h5>Filter Invoice</h5>
+            </div>
+            
+            <div class="col-sm-12">
+                <form  method="post" action="/cstbusiness_dent" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        {% if message %}
+                            <div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+                                <strong></strong> {{message}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="form-group col-sm-12 col-md-4">
+                            <label for="orgid">Select Organization</label>
+                            <select name="requestOrg" id="orgid" class="form-control" required>
+                                {% for clinic in organisation %}
+                                <option value="{{clinic.id}}">{{clinic.orgname}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-8"></div>
+                        <div class="form-group col-sm-12 col-md-2">
+                            <label for="year">Select Year</label>
+                            <select name="year" id="year"  class="form-control" onchange="onYearChange()" >
+                                
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-2">
+                            <label for="day">Select Month</label>
+                            <select name="month" id="month"  class="form-control">
+                                <!-- <option>Select Year First</option> -->
+                                <option value="0" selected>January</option>
+                                <option value="1" disabled>February</option>
+                                <option value="2" disabled>March</option>
+                                <option value="3" disabled>April</option>
+                                <option value="4" disabled>May</option>
+                                <option value="5" disabled>June</option>
+                                <option value="6" disabled>July</option>
+                                <option value="7" disabled>August</option>
+                                <option value="8" disabled>September</option>
+                                <option value="9" disabled>Octobar</option>
+                                <option value="10" disabled>November</option>
+                                <option value="11" disabled>December</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 text-center pt-2">
+                            <h6 class="heading6">OR</h6>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-2">
+                            <label for="date1">From Date</label>
+                            <input type="date" name="fromdate" id="date1"  class="form-control">
+                        </div>
+                        <div class="form-group col-sm-12 col-md-2">
+                            <label for="date2" >To Date</label>
+                            <input type="date" name="todate" id="date2"  class="form-control">
+                        </div>
+                        <div class="col-sm-12 form-group text-center pt-2">
+                            <h6 class="heading6">Apply Discount(if applicable)</h6>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-4">
+                            <label for="radio_discount">Radiology Discount</label>
+                            <input type="number" max="100" min="0" class="form-control" name="radio_discount" id="radio_discount" placeholder="Enter Radiology Discount ( in % only )">
+                        </div>
+                        <div class="form-group col-sm-12 col-md-4">
+                            <label for="image_discount">Image Discount</label>
+                            <input type="number" max="100" min="0" class="form-control" name="image_discount" id="image_discount" placeholder="Enter Image Discount ( in % only )">
+                        </div>
+                        <div class="form-group col-sm-12 col-md-4">
+                            <label for="implant_discount">Implant Discount</label>
+                            <input type="number" max="100" min="0" class="form-control" name="implant_discount" id="implant_discount" placeholder="Enter Implant Discount ( in % only )">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="reset" class="btn reset-button">Reset</button>
+                        <button type="submit" class="btn submit-button">Filter</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    {% if service_order %}
+        <div class="content">
+            <div class="row">
+                <div class="col-sm-12 mb-3">
+                    <h5>Service Details:</h5>
+                </div>
+                <div class="search-enclosing" onclick="onSearchAnimate(this)">
+                    <img src="/static/svg_icons/ei_search_icon.svg" alt="">
+                </div>
+                <div class="search-box d-none ml-3">
+                    <input type="text" placeholder="Search Name here..." class="form-control" id="cardSearch" onkeydown="onNameSearch(this.value)">
+                </div>
+                <h6 class="total-heading col-12"><span class="float-right">Count: <span></span></span> </h6>
+                <table class="user-table summary-table auto-index">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Service Date</th>
+                            <th>Service</th>
+                            <th class="text-center">HSN/HAC</th>
+                            <th>Order Id</th>
+                            <th>Product/Study</th>
+                            <th>Patient Name</th>
+                            <th>Center </th>
+                            <th class="text-center">MRP</th>
+                            <th class="text-center">Discount (%)</th>
+                            <th class="text-center">Net Amount</th>
+                            <th class="text-center">SGST</th>
+                            <th class="text-center">CGST</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in radioData %}
+                            <tr>
+                                <td></td>
+                                <td class="small-date">{{ i.date|date:"d-m-y" }}</td>
+                                <td>{{i.service_name}}</td>
+                                <td class="text-center">999316</td>
+                                <td>{{ i.order_id }}</td>
+                                <td>{{i.data_type}} | {{i.service_catagory}} {% if i.finding_requires %}| {{i.finding_requires}}{% endif %}</td>
+                                <td>{{ i.name }}</td>
+                                <td>{{i.orgid_id}}</td>
+                                <td class="text-center">{{i.price}}</td>
+                                <td class="text-center">{{i.discount}}</td>
+                                <td class="text-center">{{i.netAmount}}</td>
+                                <td class="text-center">0</td>
+                                <td class="text-center">0</td>
+                            </tr>
+                        {% endfor %}
+                        {% for i in imageData %}
+                            <tr>
+                                <td></td>
+                                <td class="small-date">{{ i.date|date:"d-m-y" }}</td>
+                                <td>{{ i.service_name }}</td>
+                                <td class="text-center">999316</td>
+                                <td>{{ i.item_id }}</td>
+                                <td>{{i.data_type}} | {{i.service_catagory}} | {{i.sub_category}}</td>
+                                <td>{{ i.name }}</td>
+                                <td>{{i.orgid_id}}</td>
+                                <td class="text-center">{{i.price}}</td>
+                                <td class="text-center">{{i.discount}}</td>
+                                <td class="text-center">{{i.netAmount}}</td>
+                                <td class="text-center">0%</td>
+                                <td class="text-center">0%</td>  
+                            </tr>
+                        {% endfor %}
+                        {% for i in implantData %}
+                            <tr>
+                                <td></td>
+                                <td class="small-date">{{ i.date|date:"d-m-y" }}</td>
+                                <td>{{service_name}}</td>
+                                <td class="text-center">9021</td>
+                                <td>{{ i.item_id }}</td>
+                                <td>{{i.data_type}}| {{i.service_catagory}} | {{i.planning_type}</td>
+                                <td>{{ i.name }}</td>
+                                <td>{{i.orgid_id}}</td>
+                                <td class="text-center">{{i.price}}</td>
+                                <td class="text-center">{{i.discount}}</td>
+                                <td class="text-center">{{i.netAmount}}</td>
+                                <td class="text-center">9%</td>
+                                <td class="text-center">9%</td>
+                            </tr>
+                        {% endfor %}
+                        
+                    </tbody>
+            
+                </table>
+                <form action="/invoiceForClinic" method="post" class="printInvoiceForm">
+                    {% csrf_token %}
+                    <input type="text" name="organisationId-edit" value="{{request_org}}" hidden>
+                    <input type="number" name="month-edit" value="{{month}}" hidden>
+                    <input type="number" name="year-edit" value="{{year}}" hidden>
+                    <input type="date" name="dateFrom-edit" value="{{fd}}" hidden>
+                    <input type="date" name="dateTo-edit" value="{{td}}" hidden>
+                    <input type="number" name="discountRadio-edit" value="{{radiology_discount}}" hidden>
+                    <input type="number" name="discountImage-edit" value="{{imageAnalysis_discount}}" hidden>
+                    <input type="number" name="discountImplant-edit" value="{{implantPlanning_discount}}" hidden>
+
+                </form>
+
+                <div class="col-sm-12">
+                    <button class="btn ml-auto mr-2" onclick="tableToCSV();" style="background-color: #1F3F7F; color: white;">Convert to CSV</button>
+                    <button class="btn" onclick="onPrintInvoiceClick()" style="background-color: #1F3F7F; color: white;">Print Invoice </button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+
+</div>
+
+<script>
+    function onPrintInvoiceClick(){
+        document.querySelector('.printInvoiceForm').submit();
+    }
+
+    let yearlyTarget = document.getElementById('year');
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = currentDate.getMonth();
+
+    for(let i=currentYear; i >= 2022; i--){
+        let option = document.createElement('option');
+        option.innerText = i;
+        option.value = i;
+        yearlyTarget.appendChild(option);
+    }
+    onYearChange();
+
+    function onYearChange(){
+        if( yearlyTarget.value == currentYear){
+            for(let x of document.querySelectorAll('#month option')){
+                if(x.value > currentMonth){
+                    x.disabled = true;
+                }
+                else{
+                    x.disabled = false;
+                }
+            }
+        }
+        else{
+            for(let x of document.querySelectorAll('#month option')){
+                x.disabled = false;
+            }
+        }
+    }
+
+    function onSearchAnimate(target){
+        target.parentElement.querySelector('.search-box').classList.toggle('d-none');
+    };
+
+    function onNameSearch(name){
+        for(let x of document.querySelectorAll('.patient-name')){
+            if(!x.innerText.toLowerCase().includes(name.toLowerCase())){
+                x.parentElement.classList.add('d-none');
+            }else{
+                x.parentElement.classList.remove('d-none');
+            }
+        }
+        
+    };
+    
+    function getData(){
+        document.querySelector('.total-heading span span').innerText = document.querySelectorAll('.summary-table tbody tr').length;
+    }
+
+    
+</script>
+<script>
+    function tableToCSV() {
+        for(let target of document.querySelectorAll('.user-table')){
+            var csv_data = [];
+            var rows = target.getElementsByTagName('tr');
+            for (var i = 0; i < rows.length; i++) {
+                var cols = rows[i].querySelectorAll('td,th');
+                var csvrow = [];
+                for (var j = 0; j < cols.length-1; j++) {
+                    csvrow.push(cols[j].innerText);
+                }
+                
+                csv_data.push(csvrow.join(","));
+            }
+            csv_data = csv_data.join('\n');
+            console.log(csv_data);
+            downloadCSVFile(csv_data);
+        }
+    }
+    function downloadCSVFile(csv_data) {
+        CSVFile = new Blob([csv_data], {
+            type: "text/csv"
+        });
+        var temp_link = document.createElement('a');
+        temp_link.download = "Report.csv";
+        var url = window.URL.createObjectURL(CSVFile);
+        temp_link.href = url;
+        temp_link.style.display = "none";
+        document.body.appendChild(temp_link);
+        temp_link.click();
+        document.body.removeChild(temp_link);
+    }
+    var addSerialNumber = function () {
+        $('table tr').each(function(index) {
+            $(this).find('td:nth-child(1)').html(index-1+1);
+        });
+    };
+    
+    addSerialNumber();
+</script>
+
+
+<!-- 
+  <div class="main-content pt-0 ">
+
+
+      <div class="container">
+        <div class="inner-body">
+          <div class="page-header">
+            <div>
+              <h2 class="main-content-title tx-22 mg-b-5">Dentread Services Invoices</h2>
+            </div>
+            <div class="d-flex">
+              <div class="justify-content-center">
+              </div>
+            </div>
+          </div>
+          <div class="row row-sm">
+            <div class="col-lg-12 col-md-12">
+              <div class="card custom-card">
+                <div class="card-body">
+                  <div>
+                    <h6 class="tx-18 mb-3">Filter Invoices</h6>
+                  </div>
+                  <form method="post" action="/cstbusiness_dent">
+                    {% csrf_token %}
+                    <div class="row row-sm mg-b-20">
+                      <div class="col-lg-2">
+                        <label class="rdiobox"><input name="rdio" type="radio" value="Today" onclick="today()" {{check1}}> <span>Today</span></label>
+                      </div>
+                    <div class="col-lg-2 mg-t-20 mg-lg-t-0">
+                      <label class="rdiobox"><input name="rdio" type="radio" value="Yesterday" onclick="yesterday()" {{check2}}> <span>Yesterday</span></label>
+                    </div>
+                    <div class="col-lg-2 mg-t-20 mg-lg-t-0">
+
+                      <label class="rdiobox"><input name="rdio" type="radio" value="Thisweek" onclick="thisweek()" {{check3}}> <span>This Week</span></label>
+                    </div>
+                    <div class="col-lg-2 mg-t-20 mg-lg-t-0">
+                      <div class="form-group">
+                        <input type="date" class="form-control" id="fromdate" name="fromdate">
+                      </div>
+                      <script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+                        <input type="text" id="dat" name="dat" hidden>
+                      <script>
+                          function today() {
+                            document.getElementById("dat").value = 'Today';
+                          };
+                          function yesterday() {
+                            document.getElementById("dat").value = 'Yesterday';
+                          };
+                          function thisweek() {
+                            document.getElementById("dat").value = 'Thisweek';
+                          };
+                      </script>
+
+                    </div>
+                    <div class="col-lg-2 mg-t-20 mg-lg-t-0">
+                        <div class="form-group">
+                          <input type="date" class="form-control" id="todate" name="todate">
+                        </div>
+                    </div>
+                    <div class="col-lg-2 mg-t-20 mg-lg-t-0">
+                        <button type="submit" class="btn ripple btn-block btn-outline-primary" ><i class="fa fa-search"></i> Search</button>
+                    </div>
+                    </div>
+                  </form>
+              </div>
+            </div>
+          </div>
+				</div>
+			</div>
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+              <div class="card-body">
+
+
+<div class="row">
+
+              <div class="col-sm-4 col-md-2">
+
+
+                <div class="bg-primary color-palette-set" style="text-align: center;color:white;">
+
+                  <div class="mb-2 " ><span style="font-size:25px;">{{total}}</span></div>
+                      <div class="color-palette"><span>Total Amount</span></div>
+                </div>
+              </div>
+              <div class="col-sm-4 col-md-2">
+
+
+                <div class="bg-secondary color-palette-set" style="text-align: center;color:white;" hidden>
+                <div class="mb-2 " ><span style="font-size:25px;">{{cash}}</span></div>
+                      <div class="color-palette"><span>Total Cash</span></div>
+
+                </div>
+              </div>
+              <div class="col-sm-4 col-md-2">
+
+
+                <div class="bg-warning color-palette-set" style="text-align: center;color:white;" hidden>
+
+                  <div class="mb-2 " ><span style="font-size:25px;">{{card}}</span></div>
+                      <div class="color-palette"><span>Total Card</span></div>
+                </div>
+              </div>
+    <div class="col-sm-4 col-md-2">
+
+
+                <div class="bg-info color-palette-set" style="text-align: center;color:white;" hidden>
+
+                  <div class="mb-2 " ><span style="font-size:25px;">{{online}}</span></div>
+                      <div class="color-palette"><span>Total Online</span></div>
+                </div>
+              </div>
+            </div>
+
+        <hr/>
+                <table id="example1" class="table table-bordered table-striped">
+
+
+                  <thead style="background-color:#264d60">
+                  <tr style="color:white;">
+                    <th>Date</th>
+                      <th hidden>Date</th>
+                      <th>Centre</th>
+                    <th>Patient Name</th>
+                    <th>Referred for Study</th>
+                      <th>Refer To</th>
+                      {% if org.orgtype != "Dental Clinic" %}
+                       <th>Ref Doctor</th>
+                      {% endif %}
+
+                    <th>Payable</th>
+
+
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                   {% for i in service_orders %}
+                  <tr>
+                    <td>{{ i.date|date:'d-m-Y' }}</td>
+                      <td hidden>{{ i.id }}</td>
+                    <td>{{ i.locate }}</td>
+                    <td>{{ i.name }}
+                    </td>
+                    <td>{{ i.refstudy }}</td>
+                      <td>{{ i.referto }}</td>
+                      {% if org.orgtype != "Dental Clinic" %}
+                       <td>{{ i.refdoc }}</td>
+                      {% endif %}
+                      <td>{{ i.ref_price }}</td>
+
+
+
+                  </tr>
+                {% endfor %}
+
+                  </tbody>
+
+
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+  </div>
+  </div>
+  
+  --> 
+
+{% endif %}
+
+{%endblock%}

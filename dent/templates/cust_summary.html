@@ -1,0 +1,191 @@
+{%extends "Base.html" %}
+{% load static %}
+{% block content %}
+{% load has_group %}
+{% if request.user|has_group:'sadmin' %}
+<html lang="en">
+<head>
+
+  <!-- DataTables -->
+<link rel="stylesheet" href="{% static '/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static '/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static '/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+
+     <link rel="stylesheet" href="{% static '/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
+
+        <script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+
+
+    <style>
+        tfoot input {
+        width: 100%;
+        padding: 2px;
+
+    }
+
+    </style>
+    <script>
+$(document).ready(function() {
+    // Setup - add a text input to each footer cell
+    $('#example tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+    } );
+
+
+    // DataTable
+    var table = $('#example').DataTable({
+
+
+
+        initComplete: function () {
+            // Apply the search
+            this.api().columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+                
+            } );
+        }
+    });
+
+
+} );
+   </script>
+
+
+</head>
+<body class="hold-transition sidebar-mini">
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Ref Doctor Business Summary</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Doctor Summary</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+                <table id="example" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>Doctor Name</th>
+                    <th>Clinic Name</th>
+                    <th>Month</th>
+                    <th>Study Type</th>
+                    <th>Sales Amount</th>
+
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                   {% for i in invoice %}
+                  <tr>
+                    <td>{{ i.refdoc }}</td>
+                    <td>{{ i.refclinic }}</td>
+                    <td>{{ i.date|date:'M-Y' }}
+                    </td>
+                    <td>{{ i.study }}</td>
+                    <td>{{ i.payable }}</td>
+
+
+                  </tr>
+                {% endfor %}
+
+                  </tbody>
+
+<tfoot>
+            <tr>
+        <th>Doctor Name</th>
+                    <th>Clinic Name</th>
+                    <th>Month</th>
+                    <th>Study Type</th>
+                    <th>Sales Amount</th>
+
+
+    </tr>
+
+
+
+        </tfoot>
+
+                </table>
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+<!-- jQuery -->
+
+<!-- AdminLTE App -->
+<!-- jQuery -->
+
+<!-- Bootstrap 4 -->
+<script src="{% static '/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- DataTables  & Plugins -->
+<script src="{% static '/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static '/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static '/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static '/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static '/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static '/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static '/plugins/jszip/jszip.min.js' %}"></script>
+<script src="{% static '/plugins/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static '/plugins/pdfmake/vfs_fonts.js' %}"></script>
+<script src="{% static '/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static '/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static '/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static '/dist/js/adminlte.min.js' %}"></script>
+
+  <script src="{% static '/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+
+
+<!-- AdminLTE for demo purposes -->
+
+<!-- Page specific script -->
+
+</body>
+{% endif %}
+{%endblock%}

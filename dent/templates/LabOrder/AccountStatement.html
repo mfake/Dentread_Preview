@@ -1,0 +1,222 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+<script>
+    function generatePDF(){
+        const ele= document.querySelector('.container-div');
+        html2pdf().from(ele).save();
+    }
+</script>
+
+<style>
+    .container-div{
+        width: 100%;
+        margin: 1rem auto 2rem auto ;
+        background: white;
+    }
+
+    .weekly-heading{
+        text-align: center;
+        padding: 1rem;
+        background: aliceblue;
+        margin-top: 1rem;
+    }
+
+    .name-table, .summary-table, .collection-table{
+        width: inherit;
+    }
+
+    .container .row{
+        margin-top: 1rem;
+        row-gap: 1.5rem;
+        padding: 0 1rem;
+    }
+
+    .date-range{
+        display: inline-block;
+
+    }
+
+    .collection-table thead{
+        background: aliceblue;
+    }
+
+    .collection-table thead th, .collection-table td, .summary-table td, .summary-table th, .name-table td, .name-table th{
+        padding: 5px 10px;
+    }
+
+    .export-button{
+        margin-left: auto;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+    }
+
+</style>
+
+<div class="container-div">
+    <h5 class="weekly-heading">Weekly Account Statement</h5>    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <img src="/static/logo/DentreadlogoV3cloud30May.png" alt="Dentread Logo" height="50px">
+            </div>
+            <div class="col-sm-6">
+                <table class="name-table">
+                    
+                    <tbody>
+                        <tr>
+                            <th>
+                                Display Name: 
+                            </th>
+                            <td>
+                                {{org.orgname}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Legal Name: 
+                            </th>
+                            <td>
+                                {{org.orgname}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-12">
+                <h6 class="date-range">Date Range:</h6>
+                <span>Account activity from {start_date | Aug 1, 2015 00:00 IST} through {end_date | Aug 8, 2015 00:00 IST}</span>
+            </div>
+            <div class="col-sm-12">
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Summaries</th>
+                            <th style="width: 50%;">Lorem ipsum doleloremque. Consequatur, dolore?</th>
+                            <th>Totals</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Income</td>
+                            <td>ulla officiis deleniti doloremque. Consequatur, dolore?</th>
+                            <td>{income_total}</td>
+                        </tr>
+                        <tr>
+                            <td>Expenses</td>
+                            <td>ulla officiis deleniti doloredolore avjsk  iake ciakx ?</th>
+                            <td>{expenses_total }</td>
+                        </tr>
+                        <tr>
+                            <td>GST</td>
+                            <td>ulla officiis deleniti doloremque. Consequatur, dolore ohei c?</th>
+                            <td>{gst_total |}</td>
+                        </tr>
+                        <tr>
+                            <td>Transfer</td>
+                            <td>ulla officiis deleniti doloremque. Consequatur?</th>
+                            <td>{transfer_total}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <h6>INCOME</h6>
+                <table class="income-table collection-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Unit(s)</th>
+                            <th>Unit Price</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in income_item %} 
+                            <tr>
+                                <td>{i.item}</td>
+                                <td>{i.unit}</td>
+                                <td>{i.unitPrice}</td>
+                                <td>{i.unit}*{i.unitPrice}</td>
+                                <td>{i.debit}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <h6>EXPENSES</h6>
+                <table class="expense-table collection-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in expense_item %} 
+                            <tr>
+                                <td>{i.item}</td>
+                                <td>{i.credit}</td>
+                                <td>{i.debit}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <h6>GST</h6>
+                <table class="gst-table collection-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in gst_item %} 
+                            <tr>
+                                <td>{i.item}</td>
+                                <td>{i.credit}</td>
+                                <td>{i.debit}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <h6>TRANSFER</h6>
+                <table class="transfer-table collection-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Credit</th>
+                            <th>Debit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in transfer_item %} 
+                            <tr>
+                                <td>{i.item}</td>
+                                <td>{i.credit}</td>
+                                <td>{i.debit}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-primary btn-sm export-button" onclick="generatePDF()">
+                Export to Excel
+            </button>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+{%endblock%}

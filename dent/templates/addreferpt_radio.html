@@ -1,0 +1,197 @@
+
+
+{% extends 'radio_dashbase.html' %}
+{% load static %}
+
+
+{% block content %}
+{% if user.is_authenticated %}
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Add Patient</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+
+
+    <!-- Main content -->
+
+
+
+   <form  method="post" action="/addreferpt_radio" enctype="multipart/form-data">
+                           {% csrf_token %}
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+
+        <div class="row">
+          <div class="col-md-8">
+
+            <div class="card card-success" >
+              <div class="card-header  text-white" style="background-color:#1f3f7f;">
+                <h5 class="card-title">Registration Details</h5>
+              </div>
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+
+                  <div class="row">
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Name<span class="tx-danger"> *</span></label>
+                              <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Age<span class="tx-danger"> *</span></label>
+                              <input type="number" class="form-control" id="age" name="age" placeholder="Age" required>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Gender<span class="tx-danger"> *</span></label>
+                                  <select id="gender" name="gender" type="text" class="form-control" required>
+                                      <option value="Male" selected disabled>Choose</option>
+                                      <option value="Male">Male</option>
+                                       <option value="Female">Female</option>
+                                       <option value="Other">Other</option>
+                                  </select>
+
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Email</label>
+                              <input type="email" class="form-control" id="email" name="email" placeholder="Email" >
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Contact</label>
+                              <input type="number" class="form-control" id="contact" name="contact" placeholder="Contact" required>
+                              </div>
+                            </div>
+
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Choose Study<span class="tx-danger" > *</span></label>
+
+                             <select id="study" name="study" type="text"  class="form-control" required>
+                                  <option selected disabled>Choose</option>
+                                 {% for i in studies %}
+                                 <option value="{{i.id}}" name="{{i.price}}">{{i.title}}_{{i.maincat}}</option>
+                                 {% endfor %}
+
+
+                                  </select>
+
+                              </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                 <div class="form-group">
+                                 <label for="exampleInputEmail1">Select Referring Centre<span class="tx-danger"> *</span></label>
+                                     <select class="form-control" id="ref_centre" name="ref_centre" required>
+                                         <option value="" selected disabled>Choose</option>
+                                         {% for i in centres %}
+
+                                         <option value="{{i.id}}" >{{i.orgname}}</option>
+                                         {% endfor %}
+                                     </select>
+                                  </div>
+                             </div>
+
+                             <div class="col-6">
+                                 <div class="form-group">
+                                     <label for="exampleInputEmail1">Price<span class="tx-info" ><small>  (optional)</small></span></label>
+                                 <input type="number" class="form-control" id="price" name="price" placeholder="price for study" >
+                                  </div>
+                             </div>
+                        </div>
+                  <div class="row">
+                       <div class="col-sm-12">
+          <div class="form-group">
+                    <!-- <label for="customFile">Custom File</label> -->
+                <label for="exampleInputPassword1">Attachment (Prescription)</label>
+
+                                     <div class="custom-file">
+
+                      <input type="file" class="custom-file-input" id="prescription" name="prescription">
+                      <label class="custom-file-label" for="prescription">Choose file</label>
+                    </div>
+
+                  </div>
+    </div>
+                            <div class="col-12">
+                                 <div class="form-group">
+                                 <label for="exampleInputEmail1">Remark/ Clinical Notes</label>
+                                 <input type="text" class="form-control" id="remark" name="remark" placeholder="Remark" >
+                                  </div>
+                             </div>
+
+
+</div>
+
+
+
+                      <div class="row mt-4">
+                           <div class="col-sm-6">
+
+                        <button type="reset" value="reset" class="btn  ripple btn-warning">Reset</button>
+                      </div>
+
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary">Add</button>
+                  </div>
+
+
+
+     </div>
+                    </form>
+
+          </div>
+      </div>
+ </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+function getval(sel)
+{
+
+    var name = $("#study  option:selected").attr('name');
+    $("#price").text("  Price -"+ name +"/-");
+
+}
+</script>
+<script src="{% static '/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+
+<script>
+$(function () {
+  bsCustomFileInput.init();
+});
+</script>
+{% endif %}
+{%endblock%}
+

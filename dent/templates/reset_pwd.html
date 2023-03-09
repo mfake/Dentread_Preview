@@ -1,0 +1,114 @@
+{% extends 'dentreadbase.html' %}
+{% load static %}
+{% block content %}
+<!-- Page -->
+<div class="page main-signin-wrapper">
+  <!-- Row -->
+  <div class="row signpages text-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div
+          class="row row-sm"
+          style="box-shadow: rgb(191 184 184) 0px 5px 50px"
+        >
+          <div
+            class="col-lg-6 col-xl-5 d-lg-block text-center"
+            style="background-color: #1f3f7f"
+          >
+            <div
+              class="mt-5 pt-4 p-2 pos-absolute"
+              style="background-color: #1f3f7f"
+            >
+              <div class="clearfix"></div>
+              <img
+                src="{% static '/dentread/assets/img/brand/whitelogo.png' %}"
+                class="ht-80 mb-0"
+                alt="user"
+              />
+            </div>
+          </div>
+          <div class="col-lg-6 col-xl-7 col-xs-12 col-sm-12 login_form">
+            <div class="container-fluid">
+              <div class="row row-sm">
+                <div class="card-body mt-2 mb-2">
+                  <img
+                    src="{% static '/dentread/assets/img/brand/whitelogo.png' %}"
+                    class="d-lg-none header-brand-img text-left float-left mb-4"
+                    alt="logo"
+                  />
+                  <div class="clearfix"></div>
+
+                  <h5 class="text-left mb-2">Reset Password</h5>
+
+                  {% if message %}
+                  <div class="alert alert-{{class}}">{{message}}</div>
+                  {% endif %}
+
+                  <form method="post" action="/reset_pwd">
+                    {% csrf_token %}
+                    <div class="form-group text-left">
+                      <label>Email</label>
+                      <input
+                        class="form-control"
+                        placeholder="Enter your email"
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                      />
+                    </div>
+                    <div class="form-group text-left">
+                      <label>New Password</label>
+                      <input
+                        class="form-control"
+                        placeholder="Enter your password"
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                      />
+                    </div>
+                    <div class="form-group text-left">
+                      <label
+                        >Confirm Password<span class="tx-danger" id="message">
+                          *</span
+                        ></label
+                      >
+                      <input
+                        class="form-control"
+                        placeholder="Enter your password"
+                        onkeyup="myFunction()"
+                        name="confirm_password"
+                        id="confirm_password"
+                        type="password"
+                        required
+                      />
+                    </div>
+                    <button class="btn ripple btn-main-primary btn-block">
+                      Reset Password
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Row -->
+</div>
+<script>
+function myFunction() {
+  if (document.getElementById('password').value ==
+    document.getElementById('confirm_password').value) {
+    document.getElementById('message').style.color = 'green';
+    document.getElementById('message').innerHTML = ' * passowrd match';
+  } else {
+    document.getElementById('message').style.color = 'red';
+    document.getElementById('message').innerHTML = '* password not matching';
+  }
+}
+</script>
+		<!-- End Page -->
+{% endblock %}

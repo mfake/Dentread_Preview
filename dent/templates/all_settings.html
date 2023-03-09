@@ -1,0 +1,131 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+        	<!-- Main Content-->
+		<div class="main-content pt-0">
+				<div class="container">
+					<div class="inner-body">
+
+
+
+
+						<!--Row-->
+						<div class="row row-sm">
+							<div class="col-sm-12 col-lg-12 col-xl-12">
+
+								<!--Row-->
+								<div class="row row-sm  mt-lg-4">
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+
+									</div>
+								</div>
+								<!--Row -->
+
+								<!--Row-->
+								<div class="row row-sm">
+
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="/addpack">
+													<div class="card-item-icon card-icon" data-toggle="tooltip" data-placement="top" title="Add New Pack">
+													<i class="fa fa-plus-circle fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Payment settings</label>
+														<span class="d-block tx-12 mb-0 text-muted">Register and history of Patients</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-cog" aria-hidden="true"></i></h4>
+															<a href="/showpatients"><small><b class="text-success"> see details</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4" hidden>
+										<a href="">
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="/addmodule">
+													<div class="card-item-icon card-icon" data-toggle="tooltip" data-placement="top" title="Add New Module">
+													<i class="fa fa-plus-circle fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Module Settings</label>
+														<span class="d-block tx-12 mb-0 text-muted">Register and history of Referred Doctors</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-cog" aria-hidden="true"></i></i></h4>
+															<a href="/allmodules"><small><b class="text-success"> see details</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										</a>
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+										<a href="">
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="/addpack">
+													<div class="card-item-icon card-icon" data-toggle="tooltip" data-placement="top" title="Add New Pack">
+													<i class="fa fa-plus-circle fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Create Packs</label>
+														<span class="d-block tx-12 mb-0 text-muted">Create subscription packages</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-cog" aria-hidden="true"></i></h4>
+															<a href="/allpacks"><small><b class="text-success"> see details</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										</a>
+									</div>
+
+
+
+								</div>
+								<!--End row-->
+
+								<!--row-->
+								<!-- Row end -->
+							</div><!-- col end -->
+
+						</div><!-- Row end -->
+
+
+        			</div>
+				</div>
+		</div>
+			<!-- End Main Content-->
+
+{% endif %}
+{% endblock %}

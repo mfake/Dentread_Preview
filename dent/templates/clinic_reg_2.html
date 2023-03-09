@@ -1,0 +1,191 @@
+{% extends 'dentreadbase.html' %} 
+{% load static %} 
+{% block content %}
+
+<style>
+    body{
+        margin: 0;
+        padding: 1rem;
+        background: white;
+        overflow-x: hidden;
+    }
+    .registration-section{
+        padding: 0 5rem;
+        display: flex;
+        flex-direction: column;
+        /* align-items: center; */
+        justify-content: center;
+        /* max-width: 500px; */
+        
+    }
+    form.form-{
+        max-width: 500px;
+    }
+    .submit-button{
+        padding: 12px;
+        width: 100%;
+        border: none;
+        background: #1f3f7f;
+        border-radius: 4px;
+        color: white;
+    }
+    .help-text{
+        float: right;
+        /* color: green; */
+    }
+    .extra-content{
+        font-size: 15px;
+        font-weight: 500;
+        text-align: center;
+    }
+    .extra-content a{
+        text-decoration: underline;
+    }
+    p {
+        margin-bottom: 1rem !important;
+    }
+    .change_para {
+        font-size: medium;
+        font-weight: 450;
+        margin: 1.5rem 0 !important;
+    }
+    .change_para:first-child {
+        margin-top: 0.3rem !important;
+    }
+    @media (min-width: 576px) {
+        .modal-dialog {
+        max-width: 700px;
+        margin: 1.75rem auto;
+        }
+    }
+    .help-text{
+        float: right;
+        color: darkgreen;
+    }
+    .form input:checked+label:before, form input:checked+label:before,
+    .form input:checked+label::after, form input:checked+label::after{
+        display: none;
+    }
+</style>
+
+<div>
+    <header class="logo">
+        <img height="75" src="/static/svg_icons/dentread_logo_image.svg" alt="dentread logo">
+    </header>
+    <div class="main-content- row mb-2">
+        <div class="image-section col d-flex align-items-center justify-content-center">
+            <img src="/static/svg_icons/registration-image.png" alt="registration image" >
+        </div>
+        <div class="registration-section col">
+            <h2 class="mb-4">Register Dental Clinic</h2>
+            <form action="" class="form-">
+                <div class="form-group">
+                    <label for="name">Dental Clinic Name <span class="tx-danger">*</span></label>
+                    <input type="text" placeholder="Dental Clinic Name" required name="name" id="name" class="form-control">
+                    <small class="help-text" class="form-text text-muted">minimum 3 characters</small>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email ID <span class="tx-danger">*</span></label>
+                    <input type="email" placeholder="Email ID" name="email" required id="email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile Number <span class="tx-danger">*</span></label>
+                    <input type="number" placeholder="+91 1234567890" name="mobile" required id="mobile" class="form-control">
+                    <small class="help-text" class="form-text text-muted">country code mandatory</small>
+                </div>
+                <div class="form-group">
+                    <label for="password">Create Password <span class="tx-danger">*</span></label>
+                    <input type="password" placeholder="Password" name="password" required id="password" class="form-control">
+                    <small class="help-text w-50" class="form-text text-muted">minimum one uppercase letter, one lowercase letter, one special character and a number</small>
+                </div>
+                <div class="form-group mt-4">
+                    <label for="re-password">Confirm Password <span class="tx-danger">*</span></label>
+                    <input type="text" name="re-password" required placeholder="Re-Enter Password" id="re-password" class="form-control">
+                    <small class="help-text d-none form-text text-muted red-mark float-left" style="color: red !important;">password mis-macthed</small>
+                    <small class="help-text d-none form-text text-muted green-mark float-left" style="color: green !important;">password matched</small>
+                  
+                </div>
+                <button type="submit" class="submit-button mt-3">Register</button>
+            </form>
+            <div class="extra-content mt-4">
+                <span class="ml-auto mr-auto">Already have an account? <a href="/">Sign In</a></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function (){
+
+        if(!validateName('name')){
+            document.getElementById('name').focus();
+            return;
+        }
+        if(!validateEmail('email')){
+            document.getElementById('email').focus();
+            return;
+        }
+        if(!validateContact('mobile')){
+            document.getElementById('mobile').focus();
+            return;
+        }
+        if(!validatePassword()){
+            document.getElementById('password').focus();
+            e.preventDefault();
+            return;
+        }
+        if(!passwordMatch()){
+            document.getElementById('re-password').focus();
+            e.preventDefault();
+            return;
+        }
+
+        function passwordMatch(){
+            return document.getElementById('password').value == document.getElementById('re-password').value;
+        }
+
+        function validatePassword(){
+            let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s]).{6,}$/;
+            let ctrl =  document.getElementById('password').value;
+            return regex.test(ctrl);   
+        }
+
+        function validateName(target){
+            let regex = /^[a-zA-Z ]{3,30}$/;
+            if(target == 'orgname'){
+                regex = /^[a-zA-Z0-9\s,.'-@#$&*();]{3,}$/;
+            }
+            let ctrl =  document.getElementById(target).value;
+            return regex.test(ctrl);
+        }
+        if(!validateEmail('email')){
+            document.getElementById('email').focus();
+            e.preventDefault();
+            return;
+        }
+        if(!validateContact('contact')){
+            document.getElementById('contact').focus();
+            e.preventDefault();
+            return;
+        }
+    })
+
+    document.querySelector('#re-password').addEventListener('input', function (){
+        if(this.value == '')return;  
+        if( !passwordMatch()){
+            document.getElementById('re-password').focus();
+            document.querySelector('.red-mark').classList.remove('d-none');
+            document.querySelector('.green-mark').classList.add('d-none');
+        }
+        else{
+            document.querySelector('.red-mark').classList.add('d-none');
+            document.querySelector('.green-mark').classList.remove('d-none');
+        }
+        function passwordMatch(){
+            return document.getElementById('password').value == document.getElementById('re-password').value;
+        }
+    });
+
+</script>
+{% endblock %}

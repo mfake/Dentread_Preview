@@ -1,0 +1,134 @@
+ {%extends "Base.html" %}
+{% load static %}
+
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Create User</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Create Location</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <form  method="post" action="adduser">
+        {% csrf_token %}
+    <section class="content">
+      <div class="container-fluid">
+
+
+               <div class="row">
+                  <div class="col-md-6">
+
+                      <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Company Details</h3>
+              </div>
+              <div class="card-body">
+
+                   <div class="form-group">
+                        <label for="exampleInputPassword1">Company Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                      </div>
+                    <!-- checkbox -->
+
+                   <div class="row">
+                  <div class="col-sm-6">
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Sub Center</label>
+                          <input type="text" class="form-control" id="age" name="age" placeholder="Age">
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Location</label>
+                       <select type="text" id="gender" name="gender"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected" disabled>Choose </option>
+                           <option value="Male">Male</option>
+                           <option value="Female">Female</option>
+                           <option value="Other">Other</option>
+
+                       </select>
+                      </div>
+                  </div>
+
+
+               <!-- Email Contact Address -->
+                     <div class="row">
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Email</label>
+                          <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Contact</label>
+                          <input type="text" class="form-control" id="contact" name="contact" placeholder="Contact">
+                      </div>
+                  </div>
+                </div>
+
+
+                  <div class="form-group">
+    <label for="address_1" class="form-label">Address 1</label>
+    <input type="text" class="form-control" name="address_1" id="address_1" placeholder="1234 Main St">
+  </div>
+   <div class="form-group">
+    <label for="address_2" class="form-label">Address 2</label>
+    <input type="text" class="form-control" name="address_2" id="address_2" placeholder="Apartment, studio, or floor">
+  </div>
+<div class="row">
+  <div class="col-sm-4">
+      <div class="form-group">
+    <label for="city" class="form-label">City</label>
+    <input type="text" class="form-control" name="city" id="city">
+  </div>
+  </div>
+  <div class="col-sm-4">
+      <div class="form-group">
+   <label for="state" class="form-label">State</label>
+    <input type="text" class="form-control"  name="state" id="state">
+  </div>
+  </div>
+  <div class="col-sm-4">
+      <div class="form-group">
+    <label for="zip_code" class="form-label">Zip Code</label>
+    <input type="text" class="form-control"  name="zip_code" id="zip_code">
+  </div>
+  </div>
+</div>
+
+
+ <div class="form-group">
+                        <label for="exampleInputPassword1">Medical History (if any)</label>
+                        <textarea class="form-control" id="medih" name="medih" style="height: 54px">
+Medical History (if required)
+</textarea>
+                      </div>
+
+
+
+
+
+              </div>
+                  </div>
+
+              </div>
+{% endif %}
+ {%endblock%}

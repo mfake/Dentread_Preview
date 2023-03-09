@@ -1,0 +1,241 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+	<div class="main-content pt-0">
+				<div class="container">
+					<div class="inner-body">
+
+
+    <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Add Inventory</h5></a></li>
+                    </ol>
+
+                 </div>
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+										<div class="card bg-primary custom-card card-box">
+											<div class="card-body p-4">
+												<div class="row align-items-center">
+													<div class="offset-xl-3 offset-sm-6 col-xl-8 col-sm-6 col-12 img-bg ">
+														<h4 class="d-flex  mb-3">
+															<span class="font-weight-bold text-white ">{{ patient.name }}, Patient id -{{ patient.pid }}</span>
+														</h4>
+
+														<p class="tx-white-7 mb-1">
+													</div>
+													<img src="{% static '/dentread/assets/img/pngs/work3.png' %}" alt="user-img" class="wd-200">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+ <!-- Main content -->
+
+ <!-- Main content -->
+
+          <!-- Profile Image -->
+
+             <div class="row">
+               <div class="col-md-3">
+            <div class="card card-primary">
+              <div class="card-header bg-primary text-white">
+                <h6 class="card-title">Add Item</h6>
+              </div>
+              <!-- /.card-header -->
+
+<div class="row">
+
+
+
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+<form method="post" action="/add_inv_item" enctype="multipart/form-data">
+        {% csrf_token %}
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Select Item</label>
+
+                  <select type="text" id="temp" name="temp" onchange="singleSelectChangeValue()"  class="form-control select2bs4" required>
+                      <option selected="selected" disabled value="">Choose Item</option>
+                      {% for i in item %}
+                      <option value="{{ i.item }}" class="{{ i.price }}">{{ i.item }}</option>
+                       <script>
+                      function singleSelectChangeValue() {
+                           var selObj = document.getElementById("temp");
+                           var selValue = selObj.options[selObj.selectedIndex].value;
+
+                           var price = selObj.options[selObj.selectedIndex].className;
+
+
+                               document.getElementById("item").value = selValue;
+                               document.getElementById("qty").value = 1;
+                               document.getElementById("price").value = price;
+
+
+                            }
+</script>
+                      {% endfor %}
+                  </select>
+                      </div>
+
+
+
+                  <input id="pid" name="pid" value="{{ patient.pid }}" hidden></input>
+    <input id="item" name="item"  hidden></input>
+
+
+                <div class="row">
+                    <div class="col-sm-6">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Qty</label>
+                          <input type="number" class="form-control" id="qty" name="qty" oninput="myfunc()" placeholder="Quantity">
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Price</label>
+                          <input type="number" class="form-control" id="price" name="price" placeholder="Price" readonly>
+                      </div>
+                  </div>
+
+                </div>
+
+    <script>
+     function  myfunc() {
+     var qty= document.getElementById("qty").value;
+     var price= document.getElementById("price").value;
+     var newprice= qty * price;
+     document.getElementById("price").value = newprice;
+
+
+     }
+    </script>
+
+ <div class="row">
+                    <div class="col-sm-12">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Remark</label>
+                          <input type="text" class="form-control" id="remark" name="remark"  placeholder="Remark">
+                      </div>
+                  </div>
+
+
+</div>
+
+   <div class="row">
+
+                   <div class="col-sm-6">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary">Add</button>
+                  </div>
+                      <div class="col-sm-6">
+
+                        <button type="reset" value="reset" class="btn btn-block ripple btn-warning">Reset</button>
+                      </div>
+
+   </div>
+            </form>    <!-- /.form group -->
+             </div>
+
+               </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+                  <div class="col-md-9">
+
+
+            <div class="card">
+              <div class="card-header bg-primary text-white">
+                 <h6 class="card-title">Added Items</h6>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="active tab-pane" id="activity">
+
+
+              <!-- /.card-header -->
+
+
+                <table id="example2" class="table table-bordered table-striped">
+                   <thead>
+                    <tr>
+                      <th >Date</th>
+
+                      <th>Item</th>
+
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Remark</th>
+                        <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for i in invt %}
+                    <tr>
+                        <td>{{ i.date }}</td>
+                      <td>{{ i.item }}</td>
+
+                      <td>{{ i.qty }}</td>
+                         <td>{{ i.price }}</td>
+                         <td>{{ i.remark }}</td>
+
+
+
+                        <td>
+
+                         <a class="btn btn-danger btn-sm" href="/delete_inv_item/{{ i.id }}" >
+                              <i class="fas fa-trash">
+                              </i>
+
+                          </a>
+
+
+
+
+                      </td>
+                    </tr>
+
+    <!-- /.content -->
+       {% endfor %}
+                  </tbody>
+                </table>
+
+              </div>
+              <!-- /.card-body -->
+
+          <!-- /.col -->
+                </div>
+
+
+
+</div>
+
+
+            </div>
+
+
+
+
+              </div>
+                  </div>
+             </div>
+      </div>
+
+                </div>
+    </div>
+{% endif %}
+{%endblock%}

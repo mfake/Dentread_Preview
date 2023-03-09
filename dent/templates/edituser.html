@@ -1,0 +1,333 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    body{
+        background: white;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 2.5rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .content{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        padding: 2rem;
+        border-radius: 8px;
+    }
+    .submit-button, .reset-button{
+        width: 161px;
+        height: 36px;
+        background: #1F3F7F;
+        border-radius: 8px;
+        color: white;
+    }
+    .reset-button{
+        background-color: white;
+        color: #1F3F7F;
+        border: 1px solid #1F3F7F;
+        margin-left: auto;
+    }
+    form>.form-group{
+        display: flex;
+        margin-top: 1rem;
+        gap: 1.5rem;
+    }
+    .profile-pic{
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        clip-path: circle(50%);
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5  onclick="history.back()" style="cursor: pointer;">Edit User Details</h5>
+    </div>
+
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-12 col-md-5 d-flex">
+                <img src="/static/svg_icons/userReg.svg" height="500px" alt="User Registration">
+            </div>
+            <div class="col-sm-12 col-md-7">
+                <form  method="post" action="/edit_user/{{edit_user.id}}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        {% if message %}
+                            <div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+                                <strong></strong> {{message}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endif %}
+                        <div class="form-group col-sm-12 d-flex mb-4 position-relative">
+                            {% if edit_user.propic %}
+                                <img src="/{{edit_user.propic}}" class="ml-auto mr-auto profile-pic" alt="profile pic"/>
+                            {% endif %}
+                            {% if not edit_user.propic %}
+                                <img alt="avatar"  class="ml-auto mr-auto profile-pic" src="{% static '/profilepic/propic.jpg' %}">
+                            {% endif %}
+                            <label for="propic" class="position-absolute" style="left: 53%; bottom: -6px;">
+                                <img src="/static/svg_icons/profile-input.svg" alt="profile pic input" height="33px">
+                            </label>
+                            <input type="file" name="propic" id="propic" class="position-absolute" style="visibility: hidden;">
+                        </div>
+
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="orgName">Organization Name</label>
+                            <input type="text" class="form-control" id="orgName" value="{{org.orgname}}" name="orgName" placeholder="Organization Name" required disabled>
+                        </div>
+
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="department" >Department</label>
+                            <select type="text" id="department" name="department"  class="form-control" required>
+                                <option selected value="{{edit_user.department}}">{{edit_user.department}} </option>
+                                
+                                <option value="Admin">Admin</option>
+                                <option value="Manager">Manager</option>
+                                {% if org.orgtype == "Domain Owner" %}
+                                    <option value="Radiologist">Radiologist</option>
+                                {% endif %}
+                                <option value="Technician">Technician</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-6">
+                            
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{edit_user.name}}" placeholder="Enter Name" required >
+                            
+                        </div>
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="contact">Contact</label>
+                            <input type="tel" class="form-control" id="contact" name="contact" value="{{edit_user.contact}}" placeholder="+12 0123456789" required >
+                        </div>
+                        <div class="form-group col-sm-12 col-md-6">    
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{edit_user.email}}" placeholder="abc@xyz.com" required >
+                        </div>
+                        <div class="form-group col-sm-12 col-md-6">    
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" disabled id="username" value="{{edit_user.username}}" name="username" placeholder="username" required >
+                        </div>
+                        
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="status">Status</label>
+                            <select type="text" id="status" name="status"  class="form-control" required>
+                                <option selected value="{{edit_user.status}}">{{edit_user.status}}</option>
+                                <option value="Active" selected >Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="exampleInputPassword1">Signature img(.jpg, .png, only)</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="sign" name="sign" >
+                                <label class="custom-file-label" for="sign">Choose file</label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="form-group">
+                        <button type="reset" class="btn reset-button">Reset</button>
+                        <button type="submit" class="btn submit-button">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $( "#email" )
+      .keyup(function() {
+        var value = $( this ).val();
+        $( "#username" ).val( value );
+      })
+      .keyup();
+</script>
+
+ <!-- <div class="main-content pt-0 ">
+
+   
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Edit Profile</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+    <form  method="post" action="/edit_user/{{edit_user.id}}" enctype="multipart/form-data">
+        {% csrf_token %}
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+                    	<div class="row row-sm  mt-lg-4">
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+
+									</div>
+								</div>
+
+          <div class="col-md-12">
+            <div class="card card-primary">
+              <div class="card-header  text-white" style="background-color:#2f6ebb;">
+                <h6 class="card-title">User Details</h6>
+              </div>
+              <div class="card-body">
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Profile Image</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="propic" name="propic" >
+                            <label class="custom-file-label" for="propic">Choose file</label>
+                        </div>
+                    </div>
+
+                     <div class="form-group">
+                        <label for="exampleInputPassword1">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{edit_user.name}}" placeholder="Name" required>
+                      </div>
+
+                     <div class="row">
+                  <div class="col-sm-6">
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Email</label>
+                          <input type="email" class="form-control" id="email" name="email" value="{{edit_user.email}}" placeholder="Email" readonly>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Contact</label>
+                          <input type="tel" class="form-control" id="contact" name="contact" value="{{edit_user.contact}}" placeholder="Contact" required>
+                      </div>
+                  </div>
+                </div>
+
+                  <div class="row">
+                  <div class="col-sm-12">
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">User Name</label>
+                          <input type="text" class="form-control" id="username" name="username" value="{{edit_user.username}}" placeholder="username" readonly>
+                      </div>
+                  </div>
+
+                </div>
+
+
+
+<div class="row">
+
+
+
+
+</div>
+                  <div class="row">
+  <div class="col-sm-6">
+      <div class="form-group">
+    <label for="Department" class="form-label">Department</label>
+    <select type="text" id="department" name="department"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected"  value="{{edit_user.department}}">{{edit_user.department}} </option>
+                           <option value="Manager">Manager</option>
+                           <option value="Technician">Technician</option>
+                           <option value="Admin">Admin</option>
+
+
+                       </select>
+  </div>
+  </div>
+                      <div class="col-sm-6">
+      <div class="form-group">
+    <label for="status" class="form-label">Status</label>
+     <select type="text" id="status" name="status"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected"  value="{{edit_user.status}}">{{edit_user.status}}</option>
+                           <option value="Active">Active</option>
+                           <option value="Inactive">Inactive</option>
+</select>
+
+
+
+
+
+
+
+
+
+
+              </div>
+                      </div>
+                       <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Signature img(.jpg, .png, only)</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="sign" name="sign" >
+                                    <label class="custom-file-label" for="propic">Choose file</label>
+                                </div>
+                            </div>
+                       </div>
+
+
+<div class="col-md-12">
+<div class="row">
+
+
+                  <div class="col-sm-6">
+                      <button type="submit" class="btn btn-block ripple btn-primary">Update</button>
+                  </div>
+
+
+
+     </div>
+      </div>
+                  </div>
+              </div>
+            </div>
+            </form>
+   </div>
+      </div>
+ </div>
+</div>
+</div>
+</div>
+	<script src="{% static '/dentread/assets/plugins/jquery/jquery.min.js' %}"></script>
+
+<script src="{% static '/dentread/assets/js/form-elements.js' %}"></script> -->
+
+{% endif %}
+{%endblock%}

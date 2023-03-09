@@ -1,0 +1,136 @@
+
+{% extends "domain_dashbase.html" %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>All Invoices</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+    <!-- Main content -->
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+
+
+
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+    <form method="post" action="/cstbusiness_dent">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-2">
+        <div class="form-group">
+                        <label for="rdate">From Date</label>
+                        <input type="date" class="form-control" id="fromdate" name="fromdate"  required>
+                      </div>
+                </div>
+             <div class="col-sm-2">
+        <div class="form-group">
+                        <label for="rdate">To Date</label>
+                        <input type="date" class="form-control" id="todate" name="todate"  required>
+                      </div>
+            </div>
+            <div class="col-sm-2">
+
+            </div>
+       <div class="col-sm-2">
+                    <label for="exampleInputPassword1">Search</label>
+                      <button type="submit" class="btn btn-block " style="background-color:#264d60;color:white;">Search</button>
+                  </div>
+    </div>
+                </form>
+<hr/>
+
+<div class="row">
+              <div class="col-sm-4 col-md-2">
+
+
+                <div class="color-palette-set">
+                  <div class="bg-primary color-palette" style="text-align: center;color:white;"><span>Total Business Amount</span></div>
+                  <div class="bg-primary disabled color-palette" style="text-align: center;color:white;"><span>{{total}}</span></div>
+                </div>
+              </div>
+              <!-- /.col -->
+
+
+              <!-- /.col -->
+
+              <!-- /.col -->
+            </div>
+
+        <hr/>
+                <table id="example1" class="table table-bordered table-striped">
+
+
+                  <thead style="background-color:#264d60">
+                  <tr style="color:white;">
+                    <th>Date</th>
+                      <th hidden>Date</th>
+                      <th>Refer By</th>
+                    <th>Name</th>
+                    <th>Study</th>
+
+                    <th>Price</th>
+
+
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                   {% for i in invoice %}
+                  <tr>
+                    <td>{{ i.date|date:'d-m-Y' }}</td>
+                      <td hidden>{{ i.date|date:'Y-m-d' }}</td>
+                    <td>{{ i.refer }}</td>
+                    <td>{{ i.name }}
+                    </td>
+                    <td>{{ i.stud }}</td>
+
+                    <td>{{ i.price }}</td>
+
+
+                  </tr>
+                {% endfor %}
+
+                  </tbody>
+
+
+                </table>
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+-->
+  </div>
+  <!-- /.content-wrapper -->
+  </div>
+
+{% endif %}
+
+{%endblock%}

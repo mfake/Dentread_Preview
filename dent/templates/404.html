@@ -1,0 +1,80 @@
+
+{% load static %}
+
+<script src="https://kit.fontawesome.com/ab1f34fcc9.js" crossorigin="anonymous"></script>
+<body>
+    <div id="main">
+        <div class="fof">
+                <h1>Error 404</h1>
+                <p>
+                    Oooooops! Looks like nothing was found at this location.
+                    Maybe try on of the links below, click on the top menu
+                    or try a search?
+                </p>
+                <button class="back-button" onclick="history.back()"><i class="fa-solid fa-arrow-left" style="font-size: 1.1rem;"></i>
+                </button>
+        </div>
+    </div>
+    
+</body>
+
+
+<style>
+    *{
+        transition: all 0.6s;
+    }
+    
+    html {
+        height: 100%;
+    }
+    
+    body{
+        font-family: 'Lato', sans-serif;
+        color: #888;
+        margin: 0;
+    }
+    
+    #main{
+        display: table;
+        width: 100%;
+        height: 100vh;
+        text-align: center;
+    }
+    
+    .fof{
+          display: table-cell;
+          vertical-align: middle;
+    }
+    
+    .fof h1{
+          font-size: 50px;
+          display: inline-block;
+          padding-right: 12px;
+          animation: type .5s alternate infinite;
+    }
+    
+    @keyframes type{
+          from{box-shadow: inset -3px 0px 0px #888;}
+          to{box-shadow: inset -3px 0px 0px transparent;}
+    }
+    .back-button{
+        display: inline-flex;
+        width: 90px;
+        border: none;
+        background: #888888;
+        border-radius: 60%;
+        position: absolute;
+        height: 55px;
+        justify-content: center;
+        align-items: center;
+        margin-left: -3rem;
+    }
+
+    .back-button:hover{
+        background-color: #7aadda;
+        color: white;
+    }
+    .main-sidebar main-sidebar-sticky side-menu bg-primary ps{
+        display: none ;
+    }
+</style>

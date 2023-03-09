@@ -1,0 +1,113 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+              <div class="page-header">
+							<div>
+								<h4 class="text-primary" >Manage Invites</h4>
+
+							</div>
+							<div class="d-flex">
+								<div class="justify-content-center">
+
+                                    <a href="/inviteuser_imaging" class="btn btn-primary my-2 btn-icon-text">
+									  <i class="fe fe-link mr-2"></i> Invite Partner
+									</a>
+								</div>
+							</div>
+						</div>
+
+
+    <!-- Main content -->
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+              	{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+            <div class="card">
+
+
+             
+              <!-- /.card-header -->
+              <div class="card-body">
+
+                <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead>
+                  <tr>
+                    <th style="background-color:#2f6ebb;color:white;">Request Date</th>
+                      <th style="background-color:#2f6ebb;color:white;">Invited by</th>
+                    <th style="background-color:#2f6ebb;color:white;">Requested To</th>
+                    <th style="background-color:#2f6ebb;color:white;">Response Status</th>
+                    <th style="background-color:#2f6ebb;color:white;">Actions</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for i in partner %}
+                  <tr>
+                    <td>{{ i.sent_date }}</td>
+                      <td>{{ i.sender }}</td>
+                    <td>{{ i.receiver }}</td>
+
+                    <td>{{ i.req_status }}</td>
+
+
+
+                   <td>
+                       <div class="dropdown dropleft">
+				<button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-sm btn-outline-primary" data-toggle="dropdown" id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i></button>
+				<div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+
+					<a class="dropdown-item" href="/accept_invite/{{i.id}}" {{hide}}><i class="fa fa-check"></i> Accept</a>
+					<a class="dropdown-item" href="/deny_invite/{{i.id}}" {{hide}}><i class="fa fa-times"></i> Deny</a>
+
+                    <a class="dropdown-item" href="/" hidden><i class="fas fa-trash"></i> Delete</a>
+				</div>
+			</div>
+
+</td>
+
+                  </tr>
+                {% endfor %}
+                  </tbody>
+
+                </table>
+
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+  </div>
+  </div>
+
+<!-- jQuery -->
+
+<!-- AdminLTE for demo purposes -->
+
+
+{% endif %}
+{%endblock%}

@@ -1,0 +1,172 @@
+
+<!doctype html>
+{% extends 'radio_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-12 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Service Dashboard</h5></a></li>
+                    </ol>
+              <ol class="breadcrumb float-sm-right">
+                   <li class="breadcrumb-item"><a  href="/addreferpt_radio" class="btn  ripple btn-primary text-white">Add Patient</a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+    <!-- Main content -->
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+              	{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+            <div class="card">
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+                <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead >
+                  <tr style="color:white;">
+
+                    <th>Date</th>
+                      <th hidden>Date</th>
+
+
+                    <th>Name </th>
+                    <th>Age</th>
+                      <th>Study</th>
+                    <th>Assign To</th>
+
+                    <th>Status</th>
+                    <th>Prescription</th>
+                      <th>Remark</th>
+                      <th>Refer By</th>
+                      <th>Dicom Files</th>
+
+                      <th>Actions</th>
+
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                   {% for i in rep %}
+                  <tr>
+
+                    <td>{{ i.date|date:'d-m-Y' }}</td>
+                      <td hidden>{{ i.date|date:'Y-m-d' }}</td>
+
+
+                    <td><small class="{{i.st}}">{{ i.name }}
+                    </td>
+                    <td>{{ i.age }}</td>
+                      <td>{{ i.study }}</td>
+                    <td>{{ i.repby }}</td>
+
+
+                      <td><small class="{{i.badge}}">{{ i.status }}</td>
+
+
+
+                    <td>{% if i.prescription %}<a href="{{i.prescription}}" target="_blank" style="color:green;"><i class="fa fa-picture-o fa-2x" aria-hidden="true"></i></a>{% endif %}</td>
+
+                       <td>{{ i.remark }}</td>
+                      <td>{{ i.referby }}</td>
+                      <td>
+<a href="/download_file_radio/{{ i.repid }}" target="_blank"><i class="fa fa-download " aria-hidden="true"></i></a>
+                         </td>
+
+
+                    <td>
+                          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Upload Files" href="/upload/{{ i.id }}" hidden>
+                              <i class="fas fa-upload">
+                              </i>
+
+
+                          </a>
+
+
+                          <a class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Create/Edit Report" href="/reporting_radio/{{ i.id }}">
+                              <i class="fas fa-pencil-alt">
+                              </i>
+
+                          </a>
+
+
+                     {% if i.status == 'Completed' or i.status == 'Sent' %}
+                        <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Send Mail" href="/sendmail_radio/{{ i.id }}" >
+                              <i class="fas fa-envelope">
+                              </i>
+
+                          </a>
+                            {% endif %}
+
+                      </td>
+
+
+                  </tr>
+                {% endfor %}
+                  </tbody>
+<div class="row">
+
+
+
+
+</div>
+
+</div>
+
+                </table>
+
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+      </div>
+
+<!-- jQuery -->
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+
+<!-- AdminLTE for demo purposes -->
+
+
+
+
+</body>
+{% endif %}
+  {%endblock%}

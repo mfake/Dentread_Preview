@@ -1,0 +1,4 @@
+google-api-python-client>=1.8.2
+google-auth<2,>=1.28.0
+python-dateutil>=2.5.3
+Django>=2.2

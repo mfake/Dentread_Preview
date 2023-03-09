@@ -1,0 +1,162 @@
+{%extends "clinic_dashbase.html" %}
+{% load static %}
+
+
+{% block content %}
+
+
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- custom css & js -->
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static '/dropzone/min/dropzone.min.css' %}">
+    <script src="{% static '/dropzone/dropzone.js' %}"></script>
+
+
+    <!--<script>
+      tinymce.init({
+        selector: '#text'
+      });
+    </script> -->
+
+</head>
+
+<body>
+<div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+    <div class="container">
+        <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#"><h5>Upload DCM Data</h5></a></li>
+                    </ol>
+
+                </div>
+
+            </div>
+
+            <!-- /.container-fluid -->
+
+
+            <!-- Main content -->
+
+            <div class="row">
+                {% if not refpt.upload %}
+                <div class="col-sm-12 col-lg-12 col-xl-6">
+
+                    <div class="card card-info">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title">Upload Scan File (Only.zip )</h5>
+                        </div>
+                        <div class="card-body">
+
+
+                            <div class="container mt-3">
+                                <form action="/adddcmfiles/{{ refpt.refptid }}" method="post" class="dropzone dz"
+                                      id="recommendationDiv">
+                                    {% csrf_token %}
+                                    <div class="fallback">
+                                        <input name="file" id="file" type="file" multiple/>
+
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                {% endif %}
+                <div class="col-sm-12 col-lg-12 col-xl-6">
+
+                    <div class="card card-info">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title">Upload Clinical files (Jpg)</h5>
+                        </div>
+                        <div class="card-body">
+
+
+                            <div class="container mt-3">
+                                <form action="/addclinicfiles/{{ refpt.refptid }}" method="post" class="dropzone dz"
+                                      id="form2">
+                                    {% csrf_token %}
+                                    <div class="fallback">
+                                        <input name="file" id="file" type="file" multiple/>
+
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-sm-12 col-lg-12 col-xl-6">
+
+                    <div class="card card-info">
+
+                        <div class="card-body">
+
+
+                            <a class="btn ripple btn-main-primary btn-block" href="/allcstpatient">
+                                Submit
+                            </a>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <script>
+    Dropzone.options.recommendationDiv = {
+    acceptedFiles: ".zip",
+    maxFiles:1,
+    init: function() {
+    this.hiddenFileInput.removeAttribute('multiple');
+}
+};
+
+            </script>
+            <script>
+    Dropzone.options.form2 = {
+    acceptedFiles: "image/*",
+};
+
+            </script>
+            <script>
+  Dropzone.options.recommendationDiv = {
+    maxFilesize: 500,
+    init: function() {
+      this.on("uploadprogress", function(file, progress) {
+        console.log("File progress", progress);
+      });
+    }
+  }
+
+            </script>
+
+            <!-- /.card-body -->
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
+
+
+{% endblock %}

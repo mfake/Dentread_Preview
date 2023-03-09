@@ -1,0 +1,39 @@
+{% load static %}
+<form action="/addreport/107" method="post">
+{% csrf_token %}
+<input id="status" name="status" value="{{service_order.status}}" >
+</form>
+
+
+
+<input type="button" id="btnsave" value="test">
+
+<script src="{% static '/ajax/jquery.js' %}"></script>
+
+
+<script>
+
+    $('#btnsave').click(function() {
+      console.log("clicked");
+      let nm=$('#name').val();
+      let st="Completed";
+      let csr = $("input[name=csrfmiddlewaretoken]").val();
+      console.log(csr);
+      mydata={status:st};
+
+      $.ajax({
+        url: '/addreport/{{ service_order.id }}',
+        method:'POST',
+        headers: {'X-CSRFToken': csr},
+        mode: 'same-origin',
+        data: mydata,
+        success: function (data) {
+          console.log(data);
+        }
+
+      });
+
+    });
+
+
+</script>

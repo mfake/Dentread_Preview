@@ -1,0 +1,1395 @@
+{% extends 'dentreadbase.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  @media (min-width: 1300px){
+    .signpages {
+      width: 80%;
+      border-radius: 6px;
+      margin: 2rem auto;
+      display: flex;
+    }
+  }
+</style>
+<div class="page main-signin-wrapper">
+  <!-- Row -->
+  <div class="row signpages text-center">
+    <div class="col-md-12">
+      <div class="card" style="box-shadow: rgb(191 184 184) 0px 5px 50px">
+        <div class="container">
+          <div class="card-body p-0 pt-3">
+            <form action="/lab_reg" method="post">
+              {% csrf_token %}
+              <img
+                src="{% static '/dentread/assets/img/brand/logo1.png' %}"
+                class="header-brand-img ht-50 mb-2"
+                alt="logo"
+              />
+              <div class="row row-sm mt-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+                  {% if message %}
+                  <div
+                    class="alert alert-{{class}} alert-dismissible fade show"
+                    role="alert"
+                  >
+                    <strong></strong> {{message}}
+                    <button
+                      type="button"
+                      class="close"
+                      data-dismiss="alert"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+              <h4 class="text-center mb-4 emphasis-text"><span style="color: red;">Radiologist</span> Registration</h4>
+              <div class="row" style="justify-content: space-around !important;">
+                <div class="col-lg-8 col-xs-12 col-sm-12 login_form p-3 main-border" style="border: 1px solid #9db6dc; border-radius: 5px;" >
+                  <p class="mb-3 text-muted tx-15 ml-0 text-center main-heading" style="
+                  /* background: #5d93d6; */
+                  background: #9bbadf;
+                  padding: 5px 0;
+                  color: white !important;
+                  border-radius: 3px;
+              ">
+                    Your Details
+                  </p>
+
+                  <div class="form-row ">
+
+                    <div class="form-group col-md-6 text-left">
+                      <label>Your Name<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        name="orgname"
+                        id="orgname"
+                        placeholder="Enter your name"
+                        type="text"
+                        required
+                      />
+                    </div>
+                    <!-- <div class="form-group col-md-6 text-left">
+                      <label>Address<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        name="address"
+                        id="address"
+                        placeholder="Enter your address"
+                        type="text"
+                        required
+                      />
+                    </div> -->
+                    <div class="form-group col-md-6 text-left">
+                      <label
+                        >Official Email<span class="tx-danger"> *</span></label
+                      >
+                      <input
+                        class="form-control"
+                        name="orgemail"
+                        id="orgemail"
+                        placeholder="Enter your organisation's email"
+                        type="email"
+                        required
+                      />
+                    </div>
+                    <div class="form-group col-md-6 text-left">
+                      <label>GSTIN/Reg Number</label>
+                      <input
+                        class="form-control"
+                        name="gstin"
+                        id="gstin"
+                        placeholder="Enter your GSTIN"
+                        type="text"
+                      />
+                    </div>
+                    <div class="form-group col-md-6 text-left">
+                      <label>Mobile<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        name="orgcontact"
+                        id="orgcontact"
+                        placeholder="Enter your office's contact number"
+                        type="number"
+                        required
+                      />
+                    </div>
+
+                    
+                    <!-- address  -->
+                    <div class="form-group col-md-12 text-left">
+                      <label>Address<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        name="address"
+                        id="address"
+                        placeholder="Enter your address"
+                        type="text"
+                        required
+                      />
+                    </div>
+
+                     <!-- town -->
+                     <div class="form-group col-md-6 text-left">
+                      <label>City/Town<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        name="cityname"
+                        id="cityname"
+                        placeholder="Enter your town/city"
+                        type="text"
+                        required
+                      />
+                    </div>
+
+                    <!-- state  -->
+
+                    <div class="form-group col-md-6 text-left">
+                      <label>State<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        name="statename"
+                        id="statename"
+                        placeholder="Enter your state"
+                        type="text"
+                        required
+                      />
+                    </div>
+
+                    <!-- postal code -->
+
+                    <div class="form-group col-md-6 text-left">
+                      <label>Zipcode/Pincode<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        name="pincode"
+                        id="pincode"
+                        placeholder="Enter your zipcode"
+                        type="number"
+                        required
+                      />
+                    </div>
+
+                    <!-- country  -->
+
+                    <div class="form-group col-md-6 text-left">
+                      <label>Country<span class="tx-danger"> *</span></label>
+                      <Select class="form-control" title="Country" name="country" id="country" tabindex="-1"  aria-hidden="true">
+                        <option value="0" >Select Country</option>
+                        <option value="AF">Afghanistan</option>
+                        <option value="AL">Albania</option>
+                        <option value="DZ">Algeria</option>
+                        <option value="AS">American Samoa</option>
+                        <option value="AD">Andorra</option>
+                        <option value="AO">Angola</option>
+                        <option value="AI">Anguilla</option>
+                        <option value="AQ">Antarctica</option>
+                        <option value="AR">Argentina</option>
+                        <option value="AM">Armenia</option>
+                        <option value="AW">Aruba</option>
+                        <option value="AU">Australia</option>
+                        <option value="AT">Austria</option>
+                        <option value="AZ">Azerbaijan</option>
+                        <option value="BS">Bahamas</option>
+                        <option value="BH">Bahrain</option>
+                        <option value="BD">Bangladesh</option>
+                        <option value="BB">Barbados</option>
+                        <option value="BY">Belarus</option>
+                        <option value="BE">Belgium</option>
+                        <option value="BZ">Belize</option>
+                        <option value="BJ">Benin</option>
+                        <option value="BM">Bermuda</option>
+                        <option value="BT">Bhutan</option>
+                        <option value="BO">Bolivia</option>
+                        <option value="BW">Botswana</option>
+                        <option value="BV">Bouvet Island</option>
+                        <option value="BR">Brazil</option>
+                        <option value="BN">Brunei Darussalam</option>
+                        <option value="BG">Bulgaria</option>
+                        <option value="BF">Burkina Faso</option>
+                        <option value="BI">Burundi</option>
+                        <option value="KH">Cambodia</option>
+                        <option value="CM">Cameroon</option>
+                        <option value="CA">Canada</option>
+                        <option value="CV">Cape Verde</option>
+                        <option value="KY">Cayman Islands</option>
+                        <option value="CF">Central African Republic</option>
+                        <option value="TD">Chad</option>
+                        <option value="CL">Chile</option>
+                        <option value="CN">China</option>
+                        <option value="CX">Christmas Island</option>
+                        <option value="CC">Cocos (Keeling) Islands</option>
+                        <option value="CO">Colombia</option>
+                        <option value="KM">Comoros</option>
+                        <option value="CG">Congo</option>
+                        <option value="CK">Cook Islands</option>
+                        <option value="CR">Costa Rica</option>
+                        <option value="CI">Cote d'Ivoire</option>
+                        <option value="HR">Croatia (Hrvatska)</option>
+                        <option value="CU">Cuba</option>
+                        <option value="CY">Cyprus</option>
+                        <option value="CZ">Czech Republic</option>
+                        <option value="DK">Denmark</option>
+                        <option value="DJ">Djibouti</option>
+                        <option value="DM">Dominica</option>
+                        <option value="DO">Dominican Republic</option>
+                        <option value="EC">Ecuador</option>
+                        <option value="EG">Egypt</option>
+                        <option value="SV">El Salvador</option>
+                        <option value="GQ">Equatorial Guinea</option>
+                        <option value="ER">Eritrea</option>
+                        <option value="EE">Estonia</option>
+                        <option value="ET">Ethiopia</option>
+                        <option value="FK">Falkland Islands (Malvinas)</option>
+                        <option value="FO">Faroe Islands</option>
+                        <option value="FJ">Fiji</option>
+                        <option value="FI">Finland</option>
+                        <option value="FR">France</option>
+                        <option value="GF">French Guiana</option>
+                        <option value="PF">French Polynesia</option>
+                        <option value="GA">Gabon</option>
+                        <option value="GM">Gambia</option>
+                        <option value="GE">Georgia</option>
+                        <option value="DE">Germany</option>
+                        <option value="GH">Ghana</option>
+                        <option value="GI">Gibraltar</option>
+                        <option value="GR">Greece</option>
+                        <option value="GL">Greenland</option>
+                        <option value="GD">Grenada</option>
+                        <option value="GP">Guadeloupe</option>
+                        <option value="GU">Guam</option>
+                        <option value="GT">Guatemala</option>
+                        <option value="GN">Guinea</option>
+                        <option value="GW">Guinea-Bissau</option>
+                        <option value="GY">Guyana</option>
+                        <option value="HT">Haiti</option>
+                        <option value="HN">Honduras</option>
+                        <option value="HK">Hong Kong</option>
+                        <option value="HU">Hungary</option>
+                        <option value="IS">Iceland</option>
+                        <option value="IN">India</option>
+                        <option value="ID">Indonesia</option>
+                        <option value="IQ">Iraq</option>
+                        <option value="IE">Ireland</option>
+                        <option value="IL">Israel</option>
+                        <option value="IT">Italy</option>
+                        <option value="JM">Jamaica</option>
+                        <option value="JP">Japan</option>
+                        <option value="JO">Jordan</option>
+                        <option value="KZ">Kazakhstan</option>
+                        <option value="KE">Kenya</option>
+                        <option value="KI">Kiribati</option>
+                        <option value="KR">Korea, Republic of</option>
+                        <option value="KW">Kuwait</option>
+                        <option value="KG">Kyrgyzstan</option>
+                        <option value="LV">Latvia</option>
+                        <option value="LB">Lebanon</option>
+                        <option value="LS">Lesotho</option>
+                        <option value="LR">Liberia</option>
+                        <option value="LY">Libyan Arab Jamahiriya</option>
+                        <option value="LI">Liechtenstein</option>
+                        <option value="LT">Lithuania</option>
+                        <option value="LU">Luxembourg</option>
+                        <option value="MO">Macau</option>
+                        <option value="MG">Madagascar</option>
+                        <option value="MW">Malawi</option>
+                        <option value="MY">Malaysia</option>
+                        <option value="MV">Maldives</option>
+                        <option value="ML">Mali</option>
+                        <option value="MT">Malta</option>
+                        <option value="MH">Marshall Islands</option>
+                        <option value="MQ">Martinique</option>
+                        <option value="MR">Mauritania</option>
+                        <option value="MU">Mauritius</option>
+                        <option value="YT">Mayotte</option>
+                        <option value="MX">Mexico</option>
+                        <option value="MD">Moldova, Republic of</option>
+                        <option value="MC">Monaco</option>
+                        <option value="MN">Mongolia</option>
+                        <option value="MS">Montserrat</option>
+                        <option value="MA">Morocco</option>
+                        <option value="MZ">Mozambique</option>
+                        <option value="MM">Myanmar</option>
+                        <option value="NA">Namibia</option>
+                        <option value="NR">Nauru</option>
+                        <option value="NP">Nepal</option>
+                        <option value="NL">Netherlands</option>
+                        <option value="AN">Netherlands Antilles</option>
+                        <option value="NC">New Caledonia</option>
+                        <option value="NZ">New Zealand</option>
+                        <option value="NI">Nicaragua</option>
+                        <option value="NE">Niger</option>
+                        <option value="NG">Nigeria</option>
+                        <option value="NU">Niue</option>
+                        <option value="NF">Norfolk Island</option>
+                        <option value="MP">Northern Mariana Islands</option>
+                        <option value="NO">Norway</option>
+                        <option value="OM">Oman</option>
+                        <option value="PW">Palau</option>
+                        <option value="PA">Panama</option>
+                        <option value="PG">Papua New Guinea</option>
+                        <option value="PY">Paraguay</option>
+                        <option value="PE">Peru</option>
+                        <option value="PH">Philippines</option>
+                        <option value="PN">Pitcairn</option>
+                        <option value="PL">Poland</option>
+                        <option value="PT">Portugal</option>
+                        <option value="PR">Puerto Rico</option>
+                        <option value="QA">Qatar</option>
+                        <option value="RE">Reunion</option>
+                        <option value="RO">Romania</option>
+                        <option value="RU">Russian Federation</option>
+                        <option value="RW">Rwanda</option>
+                        <option value="KN">Saint Kitts and Nevis</option>
+                        <option value="LC">Saint LUCIA</option>
+                        <option value="WS">Samoa</option>
+                        <option value="SM">San Marino</option>
+                        <option value="ST">Sao Tome and Principe</option>
+                        <option value="SA">Saudi Arabia</option>
+                        <option value="SN">Senegal</option>
+                        <option value="SC">Seychelles</option>
+                        <option value="SL">Sierra Leone</option>
+                        <option value="SG">Singapore</option>
+                        <option value="SK">Slovakia (Slovak Republic)</option>
+                        <option value="SI">Slovenia</option>
+                        <option value="SB">Solomon Islands</option>
+                        <option value="SO">Somalia</option>
+                        <option value="ZA">South Africa</option>
+                        <option value="ES">Spain</option>
+                        <option value="LK">Sri Lanka</option>
+                        <option value="SH">St. Helena</option>
+                        <option value="PM">St. Pierre and Miquelon</option>
+                        <option value="SD">Sudan</option>
+                        <option value="SR">Suriname</option>
+                        <option value="SZ">Swaziland</option>
+                        <option value="SE">Sweden</option>
+                        <option value="CH">Switzerland</option>
+                        <option value="SY">Syrian Arab Republic</option>
+                        <option value="TW">Taiwan, Province of China</option>
+                        <option value="TJ">Tajikistan</option>
+                        <option value="TZ">Tanzania, United Republic of</option>
+                        <option value="TH">Thailand</option>
+                        <option value="TG">Togo</option>
+                        <option value="TK">Tokelau</option>
+                        <option value="TO">Tonga</option>
+                        <option value="TT">Trinidad and Tobago</option>
+                        <option value="TN">Tunisia</option>
+                        <option value="TR">Turkey</option>
+                        <option value="TM">Turkmenistan</option>
+                        <option value="TC">Turks and Caicos Islands</option>
+                        <option value="TV">Tuvalu</option>
+                        <option value="UG">Uganda</option>
+                        <option value="UA">Ukraine</option>
+                        <option value="AE">United Arab Emirates</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="US">United States</option>
+                        <option value="UY">Uruguay</option>
+                        <option value="UZ">Uzbekistan</option>
+                        <option value="VU">Vanuatu</option>
+                        <option value="VE">Venezuela</option>
+                        <option value="VN">Viet Nam</option>
+                        <option value="VG">Virgin Islands (British)</option>
+                        <option value="VI">Virgin Islands (U.S.)</option>
+                        <option value="WF">Wallis and Futuna Islands</option>
+                        <option value="EH">Western Sahara</option>
+                        <option value="YE">Yemen</option>
+                        <option value="ZM">Zambia</option>
+                        <option value="ZW">Zimbabwe</option>                                    
+                      </Select>
+                      
+                    </div>
+                  </div>
+                </div>
+
+                <!-- <div class="col-lg-3 col-xs-12 col-sm-12 login_form p-3" style="border: 1px solid #9db6dc; border-radius: 5px;">
+                  <p class="mb-3 text-muted tx-15 ml-0 text-center" style="
+                  /* background: #5d93d6; */
+                  background: #9bbadf;
+                  padding: 5px 0;
+                  color: white !important;
+                  border-radius: 3px;
+              ">
+                    Choose Services Offered
+                  </p>
+
+                
+                  <div class="form-group text-left">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="check1" required>
+                      <label class="form-check-label" for="check1">
+                        Prosthetics
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group text-left">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="check2" required>
+                      <label class="form-check-label" for="check2">
+                        3D Printed Models
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group text-left">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="check3" required>
+                      <label class="form-check-label" for="check3">
+                        Implant Surgical Guide
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-group text-left">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="check3" required>
+                      <label class="form-check-label" for="check3">
+                        All
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-8 col-xs-12 col-sm-12 login_form p-3 mt-5" style="border: 1px solid #9db6dc; border-radius: 5px;">
+                  <p class="mb-3 text-muted tx-15 ml-0 text-center" style="
+                  background: #9bbadf;
+                  /* background: #5d93d6; */
+                  padding: 5px 0;
+                  color: white !important;
+                  border-radius: 3px;
+              ">
+                    Admin Details
+                  </p>
+
+                  <div class="form-row">
+
+                    <div class="form-group col-md-6 text-left">
+                      <label>Name<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        placeholder="Enter your Name"
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                      />
+                    </div>
+                    <div class="form-group col-md-6 text-left">
+                      <label>Email<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        placeholder="Enter your email"
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                      />
+                    </div>
+                    
+                    <div class="form-group col-md-6 text-left">
+                      <label>Password<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        placeholder="Enter your password"
+                        type="password"
+                        id="password"
+                        name="password"
+                        type="password"
+                        required=""
+                      />
+                    </div>
+                    <div class="form-group col-md-6 text-left">
+                      <label
+                        >Confirm Password<span class="tx-danger" id="message">
+                          *</span
+                        ></label
+                      >
+                      <input
+                        class="form-control"
+                        placeholder="Retype your password"
+                        onkeyup="myFunction()"
+                        type="password"
+                        name="confirm_password"
+                        id="confirm_password"
+                        required=""
+                      />
+                    </div>
+                    <div class="form-group col-md-6 text-left">
+                      <label>Contact<span class="tx-danger"> *</span></label>
+                      <input
+                        class="form-control"
+                        placeholder="Enter your contact number"
+                        type="number"
+                        id="contact"
+                        name="contact"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div> -->
+
+
+                <div class="col-lg-3 col-xs-12 col-sm-12 login_form p-3 extra-content" style="border: 1px solid #69c57e; border-radius: 5px; background: #69c57e; color: white;">
+                  <h4 class="mb-3 text-muted ml-0 text-center " style="
+                  color: white !important;
+                  padding: 5px 0;
+              ">
+                    Information
+                  </h4>
+
+                  <div class="d-flex justify-content-center" style="height: 80%; flex-direction: column">
+
+                    <h4 class="text-left">
+                      As a Radiologist, you can offer Radiological Reporting Service on Dentread Platform. 
+                  </h4>
+                  <h4 class="text-left">
+                    You an also avail other Services offered by the Dentread Platform.
+                  </h4>
+                </div>
+
+                  <!-- <div class="form-group text-left">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="check1" required>
+                      <label class="form-check-label" for="check1">
+                        Prosthetics
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group text-left">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="check2" required>
+                      <label class="form-check-label" for="check2">
+                        3D Printed Models
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group text-left">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="check3" required>
+                      <label class="form-check-label" for="check3">
+                        Implant Surgical Guide
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-group text-left">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="check3" required>
+                      <label class="form-check-label" for="check3">
+                        All
+                      </label>
+                    </div>
+                  </div> -->
+                </div>
+
+
+
+                <div class="col-lg-12 col-xs-12 col-sm-12 login_form p-3">
+                  <div class="form-group text-left pl-3">
+                    <label>Terms & Conditions</label>
+                    <label class="ckbox"
+                      ><input type="checkbox" required /><span
+                        >I accept
+                        <a
+                          class="modal-effect emphasis-text"
+                          data-effect="effect-scale"
+                          data-toggle="modal"
+                          href="#modaldemo8"
+                          >Terms & Conditions</a
+                        ></span
+                      ></label
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-main-primary mb-3 ml-2 main-heading main-border"  style="width: 25%; display: block;"
+              >
+                Create Account
+              </button>
+
+              <div class="text-left " style="
+              position: absolute;
+              bottom: 2rem;
+              right: 3rem;
+              ">
+                <p class="mb-0">
+                  Already have an account? <a class="emphasis-text" href="/login_dentread">Sign In</a>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+
+  .main-heading{
+		background-color: #33ccff !important;
+		color: white !important;
+	}
+
+	.main-heading--opposite{
+		background-color: white !important;
+		color: deepskyblue !important;
+	}
+
+	.main-border{
+		border: 1px solid #33ccff !important;
+	}
+
+	.extra-content{
+		border: none !important;
+		border-radius: 5px !important;
+		background: linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%) !important;
+		color: white !important;
+	}
+
+	.emphasis-text{
+		color: deepskyblue;
+	}
+  p {
+    margin-bottom: 1rem !important;
+  }
+  .change_para {
+    font-size: medium;
+    font-weight: 450;
+    margin: 1.5rem 0 !important;
+  }
+  .change_para:first-child {
+    margin-top: 0.3rem !important;
+  }
+
+  @media (min-width: 576px) {
+    .modal-dialog {
+      max-width: 700px;
+      margin: 1.75rem auto;
+    }
+  }
+</style>
+<div class="modal" id="modaldemo8">
+  <div
+    class="modal-dialog modal-dialog-centered"
+    role="document"
+    style="height: 90%"
+  >
+    <div class="modal-content modal-content-demo" style="height: 100%">
+      <div class="modal-header">
+        <h6 class="modal-title">Terms & Conditions</h6>
+        <button
+          aria-label="Close"
+          class="close"
+          data-dismiss="modal"
+          type="button"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: justify; overflow-y: auto">
+        <p class="change_para">1. Introduction</p>
+
+        <p>
+          Welcome to Dentread (&ldquo;Company&rdquo;, &ldquo;we&rdquo;,
+          &ldquo;our&rdquo;, &ldquo;us&rdquo;)!
+        </p>
+
+        <p>
+          These Terms of Service (&ldquo;Terms&rdquo;, &ldquo;Terms of
+          Service&rdquo;) govern your use of our website located at
+          www.dentread.com (together or individually &ldquo;Service&rdquo;)
+          operated by Dentread.
+        </p>
+
+        <p>
+          Our Privacy Policy also governs your use of our Service and explains
+          how we collect, safeguard and disclose information that results from
+          your use of our web pages.
+        </p>
+
+        <p>
+          Your agreement with us includes these Terms and our Privacy Policy
+          (&ldquo;Agreements&rdquo;). You acknowledge that you have read and
+          understood Agreements, and agree to be bound of them.
+        </p>
+
+        <p>
+          If you do not agree with (or cannot comply with) Agreements, then you
+          may not use the Service, but please let us know by emailing at
+          info@dentread.com so we can try to find a solution. These Terms apply
+          to all visitors, users and others who wish to access or use Service.
+        </p>
+
+        <p class="change_para">2. Communications</p>
+
+        <p>
+          By using our Service, you agree to subscribe to newsletters, marketing
+          or promotional materials and other information we may send. However,
+          you may opt out of receiving any, or all, of these communications from
+          us by following the unsubscribe link or by emailing at
+          info@dentread.com.
+        </p>
+
+        <p class="change_para">3. Purchases</p>
+
+        <p>
+          If you wish to purchase any product or service made available through
+          Service (&ldquo;Purchase&rdquo;), you may be asked to supply certain
+          information relevant to your Purchase including but not limited to,
+          your credit or debit card number, the expiration date of your card,
+          your billing address, and your shipping information.
+        </p>
+
+        <p>
+          You represent and warrant that: (i) you have the legal right to use
+          any card(s) or other payment method(s) in connection with any
+          Purchase; and that (ii) the information you supply to us is true,
+          correct and complete.
+        </p>
+
+        <p>
+          We may employ the use of third party services for the purpose of
+          facilitating payment and the completion of Purchases. By submitting
+          your information, you grant us the right to provide the information to
+          these third parties subject to our Privacy Policy.
+        </p>
+
+        <p>
+          We reserve the right to refuse or cancel your order at any time for
+          reasons including but not limited to: product or service availability,
+          errors in the description or price of the product or service, error in
+          your order or other reasons.
+        </p>
+
+        <p>
+          We reserve the right to refuse or cancel your order if fraud or an
+          unauthorized or illegal transaction is suspected.
+        </p>
+
+        <p class="change_para">4. Contests, Sweepstakes and Promotions</p>
+
+        <p>
+          Any contests, sweepstakes or other promotions (collectively,
+          &ldquo;Promotions&rdquo;) made available through Service may be
+          governed by rules that are separate from these Terms of Service. If
+          you participate in any Promotions, please review the applicable rules
+          as well as our Privacy Policy. If the rules for a Promotion conflict
+          with these Terms of Service, Promotion rules will apply.
+        </p>
+
+        <p class="change_para">5. Subscriptions</p>
+
+        <p>
+          Some parts of Service are billed on a subscription basis
+          (&quot;Subscription(s)&quot;). You will be billed in advance on a
+          recurring and periodic basis (&quot;Billing Cycle&quot;). Billing
+          cycles will be set depending on the type of subscription plan you
+          select when purchasing a Subscription.
+        </p>
+
+        <p>
+          At the end of each Billing Cycle, your Subscription will automatically
+          renew under the exact same conditions unless you cancel it or Dentread
+          cancels it. You may cancel your Subscription renewal either through
+          your online account management page or by contacting info@dentread.com
+          customer support team.
+        </p>
+
+        <p>
+          A valid payment method is required to process the payment for your
+          subscription. You shall provide Dentread with accurate and complete
+          billing information that may include but not limited to full name,
+          address, state, postal or zip code, telephone number, and a valid
+          payment method information. By submitting such payment information,
+          you automatically authorize Dentread to charge all Subscription fees
+          incurred through your account to any such payment instruments.
+        </p>
+
+        <p>
+          Should automatic billing fail to occur for any reason, Dentread
+          reserves the right to terminate your access to the Service with
+          immediate effect.
+        </p>
+
+        <p class="change_para">6. Free Trial</p>
+
+        <p>
+          Dentread may, at its sole discretion, offer a Subscription with a free
+          trial for a limited period of time (&quot;Free Trial&quot;).
+        </p>
+
+        <p>
+          You may be required to enter your billing information in order to sign
+          up for Free Trial.
+        </p>
+
+        <p>
+          If you do enter your billing information when signing up for Free
+          Trial, you will not be charged by Dentread until Free Trial has
+          expired. On the last day of Free Trial period, unless you cancelled
+          your Subscription, you will be automatically charged the applicable
+          Subscription fees for the type of Subscription you have selected.
+        </p>
+
+        <p>
+          At any time and without notice, Dentread reserves the right to (i)
+          modify Terms of Service of Free Trial offer, or (ii) cancel such Free
+          Trial offer.
+        </p>
+
+        <p class="change_para">7. Fee Changes</p>
+
+        <p>
+          Dentread, in its sole discretion and at any time, may modify
+          Subscription fees for the Subscriptions. Any Subscription fee change
+          will become effective at the end of the then-current Billing Cycle.
+        </p>
+
+        <p>
+          Dentread will provide you with a reasonable prior notice of any change
+          in Subscription fees to give you an opportunity to terminate your
+          Subscription before such change becomes effective.
+        </p>
+
+        <p>
+          Your continued use of Service after Subscription fee change comes into
+          effect constitutes your agreement to pay the modified Subscription fee
+          amount.
+        </p>
+
+        <p class="change_para">8. Refunds</p>
+
+        <p>
+          We issue refunds for Contracts within 1 days of the original purchase
+          of the Contract.
+        </p>
+
+        <p class="change_para">9. Content</p>
+
+        <p>
+          Our Service allows you to post, link, store, share and otherwise make
+          available certain information, text, graphics, videos, or other
+          material (&ldquo;Content&rdquo;). You are responsible for Content that
+          you post on or through Service, including its legality, reliability,
+          and appropriateness.
+        </p>
+
+        <p>
+          By posting Content on or through Service, You represent and warrant
+          that: (i) Content is yours (you own it) and/or you have the right to
+          use it and the right to grant us the rights and license as provided in
+          these Terms, and (ii) that the posting of your Content on or through
+          Service does not violate the privacy rights, publicity rights,
+          copyrights, contract rights or any other rights of any person or
+          entity. We reserve the right to terminate the account of anyone found
+          to be infringing on a copyright.
+        </p>
+
+        <p>
+          You retain any and all of your rights to any Content you submit, post
+          or display on or through Service and you are responsible for
+          protecting those rights. We take no responsibility and assume no
+          liability for Content you or any third party posts on or through
+          Service. However, by posting Content using Service you grant us the
+          right and license to use, modify, publicly perform, publicly display,
+          reproduce, and distribute such Content on and through Service. You
+          agree that this license includes the right for us to make your Content
+          available to other users of Service, who may also use your Content
+          subject to these Terms.
+        </p>
+
+        <p>
+          Dentread has the right but not the obligation to monitor and edit all
+          Content provided by users.
+        </p>
+
+        <p>
+          In addition, Content found on or through this Service are the property
+          of Dentread or used with permission. You may not distribute, modify,
+          transmit, reuse, download, repost, copy, or use said Content, whether
+          in whole or in part, for commercial purposes or for personal gain,
+          without express advance written permission from us.
+        </p>
+
+        <p class="change_para">10. Prohibited Uses</p>
+
+        <p>
+          You may use Service only for lawful purposes and in accordance with
+          Terms. You agree not to use Service:
+        </p>
+
+        <p>
+          In any way that violates any applicable national or international law
+          or regulation.
+        </p>
+
+        <p>
+          For the purpose of exploiting, harming, or attempting to exploit or
+          harm minors in any way by exposing them to inappropriate content or
+          otherwise.
+        </p>
+
+        <p>
+          To transmit, or procure the sending of, any advertising or promotional
+          material, including any &ldquo;junk mail&rdquo;, &ldquo;chain
+          letter,&rdquo; &ldquo;spam,&rdquo; or any other similar solicitation.
+        </p>
+
+        <p>
+          To impersonate or attempt to impersonate Company, a Company employee,
+          another user, or any other person or entity.
+        </p>
+
+        <p>
+          In any way that infringes upon the rights of others, or in any way is
+          illegal, threatening, fraudulent, or harmful, or in connection with
+          any unlawful, illegal, fraudulent, or harmful purpose or activity.
+        </p>
+
+        <p>
+          To engage in any other conduct that restricts or inhibits
+          anyone&rsquo;s use or enjoyment of Service, or which, as determined by
+          us, may harm or offend Company or users of Service or expose them to
+          liability.
+        </p>
+
+        <p>Additionally, you agree not to:</p>
+
+        <p>
+          Use Service in any manner that could disable, overburden, damage, or
+          impair Service or interfere with any other party&rsquo;s use of
+          Service, including their ability to engage in real time activities
+          through Service.
+        </p>
+
+        <p>
+          Use any robot, spider, or other automatic device, process, or means to
+          access Service for any purpose, including monitoring or copying any of
+          the material on Service.
+        </p>
+
+        <p>
+          Use any manual process to monitor or copy any of the material on
+          Service or for any other unauthorized purpose without our prior
+          written consent.
+        </p>
+
+        <p>
+          Use any device, software, or routine that interferes with the proper
+          working of Service.
+        </p>
+
+        <p>
+          Introduce any viruses, trojan horses, worms, logic bombs, or other
+          material which is malicious or technologically harmful.
+        </p>
+
+        <p>
+          Attempt to gain unauthorized access to, interfere with, damage, or
+          disrupt any parts of Service, the server on which Service is stored,
+          or any server, computer, or database connected to Service.
+        </p>
+
+        <p>
+          Attack Service via a denial-of-service attack or a distributed
+          denial-of-service attack.
+        </p>
+
+        <p>Take any action that may damage or falsify Company rating.</p>
+
+        <p>
+          Otherwise attempt to interfere with the proper working of Service.
+        </p>
+
+        <p class="change_para">11. Analytics</p>
+
+        <p>
+          We may use third-party Service Providers to monitor and analyze the
+          use of our Service.
+        </p>
+
+        <p class="change_para">12. No Use By Minors</p>
+
+        <p>
+          Service is intended only for access and use by individuals at least
+          eighteen (18) years old. By accessing or using Service, you warrant
+          and represent that you are at least eighteen (18) years of age and
+          with the full authority, right, and capacity to enter into this
+          agreement and abide by all of the terms and conditions of Terms. If
+          you are not at least eighteen (18) years old, you are prohibited from
+          both the access and usage of Service.
+        </p>
+
+        <p class="change_para">13. Accounts</p>
+
+        <p>
+          When you create an account with us, you guarantee that you are above
+          the age of 18, and that the information you provide us is accurate,
+          complete, and current at all times. Inaccurate, incomplete, or
+          obsolete information may result in the immediate termination of your
+          account on Service.
+        </p>
+
+        <p>
+          You are responsible for maintaining the confidentiality of your
+          account and password, including but not limited to the restriction of
+          access to your computer and/or account. You agree to accept
+          responsibility for any and all activities or actions that occur under
+          your account and/or password, whether your password is with our
+          Service or a third-party service. You must notify us immediately upon
+          becoming aware of any breach of security or unauthorized use of your
+          account.
+        </p>
+
+        <p>
+          You may not use as a username the name of another person or entity or
+          that is not lawfully available for use, a name or trademark that is
+          subject to any rights of another person or entity other than you,
+          without appropriate authorization. You may not use as a username any
+          name that is offensive, vulgar or obscene.
+        </p>
+
+        <p>
+          We reserve the right to refuse service, terminate accounts, remove or
+          edit content, or cancel orders in our sole discretion.
+        </p>
+
+        <p class="change_para">14. Intellectual Property</p>
+
+        <p>
+          Service and its original content (excluding Content provided by
+          users), features and functionality are and will remain the exclusive
+          property of Dentread and its licensors. Service is protected by
+          copyright, trademark, and other laws of and foreign countries. Our
+          trademarks may not be used in connection with any product or service
+          without the prior written consent of Dentread.
+        </p>
+
+        <p class="change_para">15. Copyright Policy</p>
+
+        <p>
+          We respect the intellectual property rights of others. It is our
+          policy to respond to any claim that Content posted on Service
+          infringes on the copyright or other intellectual property rights
+          (&ldquo;Infringement&rdquo;) of any person or entity.
+        </p>
+
+        <p>
+          If you are a copyright owner, or authorized on behalf of one, and you
+          believe that the copyrighted work has been copied in a way that
+          constitutes copyright infringement, please submit your claim via email
+          to info@dentread.com, with the subject line: &ldquo;Copyright
+          Infringement&rdquo; and include in your claim a detailed description
+          of the alleged Infringement as detailed below, under &ldquo;DMCA
+          Notice and Procedure for Copyright Infringement Claims&rdquo;
+        </p>
+
+        <p>
+          You may be held accountable for damages (including costs and
+          attorneys&rsquo; fees) for misrepresentation or bad-faith claims on
+          the infringement of any Content found on and/or through Service on
+          your copyright.
+        </p>
+
+        <p class="change_para">
+          16. DMCA Notice and Procedure for Copyright Infringement Claims
+        </p>
+
+        <p>
+          You may submit a notification pursuant to the Digital Millennium
+          Copyright Act (DMCA) by providing our Copyright Agent with the
+          following information in writing (see 17 U.S.C 512(c)(3) for further
+          detail):
+        </p>
+
+        <p>
+          an electronic or physical signature of the person authorized to act on
+          behalf of the owner of the copyright&rsquo;s interest;
+        </p>
+
+        <p>
+          a description of the copyrighted work that you claim has been
+          infringed, including the URL (i.e., web page address) of the location
+          where the copyrighted work exists or a copy of the copyrighted work;
+        </p>
+
+        <p>
+          identification of the URL or other specific location on Service where
+          the material that you claim is infringing is located;
+        </p>
+
+        <p>your address, telephone number, and email address;</p>
+
+        <p>
+          a statement by you that you have a good faith belief that the disputed
+          use is not authorized by the copyright owner, its agent, or the law;
+        </p>
+
+        <p>
+          a statement by you, made under penalty of perjury, that the above
+          information in your notice is accurate and that you are the copyright
+          owner or authorized to act on the copyright owner&rsquo;s behalf.
+        </p>
+
+        <p>
+          You can contact our Copyright Agent via email at info@dentread.com.
+        </p>
+
+        <p class="change_para">17. Error Reporting and Feedback</p>
+
+        <p>
+          You may provide us either directly at info@dentread.com or via third
+          party sites and tools with information and feedback concerning errors,
+          suggestions for improvements, ideas, problems, complaints, and other
+          matters related to our Service (&ldquo;Feedback&rdquo;). You
+          acknowledge and agree that: (i) you shall not retain, acquire or
+          assert any intellectual property right or other right, title or
+          interest in or to the Feedback; (ii) Company may have development
+          ideas similar to the Feedback; (iii) Feedback does not contain
+          confidential information or proprietary information from you or any
+          third party; and (iv) Company is not under any obligation of
+          confidentiality with respect to the Feedback. In the event the
+          transfer of the ownership to the Feedback is not possible due to
+          applicable mandatory laws, you grant Company and its affiliates an
+          exclusive, transferable, irrevocable, free-of-charge, sub-licensable,
+          unlimited and perpetual right to use (including copy, modify, create
+          derivative works, publish, distribute and commercialize) Feedback in
+          any manner and for any purpose.
+        </p>
+
+        <p class="change_para">18. Links To Other Web Sites</p>
+
+        <p>
+          Our Service may contain links to third party web sites or services
+          that are not owned or controlled by Dentread.
+        </p>
+
+        <p>
+          Dentread has no control over, and assumes no responsibility for the
+          content, privacy policies, or practices of any third party web sites
+          or services. We do not warrant the offerings of any of these
+          entities/individuals or their websites.
+        </p>
+
+        <p>
+          YOU ACKNOWLEDGE AND AGREE THAT COMPANY SHALL NOT BE RESPONSIBLE OR
+          LIABLE, DIRECTLY OR INDIRECTLY, FOR ANY DAMAGE OR LOSS CAUSED OR
+          ALLEGED TO BE CAUSED BY OR IN CONNECTION WITH USE OF OR RELIANCE ON
+          ANY SUCH CONTENT, GOODS OR SERVICES AVAILABLE ON OR THROUGH ANY SUCH
+          THIRD PARTY WEB SITES OR SERVICES.
+        </p>
+
+        <p>
+          WE STRONGLY ADVISE YOU TO READ THE TERMS OF SERVICE AND PRIVACY
+          POLICIES OF ANY THIRD PARTY WEB SITES OR SERVICES THAT YOU VISIT.
+        </p>
+
+        <p class="change_para">19. Disclaimer Of Warranty</p>
+
+        <p>
+          THESE SERVICES ARE PROVIDED BY COMPANY ON AN &ldquo;AS IS&rdquo; AND
+          &ldquo;AS AVAILABLE&rdquo; BASIS. COMPANY MAKES NO REPRESENTATIONS OR
+          WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, AS TO THE OPERATION OF
+          THEIR SERVICES, OR THE INFORMATION, CONTENT OR MATERIALS INCLUDED
+          THEREIN. YOU EXPRESSLY AGREE THAT YOUR USE OF THESE SERVICES, THEIR
+          CONTENT, AND ANY SERVICES OR ITEMS OBTAINED FROM US IS AT YOUR SOLE
+          RISK.
+        </p>
+
+        <p>
+          NEITHER COMPANY NOR ANY PERSON ASSOCIATED WITH COMPANY MAKES ANY
+          WARRANTY OR REPRESENTATION WITH RESPECT TO THE COMPLETENESS, SECURITY,
+          RELIABILITY, QUALITY, ACCURACY, OR AVAILABILITY OF THE SERVICES.
+          WITHOUT LIMITING THE FOREGOING, NEITHER COMPANY NOR ANYONE ASSOCIATED
+          WITH COMPANY REPRESENTS OR WARRANTS THAT THE SERVICES, THEIR CONTENT,
+          OR ANY SERVICES OR ITEMS OBTAINED THROUGH THE SERVICES WILL BE
+          ACCURATE, RELIABLE, ERROR-FREE, OR UNINTERRUPTED, THAT DEFECTS WILL BE
+          CORRECTED, THAT THE SERVICES OR THE SERVER THAT MAKES IT AVAILABLE ARE
+          FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS OR THAT THE SERVICES OR
+          ANY SERVICES OR ITEMS OBTAINED THROUGH THE SERVICES WILL OTHERWISE
+          MEET YOUR NEEDS OR EXPECTATIONS.
+        </p>
+
+        <p>
+          COMPANY HEREBY DISCLAIMS ALL WARRANTIES OF ANY KIND, WHETHER EXPRESS
+          OR IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING BUT NOT LIMITED TO ANY
+          WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, AND FITNESS FOR
+          PARTICULAR PURPOSE.
+        </p>
+
+        <p>
+          THE FOREGOING DOES NOT AFFECT ANY WARRANTIES WHICH CANNOT BE EXCLUDED
+          OR LIMITED UNDER APPLICABLE LAW.
+        </p>
+
+        <p class="change_para">20. Limitation Of Liability</p>
+
+        <p>
+          EXCEPT AS PROHIBITED BY LAW, YOU WILL HOLD US AND OUR OFFICERS,
+          DIRECTORS, EMPLOYEES, AND AGENTS HARMLESS FOR ANY INDIRECT, PUNITIVE,
+          SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGE, HOWEVER IT ARISES
+          (INCLUDING ATTORNEYS&rsquo; FEES AND ALL RELATED COSTS AND EXPENSES OF
+          LITIGATION AND ARBITRATION, OR AT TRIAL OR ON APPEAL, IF ANY, WHETHER
+          OR NOT LITIGATION OR ARBITRATION IS INSTITUTED), WHETHER IN AN ACTION
+          OF CONTRACT, NEGLIGENCE, OR OTHER TORTIOUS ACTION, OR ARISING OUT OF
+          OR IN CONNECTION WITH THIS AGREEMENT, INCLUDING WITHOUT LIMITATION ANY
+          CLAIM FOR PERSONAL INJURY OR PROPERTY DAMAGE, ARISING FROM THIS
+          AGREEMENT AND ANY VIOLATION BY YOU OF ANY FEDERAL, STATE, OR LOCAL
+          LAWS, STATUTES, RULES, OR REGULATIONS, EVEN IF COMPANY HAS BEEN
+          PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. EXCEPT AS
+          PROHIBITED BY LAW, IF THERE IS LIABILITY FOUND ON THE PART OF COMPANY,
+          IT WILL BE LIMITED TO THE AMOUNT PAID FOR THE PRODUCTS AND/OR
+          SERVICES, AND UNDER NO CIRCUMSTANCES WILL THERE BE CONSEQUENTIAL OR
+          PUNITIVE DAMAGES. SOME STATES DO NOT ALLOW THE EXCLUSION OR LIMITATION
+          OF PUNITIVE, INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THE PRIOR
+          LIMITATION OR EXCLUSION MAY NOT APPLY TO YOU.
+        </p>
+
+        <p class="change_para">21. Termination</p>
+
+        <p>
+          We may terminate or suspend your account and bar access to Service
+          immediately, without prior notice or liability, under our sole
+          discretion, for any reason whatsoever and without limitation,
+          including but not limited to a breach of Terms.
+        </p>
+
+        <p>
+          If you wish to terminate your account, you may simply discontinue
+          using Service.
+        </p>
+
+        <p>
+          All provisions of Terms which by their nature should survive
+          termination shall survive termination, including, without limitation,
+          ownership provisions, warranty disclaimers, indemnity and limitations
+          of liability.
+        </p>
+
+        <p class="change_para">22. Governing Law</p>
+
+        <p>
+          These Terms shall be governed and construed in accordance with the
+          laws of India, which governing law applies to agreement without regard
+          to its conflict of law provisions.
+        </p>
+
+        <p>
+          Our failure to enforce any right or provision of these Terms will not
+          be considered a waiver of those rights. If any provision of these
+          Terms is held to be invalid or unenforceable by a court, the remaining
+          provisions of these Terms will remain in effect. These Terms
+          constitute the entire agreement between us regarding our Service and
+          supersede and replace any prior agreements we might have had between
+          us regarding Service.
+        </p>
+
+        <p class="change_para">23. Changes To Service</p>
+
+        <p>
+          We reserve the right to withdraw or amend our Service, and any service
+          or material we provide via Service, in our sole discretion without
+          notice. We will not be liable if for any reason all or any part of
+          Service is unavailable at any time or for any period. From time to
+          time, we may restrict access to some parts of Service, or the entire
+          Service, to users, including registered users.
+        </p>
+
+        <p class="change_para">24. Amendments To Terms</p>
+
+        <p>
+          We may amend Terms at any time by posting the amended terms on this
+          site. It is your responsibility to review these Terms periodically.
+        </p>
+
+        <p>
+          Your continued use of the Platform following the posting of revised
+          Terms means that you accept and agree to the changes. You are expected
+          to check this page frequently so you are aware of any changes, as they
+          are binding on you.
+        </p>
+
+        <p>
+          By continuing to access or use our Service after any revisions become
+          effective, you agree to be bound by the revised terms. If you do not
+          agree to the new terms, you are no longer authorized to use Service.
+        </p>
+
+        <p class="change_para">25. Waiver And Severability</p>
+
+        <p>
+          No waiver by Company of any term or condition set forth in Terms shall
+          be deemed a further or continuing waiver of such term or condition or
+          a waiver of any other term or condition, and any failure of Company to
+          assert a right or provision under Terms shall not constitute a waiver
+          of such right or provision.
+        </p>
+
+        <p>
+          If any provision of Terms is held by a court or other tribunal of
+          competent jurisdiction to be invalid, illegal or unenforceable for any
+          reason, such provision shall be eliminated or limited to the minimum
+          extent such that the remaining provisions of Terms will continue in
+          full force and effect.
+        </p>
+
+        <p class="change_para">26. Acknowledgement</p>
+
+        <p>
+          BY USING SERVICE OR OTHER SERVICES PROVIDED BY US, YOU ACKNOWLEDGE
+          THAT YOU HAVE READ THESE TERMS OF SERVICE AND AGREE TO BE BOUND BY
+          THEM.
+        </p>
+
+        <p class="change_para">27. Contact Us</p>
+
+        <p>
+          Please send your feedback, comments, requests for technical support by
+          email: info@dentread.com.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn ripple btn-close" data-dismiss="modal" type="button">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Row -->
+<script>
+  function myFunction() {
+    if (
+      document.getElementById("password").value ==
+      document.getElementById("confirm_password").value
+    ) {
+      document.getElementById("message").style.color = "green";
+      document.getElementById("message").innerHTML = " * passowrd match";
+    } else {
+      document.getElementById("message").style.color = "red";
+      document.getElementById("message").innerHTML = "* password not matching";
+    }
+  }
+</script>
+<script>
+  function maxlen() {
+    var numlen = document.getElementById("contact").value;
+    var len = numlen.toString().length;
+    if (len > 10) {
+      document.getElementById("message1").style.color = "red";
+      document.getElementById("message1").innerHTML =
+        " * Mobile Number Length Exceeded";
+    }
+    if (len <= 10) {
+      document.getElementById("message1").style.color = "green";
+      document.getElementById("message1").innerHTML = " * ";
+    }
+  }
+</script>
+
+<!-- End Page -->
+{% endblock %}

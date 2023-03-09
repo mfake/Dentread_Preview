@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+
+{% load filename %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="{% static '/dropzone/min/dropzone.min.css' %}">
+
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static '/dist/css/adminlte.min.css' %}">
+
+
+    <script src="{% static '/dropzone/dropzone.js' %}"></script>
+
+
+    <script src="{% static '/tinymce/tinymce.min.js' %}"></script>
+
+
+    <script>
+            tinymce.init({
+  selector: '#text',
+  plugins: 'print preview paste importcss searchreplace save autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap emoticons',
+  imagetools_cors_hosts: ['picsum.photos'],
+  menubar: 'file edit view insert format tools table help',
+  toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | save | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+  toolbar_sticky: true,
+  autosave_ask_before_unload: true,
+  autosave_interval: "30s",
+  autosave_prefix: "{path}{query}-{id}-",
+  autosave_restore_when_empty: false,
+  autosave_retention: "2m",
+  image_advtab: true,
+ content_style: "body { background: white; color: Black; font-size: 12pt; font-family: Arial; }",
+
+  link_list: [
+    { title: 'My page 1', value: 'http://www.tinymce.com' },
+    { title: 'My page 2', value: 'http://www.moxiecode.com' }
+  ],
+
+  image_list: [
+    { title: 'My page 1', value: 'http://www.tinymce.com' },
+    { title: 'My page 2', value: 'http://www.moxiecode.com' }
+  ],
+  image_class_list: [
+    { title: 'None', value: '' },
+    { title: 'Some class', value: 'class-name' }
+  ],
+  importcss_append: true,
+  height: 800,
+
+  file_picker_callback: function (callback, value, meta) {
+    /* Provide file and text for the link dialog */
+    if (meta.filetype === 'file') {
+      callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
+    }
+
+    /* Provide image and alt text for the image dialog */
+    if (meta.filetype === 'image') {
+      callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+    }
+
+    /* Provide alternative source and posted for the media dialog */
+    if (meta.filetype === 'media') {
+      callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
+    }
+  },
+  templates: [
+        { title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
+    { title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
+    { title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
+  ],
+  {% comment %} template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
+  template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]', {% endcomment %}
+
+
+  image_caption: true,
+  quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+  noneditable_noneditable_class: "mceNonEditable",
+  toolbar_mode: 'sliding',
+  contextmenu: "link image imagetools table",
+ });
+
+    </script>
+
+
+    <style>
+div#tooth{
+    display:none;
+  }
+div#deci{
+    display:none;
+  }
+div#mixed{
+    display:none;
+  }
+
+div#implant{
+    display:none;
+}
+.main-sidebar{
+    background: #1f3f7f !important;
+}
+
+    </style>
+
+
+    <!--<script>
+      tinymce.init({
+        selector: '#text'
+      });
+    </script> -->
+
+</head>
+
+<body>
+
+
+<div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+    <div class="container">
+        <div class="inner-body">
+
+            <div class="page-header">
+                <div>
+                    <h2 class="main-content-title tx-22 mg-b-5">Report</h2>
+
+                </div>
+                <div class="d-flex">
+                    <div class="justify-content-center">
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- Main content -->
+            <div class="row">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+                    <div class="card">
+
+
+                        <form method="post" action="/addservice_order_planning/{{ service_order.id }}/{{ mycat.id }}/{{image_order.id}}">
+                            {% csrf_token %}
+
+
+                            <div class="card-header" style="background-color:#1f3f7f;color:white;">
+                                <h3 class="card-title">Report Details</h3>
+                            </div>
+                            <div class="card-body">
+                                <!-- Date dd/mm/yyyy -->
+
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <!-- checkbox -->
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Service Catagory</label>
+                                            <input type="text" class="form-control" id="study" name="study"
+                                                   value="{{ image_order.service_catagory }}" placeholder="Study Title" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <!-- checkbox -->
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Planning Type</label>
+                                            <input type="text" class="form-control" id="study" name="study"
+                                                   value="{{ image_order.planning_type }}" placeholder="Study Title" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+
+                                        <div class="form-group">
+                                            <label for="pid">Patient ID</label>
+                                            <input type="text" class="form-control" id="pid" name="pid"
+                                                   value="{{ service_order.patient_id }}" placeholder="Patient ID" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Patient Name</label>
+                                            <input type="text" class="form-control" id="name" name="name"
+                                                   value="{{ service_order.name }}" placeholder="Patient Name" readonly>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <!-- checkbox -->
+                                        <div class="form-group">
+                                            <label for="date">Date</label>
+                                            <input type="date" class="form-control" id="date" name="date"
+                                                   value="{{ image_order.date|date:'Y-m-d' }}" placeholder="Date">
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <!-- checkbox -->
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Status</label>
+                                            <select type="text" id="status" name="status" onchange="single()"
+                                                    class="form-control select2bs4" style="width: 100%;">
+                                                <option selected="selected" value="{{ image_order.status }}">{{ image_order.status}}
+                                                </option>
+
+                                                <option>In Process</option>
+                                                <option>For Review</option>
+                                                <option>Completed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+
+                                        <div class="form-group">
+                                            <label for="repid">Created By</label>
+                                            <select type="text" id="signby" name="created_by"
+                                                    class="form-control select2bs4" style="width: 100%;">
+                                                    <option value = 'None'>Select</option>
+                                                    <option selected="selected" value="{{ image_order.repby }}">{{ image_order.repby}}</option>                                            
+                                                    {% for i in techno %}
+                                                    <option value="{{i.name}}" name="created_by">{{i.name}}</option>
+                                                    {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3">
+
+                                        <div class="form-group">
+                                            <label for="repid">Reviewed By</label>
+                                            <select type="text" id="reviewed_by" name="reviewed_by"
+                                                    class="form-control select2bs4" style="width: 100%;">
+                                                    <option selected="selected" value = 'None'>Select</option>
+                                                    <option selected="selected" value="{{ image_order.signby }}">{{ image_order.signby}}</option>                                   
+                                                    {% for i in radio %}
+                                                    <option value="{{i.name}}" name="reviewed_by">{{i.name}}</option>
+                                                    {% endfor %}
+                                            </select>
+                                        </div>
+                                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                                        <script>
+
+                                        </script>
+                                        <script>
+    $('html').click(function() {
+  //Hide the menus if visible
+});
+
+$('#menucontainer').click(function(event){
+    event.stopPropagation();
+});
+
+                                        </script>
+                                    </div>
+                                    <div class="col-sm-4">
+
+                                        <div class="form-group">
+                                            <label for="repid" hidden>Report ID</label>
+                                            <input type="text" class="form-control" id="repid" name="repid"
+                                                   value="{{ service_order.repid }}" placeholder="Report ID" hidden>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                                <div class="col-sm-12">
+
+
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-12">
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="row">
+
+                                    
+                                    <script>
+                            function single() {
+                           var selObj = document.getElementById("status");
+                           var selValue = selObj.options[selObj.selectedIndex].value;
+                            if (selValue=="In Process") {
+                               document.getElementById("badge").value = "badge badge-warning";
+
+                              }
+                              if (selValue=="Sent") {
+                               document.getElementById("badge").value = "badge badge-info";
+
+                              }
+
+                              if (selValue=="Completed") {
+                               document.getElementById("badge").value = "badge badge-success";
+
+                              }
+                              if (selValue=="For Review") {
+                               document.getElementById("badge").value = "badge badge-primary";
+
+                              }
+
+                            }
+
+                                    </script>
+                                    <input type="text" id="badge" name="badge" value="{{image_order.badge}}" hidden></input>
+                                    <div class="col-sm-4">
+
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Report Sent Time</label>
+                                            <input type="datetime" class="form-control" id="repsdate" name="repsdate"
+                                                   value="{{image_order.repsdate|date:'Y-m-d H:i'}}"
+                                                   placeholder="Report Sent Time">
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-sm-4">
+
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Remark</label>
+                                            <input type="text" class="form-control" id="remark"
+                                                   value="{{image_order.remark}}" name="remark" placeholder="Remark">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4" style="margin-top: 1.8rem !important;">
+                                        <!-- checkbox -->
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-block ripple btn-primary" style="background: #1f3f7f !important;">Update</button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <!-- phone mask -->
+
+
+                        </form>
+
+
+                        <!-- phone mask -->
+
+
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-sm-6">
+
+                        <div class="card card-info">
+                            <div class="card-header" style="background-color:#1f3f7f;color:white;">
+                                <h3 class="card-title">Upload Files</h3>
+                            </div>
+                            <div class="card-body">
+
+
+                                <div class="container mt-3">
+                                    <form action="/addfilesPlanning/{{ service_order.id }}/{{image_order.id}}" method="post" class="dropzone dz">
+                                        {% csrf_token %}
+                                        <div class="fallback">
+                                            <input name="file" id="file" type="file" multiple/>
+
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="card card-info">
+                            <div class="card-header" style="background-color:#1f3f7f;color:white;">
+                                <h3 class="card-title">Files</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            title="Collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body table-responsive p-0">
+                                <table class="table  text-nowrap">
+                                    <thead>
+                                    <tr>
+                                        <th>File Name</th>
+
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        {% for i in file %}
+                                            {% if  i.file %}
+                                                <td>{{i.fileName}}</td>                                  
+                                                <td class="text-right py-0 align-middle">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="{{i.file.url}}" target="_blank" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                                                        <a href="/file_delete/{{i.id}}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+        </div>
+        <input id="id" name="id" value="{{service_order.id}}" hidden>
+
+
+        <script src="{% static '/ajax/jquery.js' %}"></script>
+
+
+        <script>
+ $(document).ready(function(){
+
+  setInterval(sendRequest, 20000);
+
+  function sendRequest(){
+	  let id=$('#id').val();
+      let text = tinyMCE.get('text').getContent();
+      console.log(text)
+
+      let csr = $("input[name=csrfmiddlewaretoken]").val();
+      console.log(csr);
+      mydata={text:text, id:id, csrfmiddlewaretoken:csr};
+      $.ajax({
+        url: '/updatereports/',
+        method:'POST',
+        data: mydata,
+        success: function (data) {
+          console.log(data);
+        }
+    });
+  };
+});
+
+
+
+        </script>
+    </div>
+</div>
+
+</body>
+
+
+{% endif %}
+{%endblock%}
+

@@ -1,0 +1,67 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+        <div class="container">
+            <div class="inner-body">
+
+                <div class="row row-sm">
+                    <div class="col-sm-6 ">
+                        {<ol class="breadcrumb float-sm-left">
+                            <li class="breadcrumb-item d-none"><a href="#"><h5>Payment Status </h5></a></li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row row-sm">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card custom-card">
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                    <div class="authincation h-100">
+                                        <div class="container h-100">
+                                            <div class="row justify-content-center h-100 align-items-center">
+                                                <div class="col-md-5">
+                                                    <div class="form-input-content text-center error-page">
+                                                        <h4><i class="fa fa-check-circle text-success fa-4x"></i> </h4>
+
+                                                        <h4>Payment Inprocess...</h4>
+                                                        <h6>It will take few minutes to get into your wallet, If payment is failed and money was debited from your account then it will automatically credited into your account in 2-3 working days</h1>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a href="/labWalletInfo" id="okk" class="btn btn-primary">Wallet Information</a>
+                </div>
+            </div>
+        </div>
+</div>
+<style>
+    #okk {
+        margin-left: 63rem;
+        position: absoloute;
+    }
+    .card custom-card{
+        height: 325px;
+        background: aqua;
+    }
+    .container-fluid{
+        margin-top: 4rem;
+    }
+</style>
+
+{% endif %}
+{% endblock %}

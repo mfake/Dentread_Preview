@@ -1,0 +1,247 @@
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+<style>
+    body{
+        margin: 0;
+
+    }
+    canvas{
+        width: 100%;
+        height: 100%;
+        display: block;
+        cursor: grab;
+    }
+    canvas.active{
+        cursor: grabbing;
+    }
+    a.button{
+        padding: 7px 15px;
+        border-radius: 4px;
+        border: 1px solid #ECECEC;
+        background: transparent;
+        color: #ECECEC;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    header{
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 70%;
+    }
+    .button-group{
+        display: flex;
+        gap: 0.55rem;
+    }
+    .button-active{
+        background:  #ECECEC !important;
+        color: black !important;
+    }
+    aside{
+        position: absolute;
+        right: 2rem;
+        top: 30%;
+        display: flex;
+        flex-direction: column;
+        padding: 1.25rem 1rem;
+        gap: 1rem;
+        background: #484848;
+        border-radius: 4px;
+    }
+    aside img{
+        height: 20px;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <header >
+        <h1>Dentread 3D Viewer</h1>
+        <div class="button-group">
+            {% for i in stlFile %}
+                <a class="button" href='/reverseEngineering/{{service_order.id}}/{{i.id}}'>{{i.site}}</a>
+            {% endfor %}
+        </div>
+        <script>
+            let site = '{{site}}'
+            for(let x of document.querySelectorAll('.button-group a')){
+                if(x.innerText == site)x.classList.add('button-active')
+            }
+            console.log('{{stlFile}}');
+        </script>
+    </header>
+    <aside>
+        <img src="/static/svg_icons/magnify.svg" alt="" class="magnify">
+        <img src="/static/svg_icons/de-magnify.svg" alt="" class="de-magnify">
+        <!-- <img src="/static/svg_icons/boxes.svg" alt="">
+        <img src="/static/svg_icons/hand.svg" alt="">
+        <img src="/static/svg_icons/video-camera.svg" alt=""> -->
+    </aside>
+    <canvas id="canvas"></canvas>
+</body>
+<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+<script type="importmap"> 
+    { 
+        "imports": { 
+            "three": "https://unpkg.com/three@v0.149.0/build/three.module.js", 
+            "three/addons/": "https://unpkg.com/three@v0.149.0/examples/jsm/" 
+        } 
+    } 
+
+</script>
+<script type="module">
+    import * as THREE from 'three';
+    import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+    import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+
+    function main(){
+
+        const canvas = document.querySelector('canvas');
+        const renderer = new THREE.WebGLRenderer({canvas})
+        
+        // camera settings
+
+        const fov = 75;
+        const aspect = 2;
+        const near = 0.5;
+        const far = 100;
+        const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+        camera.position.set(0, 0, 50);
+
+        document.querySelector('.magnify').addEventListener('click', ()=>{
+            camera.position.set(0, 0, camera.position.z - 5);
+        })
+        document.querySelector('.de-magnify').addEventListener('click', ()=>{
+            camera.position.set(0, 0, camera.position.z + 5);
+        })
+
+        // scene settings
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0X393939)
+
+        const material = new THREE.MeshPhongMaterial({color:0x44aa88})
+
+        // axis settings 
+        const axesHelper = new THREE.AxesHelper( 5 );
+        scene.add( axesHelper );
+
+        // stl loader settings 
+        // const loader = new STLLoader();
+        const loader = '{{stlCheck}}' == 'True' ? new STLLoader() : new PLYLoader();
+        let mesh = '';
+        loader.load( '/renderSTLFile/{{firstId}}', function ( geometry ) {
+            geometry.center();
+            mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+        });
+
+
+        let isDown = false;
+        let startX;
+        let startY;
+
+        let prevRotationX = 0;
+        let prevRotationY = 0;
+
+        let changeX = 0;
+        let changeY = 0;
+
+        let slider = renderer.domElement;
+
+        slider.addEventListener('mousedown', (e)=>{
+            isDown = true;
+            startX = e.pageX - slider.offsetLeft;
+            startY = e.pageY - slider.offsetTop;
+        });
+
+        slider.addEventListener('mouseleave', ()=>{
+            isDown = false;
+            slider.classList.remove('active');
+        });
+        
+        slider.addEventListener('mouseup', ()=>{
+            isDown = false;
+            slider.classList.remove('active');
+            prevRotationX = mesh.rotation.y;
+            prevRotationY = mesh.rotation.x;
+            changeX = 0;
+            changeY = 0;
+        });
+        
+        slider.addEventListener('mousemove', (e)=>{
+            if(!isDown) return; 
+            e.preventDefault();
+            
+            slider.classList.add('active');
+            const x = e.pageX - slider.offsetLeft;
+            const y = e.pageY - slider.offsetTop;
+            
+            let walkX = x - startX;
+            let walkY = y - startY;
+
+            changeX = degInRad(walkX);
+            changeY = degInRad(walkY);
+            // console.log({walkX: mouseX, walkY: mouseY});
+
+        });
+
+        function degInRad(deg) {
+            let newDeg = deg * Math.PI / 180;
+            return newDeg;
+        }    
+
+
+        // light settings
+
+        const color = 0xFFFFFF;
+        const intensity = 1; 
+        const light = new THREE.DirectionalLight(color, intensity);
+        light.position.set(0, 0, 10);
+        scene.add(light);
+
+        // renderer settings 
+        function resizeRendererToDisplaySize(renderer) {
+            const canvas = renderer.domElement;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            const needResize = canvas.width !== width || canvas.height !== height;
+            if (needResize) {
+            renderer.setSize(width, height, false);
+            }
+            return needResize;
+        }
+        
+
+        function render(time) {
+            requestAnimationFrame(render);
+
+            time *= 0.001;  // convert time to seconds
+            
+            mesh.rotation.y =  prevRotationX + changeX;
+            mesh.rotation.x =  prevRotationY + changeY;
+
+            if (resizeRendererToDisplaySize(renderer)) {
+                const canvas = renderer.domElement;
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+            }
+            
+            renderer.render(scene, camera);
+        
+        }
+
+
+        requestAnimationFrame(render);
+    }
+
+    main();
+</script>
+<!-- </html> -->
+
+{% endif %}
+{% endblock %}

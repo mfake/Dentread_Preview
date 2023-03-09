@@ -1,0 +1,493 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+	<div class="main-content pt-0">
+				<div class="container">
+					<div class="inner-body">
+
+
+    <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Add Investigation</h5></a></li>
+                    </ol>
+
+                 </div>
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+
+									</div>
+								</div>
+ <!-- Main content -->
+
+
+          <!-- Profile Image -->
+
+            <div class="row row-sm">
+               <div class="col-md-12">
+            <div class="card card-primary">
+              <div class="card-header  text-white" style="background-color:#1f3f7f;">
+                <h6 class="card-title">Add Details</h6>
+              </div>
+              <!-- /.card-header -->
+
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+<form method="post" action="/add_invest/{{ patient.id }}" enctype="multipart/form-data">
+        {% csrf_token %}
+                 <div class="form-group">
+													<label class="">Select Study<span><small class="text-danger"> *</small></span><a class="modal-effect btn btn-sm btn-primary" data-effect="effect-flip-vertical" data-toggle="modal" href="#modaldemo9"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+</label>
+													     <select type="text" id="temp" name="temp" onchange="singleSelectChangeValue1()"  class="form-control select2" required>
+                      <option selected="selected" disabled >Choose</option>
+                      {% for i in studies %}
+                      <option value="{{ i.title }}" class="{{ i.price }}">{{ i.title }}__{{ i.maincat }}__{{ i.subcat }}</option>
+
+
+{% endfor %}
+
+                  </select>
+												</div>
+                                                        <input id="study" name="study"  hidden>
+                                                <div class="row">
+                                                    <div class="col-6">
+												<div class="form-group">
+													<label class="">Price</label>
+													<input type="number" class="form-control" id="price" name="price"  placeholder="Price" readonly>
+												</div>
+                                                    </div>
+                                                        <div class="col-6">
+												<div class="form-group">
+													<label class="">Discount</label>
+													 <input type="number" class="form-control" id="discount" name="discount"  oninput="tax()" placeholder="Discount">
+												</div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6">
+												<div class="form-group">
+													<label class="">Payable</label>
+													<input type="number" class="form-control" id="payable" name="payable"  placeholder="Payable" readonly>
+												</div>
+                                                    </div>
+                                                        <div class="col-6">
+												<div class="form-group">
+													<label class="">Amount Paid<span><small class="text-danger"> *</small></span></label>
+													 <input type="number" class="form-control" id="paid" name="paid"  oninput="checkbal()" placeholder="Amount Paid" required>
+												</div>
+                                                    </div>
+                                                </div>
+                                                   <script>
+         function checkbal() {
+            var discount = document.getElementById("discount").value;
+            var paid = document.getElementById("paid").value;
+            var payable = document.getElementById("payable").value;
+            var disc = payable - discount
+            var balance = disc - paid ;
+            document.getElementById("balance").value = balance;
+
+
+         }
+      </script>
+                                                 <div class="row">
+                                                    <div class="col-6">
+												<div class="form-group">
+													<label class="">Amount Balance</label>
+													<input type="number" class="form-control" id="balance" name="balance"  placeholder="Amount Balance" readonly>
+												</div>
+                                                    </div>
+                                                        <div class="col-6">
+												<div class="form-group">
+													<label class="">Payment Date<span><small class="text-danger"> *</small></span></label>
+													 <input type="date" class="form-control" id="date" name="date"   required>
+												</div>
+                                                    </div>
+                                                </div>
+                                                   <div class="row">
+                                                    <div class="col-6">
+												<div class="form-group">
+													<label class="">Payment Mode<span><small class="text-danger"> *</small></span></label>
+													<select type="text" id="mode" name="mode" class="form-control select2" required>
+                      <option selected="selected" readonly >Choose</option>
+                             <option value="Cash">Cash</option>
+                            <option value="Card">Card</option>
+                             <option value="Online">Online</option>
+
+                         </select>
+												</div>
+                                                    </div>
+                                                        <div class="col-6">
+												<div class="form-group">
+													<label class="">Attachment (Prescription)</label>
+													<div class="custom-file">
+
+                      <input type="file" class="custom-file-input" id="prescription" name="prescription" >
+                      <label class="custom-file-label" for="prescription">Choose file</label>
+                    </div>
+                                                    </div>
+                                                </div>
+                                                   </div>
+												<div class="form-group">
+                                         <label class="">Remark</label>
+                                                <input type="text" class="form-control" id="remark" name="remark"  placeholder="Remark" >
+                                                     </div>
+                                                        <div class="form-group">
+                                         <label class=""></label>
+                                               <button type="submit" class="btn btn-block ripple btn-primary" >Add Investigation</button>
+                                                     </div>
+
+                                                    </div>
+                                            </div>
+
+                                        </div>
+                                             </form>
+ <div class="modal" id="modaldemo9">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content modal-content-demo">
+						<div class="modal-header">
+							<h6 class="modal-title">Add Study</h6><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+						</div>
+
+                        <div class="modal-body">
+                        <form  method="post" action="/createstudy_modal">
+        {% csrf_token %}
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+          <div class="col-md-12">
+
+            <div class="card card-success">
+              <div class="card-header  text-white" style="background-color:#1f3f7f">
+                <h6 class="card-title text-white">Study Details</h6>
+              </div>
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Study Title<span><small class="text-danger"> *</small></span></label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Study Title" required>
+                      </div>
+
+
+                <!-- phone mask -->
+                <div class="form-group">
+                        <label for="exampleInputPassword1">Main Category<span><small class="text-danger"> *</small></span></label>
+                        <input type="text" class="form-control" id="maincat" name="maincat" placeholder="Main Category" required>
+                      </div>
+                <!-- /.form group -->
+
+                <!-- phone mask -->
+          <div class="form-group">
+                        <label for="exampleInputPassword1">Sub Category<span><small class="text-danger"> *</small></span></label>
+                        <input type="text" class="form-control" id="subcat" name="subcat" placeholder="Sub Category" required>
+                      </div>
+                <!-- /.form group -->
+
+                <!-- IP mask -->
+             <div class="form-group">
+                        <label for="exampleInputPassword1">Price<span><small class="text-danger"> *</small></span></label>
+                        <input type="number" class="form-control" id="price" name="price" placeholder="Price" required>
+                      </div>
+                <!-- /.form group -->
+
+
+              <!-- /.card-body -->
+
+            <!-- /.card -->
+
+
+
+
+
+<div class="row">
+    <div class="col-sm-6">
+
+                        <button type="reset" value="reset" class="btn  ripple btn-warning">Reset</button>
+                      </div>
+    <div class="col-sm-6">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary ">Add</button>
+                  </div>
+
+
+
+
+
+
+     </div>
+
+              </form>
+                    </div>
+                    </div>
+                </div>
+      </div>
+										</div>
+									</div>
+
+
+								</div>
+							</div>
+
+						</div>
+          </div>
+     <div class="modal" id="modaldemo8">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content modal-content-demo">
+						<div class="modal-header">
+							<h6 class="modal-title">Add Referral Centre</h6><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+						</div>
+						<div class="modal-body">
+
+                            <form  method="post" action="/createdoctor_modal">
+        {% csrf_token %}
+
+        <div class="row">
+          <div class="col-md-6" hidden>
+
+            <div class="card card-success" >
+              <div class="card-header  text-white" style="color:#1f3f7f;">
+                <h6 class="card-title">Registration Details</h6>
+              </div>
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Registration Date<span><small class="text-danger"> *</small></span></label>
+                        <input type="date" class="form-control" id="rdate" name="rdate" value="{% now 'Y-m-d' %}" required>
+                      </div>
+
+
+                <!-- phone mask -->
+               <div class="form-group">
+                        <label for="exampleInputPassword1">Referral Centre</label>
+                        <select type="text" id="locate" name="locate"  class="form-control select2bs4" style="width: 100%;">
+
+
+                           <option value="{{org.orgname}}" selected >{{org.orgname}}</option>
+
+
+                       </select>
+                      </div>
+                <!-- /.form group -->
+
+                <!-- phone mask -->
+          <div class="form-group">
+                        <label for="exampleInputPassword1">Registered By</label>
+                        <input type="text" class="form-control" id="regby" name="regby" value="{{request.user}}" placeholder="Registered By" readonly>
+                      </div>
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Refer By</label>
+                        <input type="text" class="form-control" id="referby" name="referby"  placeholder="Referred By" >
+                      </div>
+                <!-- /.form group -->
+
+                <!-- IP mask -->
+             <div class="form-group">
+                        <label for="exampleInputPassword1">Doctor ID</label>
+                        <input type="text" class="form-control" id="docid" name="docid" placeholder="Doctor ID (Auto)" disabled >
+                      </div>
+                <!-- /.form group -->
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+
+            <!-- /.card -->
+
+          </div>
+        </div>
+         <div class="row">
+          <!-- /.col (left) -->
+          <div class="col-md-12">
+               <div class="card card-info">
+              <div class="card-header text-white" style="background-color:#1f3f7f;">
+                <h6 class="card-title text-white">Referral Centre Details</h6>
+              </div>
+              <div class="card-body">
+
+               <div class="form-group">
+                        <label for="exampleInputPassword1">Centre Name<span><small class="text-danger"> *</small></span></label>
+                        <input type="text" class="form-control" id="clinic" name="clinic" placeholder="Name" required>
+                      </div>
+
+
+
+                   <div class="form-group">
+                        <label for="exampleInputPassword1">Centre Email</label>
+                        <input type="email" class="form-control" id="clcontact" name="clcontact" placeholder="Clinic Email">
+                      </div>
+
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <div class="card card-primary">
+              <div class="card-header  text-white" style="background-color:#1f3f7f;">
+                <h6 class="card-title text-white">Admin Details</h6>
+              </div>
+              <div class="card-body">
+                <!-- Name -->
+
+                     <div class="form-group">
+                        <label for="exampleInputPassword1">Name<span><small class="text-danger"> *</small></span></label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                      </div>
+
+
+
+                <!-- Age Gender -->
+                     <div class="row">
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                  <div class="form-group" hidden>
+                       <label for="exampleInputPassword1">Age</label>
+                          <input type="text" class="form-control" id="age" name="age" placeholder="Age" disabled>
+                      </div>
+                  </div>
+                  <div class="col-sm-12">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Gender<span><small class="text-danger"> *</small></span></label>
+                         <select type="text" id="gender" name="gender"  class="form-control select2bs4" style="width: 100%;" required>
+                      <option selected="selected" disabled>Choose </option>
+                           <option value="Male">Male</option>
+                           <option value="Female">Female</option>
+                           <option value="Other">Other</option>
+
+                       </select>
+                      </div>
+                  </div>
+                </div>
+
+               <!-- Email Contact Address -->
+                     <div class="row">
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Email<span><small class="text-danger"> *</small></span></label>
+                          <input type="text" class="form-control" id="email" name="email" placeholder="Email" required>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Contact<span><small class="text-danger"> *</small></span></label>
+                          <input type="text" class="form-control" id="contact" name="contact" placeholder="Contact" required>
+                      </div>
+                  </div>
+                </div>
+
+<div class="row">
+        <div class="col-6">
+            <div class="form-group" hidden>
+            <label for="address_1" class="form-label">Incentive</label>
+           <select id="incentive" name="incentive"class="form-control" required>
+               <option selected disabled>Choose</option>
+               <option value="Yes">Yes</option>
+               <option value="No">No</option>
+           </select>
+
+         </div>
+        </div>
+            <div class="col-12">
+            <div class="form-group">
+            <label for="address_1" class="form-label">Address 1</label>
+           <input type="text" class="form-control" name="address_1" id="address_1" placeholder="1234 Main St">
+         </div>
+    </div>
+</div>
+   <div class="form-group">
+    <label for="address_2" class="form-label">Address 2</label>
+    <input type="text" class="form-control" name="address_2" id="address_2" placeholder="City State, zip">
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+                  </div>
+
+
+
+<hr>
+
+  <div class="row">
+<div class="col-6">
+                        <button type="reset" value="reset" class="btn  ripple btn-warning">Reset</button>
+                      </div>
+         <div class="col-6">
+
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary" >Add</button>
+
+         </div>
+
+      </div>
+            </form>
+                        </div>
+                    </div>
+                </div>
+      </div>
+
+      </div>
+ </div>
+</div>
+
+<script src="{% static '/dentread/assets/plugins/jquery/jquery.min.js' %}"></script>
+
+<script src="{% static '/dentread/assets/js/form-elements.js' %}"></script>
+<script src="{% static '/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+<script>
+$(function () {
+  bsCustomFileInput.init();
+});
+</script>
+
+<script>
+  function singleSelectChangeValue() {
+                          var selObj = document.getElementById("demo");
+                           var selValue = selObj.options[selObj.selectedIndex].value;
+                           var docValue = selObj.options[selObj.selectedIndex].text;
+
+                               document.getElementById("docid").value = selValue;
+                               document.getElementById("refdoctor").value = docValue;
+
+                            }
+</script>
+     <script>
+                      function singleSelectChangeValue1() {
+                           var selObj = document.getElementById("temp");
+                           var selValue = selObj.options[selObj.selectedIndex].value;
+                           var studydes = selObj.options[selObj.selectedIndex].text;
+                           var price = selObj.options[selObj.selectedIndex].className;
+
+
+                               document.getElementById("study").value = studydes;
+                               document.getElementById("price").value = price;
+                               document.getElementById("discount").value= 0;
+                               document.getElementById("payable").value= price;
+
+                            }
+                            </script>
+</div>
+</div>
+</div>
+
+{% endif %}
+{%endblock%}

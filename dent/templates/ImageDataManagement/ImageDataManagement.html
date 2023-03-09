@@ -1,0 +1,424 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 1rem auto 0 auto;
+        max-width: 1200px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .content{
+        padding: 2rem;
+        border-radius: 8px;
+        padding-bottom: 0;
+    }
+    .main-content{
+        padding-top: 0;
+    }
+    .patient{
+        padding: 8px 0.75rem ;
+        margin-bottom: 8px;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .patient.active{
+        background: #5872a7;
+        color: white;
+
+    }
+    .patient img{
+        margin-right: 8px;
+    }
+    
+    .bottom-field{
+        width: 100%;
+        padding-top: 5px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+    .pagination{
+        display: flex;
+        width: 35%;
+        overflow: hidden;
+        align-items: center;
+        scroll-behavior: smooth;
+        background: rgba(31, 63, 127, 0.04);
+        box-shadow: inset 1px 4px 8px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    .pagination li{
+        list-style: none;
+        padding: 2px;
+        margin: 4px 5px;
+        flex-shrink: 0;
+        text-align: center;
+        border-radius: 5px;
+        /* border: 1px solid #999; */
+        color: #999;
+    }
+    
+    .pagination li.active{
+        background: white;
+        color: black;
+        border-color: #B0B0B0;
+    }
+    .pagination li a{
+        text-decoration: none;
+        padding: 0 8px;
+        color: inherit;
+        display: block;
+        font-family: sans-serif;
+        font-size: 13px;
+    }
+   
+    .prev, .last{
+        position: absolute;
+        border: 1px solid #999;
+        padding: 0;
+        border: none;
+        box-shadow: 1px 4px 14px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    a#prev, a#last{
+        padding: 0 6px;
+    }
+    .prev{
+        left: 17%;
+    }
+    .last{
+        right: 17%;
+    }
+    .button{
+        padding: 0 10px;
+        border-radius: 4px;
+        border: 0.5px solid #ABA8A8;
+    }
+    .button-secondary{
+        background: white;
+    }
+    .middle{
+        background: aliceblue;
+    }
+    .middle .button-group{
+        gap: 8px;
+    }
+    .patient-details{
+        font-size: 16px;
+    }
+    .patient-details .patient-name,  .patient-details .patient-name+span{
+        font-weight: 500;
+    }
+    label{
+        font-weight: 400;
+    }
+    .icon-group img{
+        height: 20px;
+        margin-left: 1rem;
+    }
+    .button-group img{
+        height: 18px;
+        margin-right: 0.25rem;
+    }
+    .search-box{
+        border-radius: 0.25rem;
+    }
+    .search-box input, select{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        /* width: 175px !important; */
+        height: 38px;
+    }
+    /* .search-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+        border: 1px solid #dfe2e9;
+    } */
+</style>
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5  onclick="history.back()" style="cursor: pointer;">Image Data Management</h5>
+    </div>
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-12 col-md-4" style="border-right: 2px solid #ebebeb">
+                <div class="search mb-2">
+                    
+                    <div class="search-box">
+                        <input type="text" placeholder="Search Name here..." class="form-control" id="cardSearch" onkeydown="onNameSearch(this.value)">
+                    </div>
+                </div>
+                <div class="patient-group main-content">
+                    {% for i in patient %}
+                        <div class="patient" onclick="getImageData(`{{i.id}}`);">
+                            {% if i.gender == 'Female' %}
+                                <img src="/static/svg_icons/female-pink.svg" alt="female icon">
+                            {% endif %}
+                            {% if i.gender != 'Female' %}
+                                <img src="/static/svg_icons/Male.svg" alt="male icon">
+                            {% endif %}
+                            <span class="patient-name">
+                                {{i.name}}
+                            </span>
+                            <span class="float-right">
+                                <label for="">Patient ID:</label> <span>{{i.pid}}</span> 
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="bottom-field">
+                    <ul class="pagination" onclick="onPaginationClick(event)">
+                        <li class="prev">
+                            <a href="#1" id="prev">
+                                <img src="/static/svg_icons/pagination-left.svg" alt="">
+                            </a>
+                        </li>
+                        <li class="last">
+                            <a href="#1" id="last">
+                                <img src="/static/svg_icons/pagination-left.svg" alt="" style="transform: rotate(180deg);">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-8">
+                <div class="top d-flex">
+                    <div class="patient-details">
+                        <span class="patient-name">{Patient Name}</span>
+                        <span class="ml-3 patient-id"> <label for="">Patient ID: </label> <span>{ID here}</span> </span>
+                    </div>
+                    <div class="icon-group ml-auto">
+                        <img src="/static/svg_icons/filter-inactive.svg" alt="">
+                        <img src="/static/svg_icons/compare-inactive.svg" alt="">
+                        <img src="/static/svg_icons/slider-inactive.svg" alt="">
+                        <img src="/static/svg_icons/grid-active.svg" alt="">
+                        <img src="/static/svg_icons/timeline-inactive.svg" alt="">
+                    </div>
+                </div>
+                <div class="middle mt-2">
+                    <div class="button-group p-2 d-flex">
+                        <button class="button button-secondary ml-auto"><img src="/static/svg_icons/share.svg" alt=""> Share</button>
+                        <button class="button button-secondary"><img src="/static/svg_icons/download.svg" alt="">Download</button>
+                        <button class="button button-secondary"><img src="/static/svg_icons/archive.svg" alt="">Archive</button>
+                        <button class="button button-secondary"><img src="/static/svg_icons/eye.svg" alt="">Open in Viewer</button>
+                        <button class="button button-secondary"><img src="/static/svg_icons/print.svg" alt="">Print</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //patient filling here
+    let totalPatients = [];
+
+    totalPatients = document.querySelectorAll('.patient')
+    totalPatients = [...totalPatients];
+    totalPatients.reverse();
+    let allPatients = [...totalPatients]
+
+    // document.querySelector('.result span').innerText = allPatients.length;
+
+    //cards allowed per page
+    let cardsAllowed = 9;
+
+    function nosPaginationFunction(){
+        return Math.ceil(allPatients.length/cardsAllowed);
+    }
+    let nosPagination = 0;
+    // paginationNumbers here 
+    function paginationNumber(){
+        nosPagination = nosPaginationFunction();
+        for(let i= 1; i<=nosPagination; i++){
+
+            // li creation 
+            let li= document.createElement('li');
+            li.classList.add('list');
+            li.setAttribute('id', "item"+`${i}`);
+
+            // anchor creation 
+            let a= document.createElement('a');
+            a.href= '#1';
+            a.innerText = i;
+
+            // appending anchor to the list item
+            li.appendChild(a);
+            
+
+            // appending li to the ul 
+
+            document.querySelector('.pagination').insertBefore(li, document.querySelector('.last'));
+        }
+    }
+    paginationNumber();
+
+    //current page: by default 1
+    currentPage = 1;
+    prevActiveLi = document.querySelector('.list');
+    prevActiveLi.classList.add('active');
+
+    // display the page 
+    function displayPage(){
+        document.querySelector('.main-content').innerHTML = '';
+        for(let i= 0; i<cardsAllowed; i++){
+            let exNum = allPatients[cardsAllowed*(currentPage-1)+i];
+            if(exNum){
+                document.querySelector('.main-content').appendChild(allPatients[cardsAllowed*(currentPage-1)+i]);
+            }
+        }
+        
+    }
+    displayPage();
+
+    // function to activate the list 
+    function liActive(){
+        for(let i of document.querySelectorAll('.list')){
+            console.log('inside liActive(): ', i.innerText);
+            if(i.innerText == currentPage){
+                i.classList.add('active');
+                prevActiveLi.classList.remove('active');
+                prevActiveLi = i;
+                break;
+            }
+            
+        } 
+    }
+
+    let currentPaginatioTarget = currentPage;
+
+    function onPaginationClick(event){
+        let target = event.target.tagName == 'IMG' ? event.target.parentElement : event.target;
+        if(target.tagName == 'A' && target.getAttribute('id')!= 'prev' && target.getAttribute('id')!= 'last'){
+            currentPage = target.innerText;
+            currentPaginatioTarget = currentPage;
+            liActive();
+            displayPage();
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'prev' ){
+
+            currentPaginatioTarget -= 3;
+            if(currentPaginatioTarget < 1){
+                currentPaginatioTarget = 1;
+            }
+
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'last' ){
+                
+            currentPaginatioTarget = parseInt(currentPaginatioTarget) + 3;
+
+            if(currentPaginatioTarget>nosPagination){
+                currentPaginatioTarget = nosPagination;
+            }
+            
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+    }
+
+</script>
+
+<script>
+
+    document.querySelector('.patient').classList.add('active');
+    document.querySelector('.patient-details .patient-name').innerText = document.querySelector('.patient .patient-name').innerText 
+    document.querySelector('.patient-details .patient-id span').innerText = document.querySelector('.patient .patient-name + .float-right span').innerText 
+
+
+    document.querySelector('.patient-group').addEventListener('click', function(e){
+        
+        if(!e.target.classList.contains('patient-group')){
+            let mainTarget = e.target;
+            
+            while(!mainTarget.classList.contains('patient-group')){
+                mainTarget= mainTarget.parentElement;
+            }
+            if(mainTarget.querySelector('.patient.active')){
+                mainTarget.querySelector('.patient.active').classList.remove('active');
+            } 
+            let realTarget = e.target
+            while(!realTarget.classList.contains('patient')){
+                realTarget = realTarget.parentElement;
+            }
+            realTarget.classList.add('active');
+    
+            document.querySelector('.patient-details .patient-name').innerText = realTarget.querySelector('.patient-name').innerText 
+            document.querySelector('.patient-details .patient-id span').innerText = realTarget.querySelector('.patient-name + .float-right span').innerText 
+
+        }
+    })
+
+
+    function onNameSearch(name){
+        allPatients = [];
+        totalPatients.forEach(element => {
+            if(element.querySelector('.patient-name').innerText.toLowerCase().includes(name.toLowerCase())){
+                allPatients.push(element);
+            }
+        });
+        // document.querySelector('.result span').innerText = allPatients.length;
+        for(let x of document.querySelectorAll('.list')){
+            x.remove();
+        }
+        paginationNumber();
+        currentPage = 1;
+        liActive();
+        displayPage();
+    }
+
+
+</script>
+
+<script>
+// ajax call function 
+function getImageData(id){
+    let pk = id
+    let csr = $("input[name=csrfmiddlewaretoken]").val();    
+    mydata={'pk': pk, 'csrfmiddlewaretoken': csr};
+    $.ajax(
+      {
+        url: `/requestForImage/${pk}`,
+        method:'GET',
+        data: mydata,
+        success: function (data) {
+            console.log(data);
+        }
+    });
+}
+  
+</script>
+
+{% endif %}
+{% endblock %}

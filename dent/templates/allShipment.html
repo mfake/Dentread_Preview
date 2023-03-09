@@ -1,0 +1,863 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .header img{
+        width: 20px;
+    }
+    .search-box{
+        border-radius: 0.25rem;
+    }
+    .search-box input, select{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 175px !important;
+    }
+    .search-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+        border: 1px solid #dfe2e9;
+    }
+    .header .form-group{
+        margin-bottom: 0 !important;
+    }
+    .add-button{
+        height: 38px !important;
+        width: 175px !important;
+        background: #1F3F7F;
+        border-radius: 8px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .add-button .add-icon{
+        font-size: 1.5rem;
+    }
+    .card-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;;
+        margin-bottom: 1rem;
+        border-left: 5px solid #1F3F7F;
+        padding: 1rem 0rem 1rem 0rem;
+    }
+    .row{
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .action-enclosing button{
+        float: right;
+        margin-top: 1rem;
+        margin-right: 2rem;
+    }
+    .main-content{
+        padding-top: 0 !important;
+    }
+    
+    img.icon-enclosing{
+        height: 45px;
+    }
+    .details-enclosing span:not(.patient-name){
+        font-weight: 500;
+        /* margin-left: 0.5rem; */
+    }
+    .patient-name{
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+
+    .bottom-field{
+        width: 100%;
+        padding-top: 5px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+    .pagination{
+        display: flex;
+        width: 11%;
+        overflow: hidden;
+        align-items: center;
+        scroll-behavior: smooth;
+        background: rgba(31, 63, 127, 0.04);
+        box-shadow: inset 1px 4px 8px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    .pagination li{
+        list-style: none;
+        padding: 2px;
+        margin: 4px 5px;
+        flex-shrink: 0;
+        text-align: center;
+        border-radius: 5px;
+        /* border: 1px solid #999; */
+        color: #999;
+    }
+    
+    .pagination li.active{
+        background: white;
+        color: black;
+        border-color: #B0B0B0;
+    }
+    .pagination li a{
+        text-decoration: none;
+        padding: 0 8px;
+        color: inherit;
+        display: block;
+        font-family: sans-serif;
+        font-size: 13px;
+    }
+   
+    .prev, .last{
+        position: absolute;
+        border: 1px solid #999;
+        padding: 0;
+        border: none;
+        box-shadow: 1px 4px 14px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    a#prev, a#last{
+        padding: 0 6px;
+    }
+    .prev{
+        left: 38%;
+    }
+    .last{
+        right: 38%;
+    }
+    .shipment-details{
+        padding: 1rem 2rem;
+        margin-top: 1rem;
+    }
+    .meta-data{
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid white;
+    }
+    .main-data a{
+        text-decoration: underline;
+    }
+    .meta-data a{
+        padding: 6px 12px;
+        border: 1px solid;
+        border-radius: 4px;
+    }
+    .details-enclosing{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .details-enclosing>div{
+        display: flex;
+        justify-content: space-between;
+    }
+    .dropdown-item:hover{
+        color: white;
+    }
+    .show{
+        display: block;
+    }
+    /* shipment details css from here  */
+    .shipment-details h5{
+        margin-bottom: 1rem;
+    }
+    .shipment-details>div:not(.payment-options, .form-group){
+        padding: 0.5rem 2rem;
+        border-left: 1px solid #e8e8f7;
+    }
+    .shipment-details h6{
+        margin-bottom: 1rem;
+    }
+    textarea{
+        resize: none;
+    }
+    .button{
+        padding: 0 30px;
+        border-radius: 4px;
+    }
+    .button:hover{
+        cursor: pointer;
+    }
+    .button-primary{
+        color: white !important;
+        border: 1px solid #1f3f7f;
+        background: #1f3f7f;
+    }
+    .button-secondary{
+        border: 1px solid;
+    }
+    .help-text{
+        float: right;
+        color: darkgreen;
+    }
+    .payment-options{
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    .ship-details{
+        padding: 1rem 2rem;
+        margin-top: 1rem;
+        background: aliceblue;
+    }
+    .ship-details .meta-data{
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid white;
+    }
+    .ship-details .main-data a{
+        text-decoration: underline;
+    }
+    .ship-details .meta-data a{
+        padding: 6px 12px;
+        border: 1px solid;
+        border-radius: 4px;
+    }
+    .initiate-shipment{    
+        margin-left: auto;
+        margin-top: 0.5rem;
+        margin-right: 2rem;
+        text-decoration: underline;
+    }
+    .form input:checked+label:before, form input:checked+label:before, 
+    .form input:checked+label::after, form input:checked+label::after{
+        display: none;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <h5>All Shipments</h5>
+
+        <div class="search-enclosing" onclick="onSearchAnimate(this)">
+            <img src="/static/svg_icons/ei_search_icon.svg" alt="">
+        </div>
+        <div class="search-box d-none ml-3">
+            <input type="text" placeholder="Search Name here..." class="form-control" id="cardSearch" onkeydown="onNameSearch(this.value)">
+        </div>
+
+        {% if usr.department == 'Admin'%}
+            <form action="/showpatients" method="post">
+                {% csrf_token %}
+                <div class="form-group ml-3">
+                    <label class="d-none">Branch</label>
+                    <select class="form-control" name="users" id="users">
+                        <option selected>Select Branch</option>
+                        {% for i in branch %}
+                            <option value="{{i.id}}">{{i.orgname}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        {% endif %}
+
+    </div>
+
+    <div class="result">Results: <span></span></div>
+
+    <div class="main-content">
+
+        {% for i in service_order %}
+        {% comment %} <div class="card-enclosing row">
+            <!-- <div class="col-sm-1 icon-enclosing d-flex align-items-center"> -->
+                {% if i.gender == 'Female' %}
+                    <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/female-pink.svg" alt="female icon">
+                
+                {% else %}
+                    <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/Male.svg" alt="male icon">
+                {% endif %}
+            <!-- </div> -->
+            <div class="col-sm-10 details-enclosing">
+                <div class="mb-2">
+                    <div>Patient Name: <span class="patient-name">Aditya Tomar</span> </div>
+                    <div> Date: <span>{ i.date|date:'d-m-Y' }</span> </div>
+                    <div>Patient ID: <span>{i.name}</span> </div>
+                    <div>Order ID: <span>{ i.date|date:'d-m-Y' }</span> </div>
+                    <div>Order Status: <span>{i.status}</span></div>
+                </div>
+                <div class="">
+                    <div>Ship. ID: <span>{i.shipId}</span></div>
+                    <div>Ship. Date: <span>{i.shipDate}</span></div>
+                    <div>Ship. To: <span>{i.shipBy}</span></div>
+                    <div>Ship. By: <span>{i.shipTo}</span></div>
+                    <div>Ship. Status: <span>{i.shiptatus}</span></div>
+                </div>
+            </div>
+            <div class="col-sm-1 action-enclosing">
+
+                <span class="shipToAdd d-none">{add}</span>
+                <span class="shipToContact d-none">+645098640640</span>
+                <span class="shipToEmail d-none">{email}</span>
+                
+                <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                    id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                </button>
+                
+                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                    <a href="" class="dropdown-item shipment-booking" style="cursor: pointer;" >
+                        <i class="fa-regular fa-file-lines mr-2"></i> Book Shipment
+                    </a>
+                    <a href="" class="dropdown-item" style="cursor: pointer;" >
+                        <i class="fa-regular fa-file-lines mr-2"></i> Track Shipment
+                    </a>
+                    <a href="" class="dropdown-item" style="cursor: pointer;" >
+                        <i class="fa-solid fa-indian-rupee-sign mr-2"></i> Shipment History
+                    </a>
+                </div>
+               
+            </div>
+            
+        </div> {% endcomment %}
+            <div class="card-enclosing row">
+                <!-- <div class="col-sm-1 icon-enclosing d-flex align-items-center"> -->
+                    {% if i.gender == 'Female' %}
+                        <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/female-pink.svg" alt="female icon">
+                    {% endif %}
+                    {% if i.gender != 'Female' %}
+                        <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/Male.svg" alt="male icon">
+                    {% endif %}
+                <!-- </div> -->
+                <div class="col-sm-10 details-enclosing">
+                    <div class="mb-2">
+                        <div><span class="patient-name">{{i.name}}</span> </div>
+                        <div> Date: <span>{{ i.ship_date|date:'d-m-Y' }}</span> </div>
+                        <div>Patient ID: <span>{{i.patient_id}}</span> </div>
+                        <div>Order ID: <span>{{ i.order_id }}</span> </div>
+                        <div>Order Status: <span>{{i.order_status}}</span></div>
+                    </div>
+                    <div class="">
+                        <div>Ship. ID: <span>{{i.shipment_id}}</span></div>
+                        <div>Ship. Date: <span>{{ i.ship_date|date:'d-m-Y' }}</span></div>
+                        <div>Ship. To: <span>{{i.shipTo}}</span></div>
+                        <div>Ship. By: <span>{{i.shipBy}}</span></div>
+                        <div>Ship. Status: <span>{{i.status}}</span></div>
+                    </div>
+
+                </div>
+                <div class="col-sm-1 action-enclosing">
+                    <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                        id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                    </button>
+                    
+                    <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                        <a href="#" class="dropdown-item shipment-booking" style="cursor: pointer;">
+                            <i class="fa-regular fa-file-lines mr-2"></i> Book Shipment
+                        </a>
+                        <a href="https://shiprocket.co/tracking/{{i.awb_code}}" class="dropdown-item custom-link" style="cursor: pointer;">
+                            <i class="fa fa-map-marker" aria-hidden="true"></i> Track Shipment
+                        </a>
+                        <a href="/shipmentHistory/{{i.repid}}" class="dropdown-item custom-link" style="cursor: pointer;">
+                            <i class="fa fa-book" aria-hidden="true"></i> Shipment History
+                        </a>
+                        <a href="/generateLabel/{{i.id}}" class="dropdown-item custom-link" style="cursor: pointer;">
+                            <i class="fa fa-download" aria-hidden="true"></i> Download Label
+                        </a>
+                        <a href="/generateMenifest/{{i.id}}" class="dropdown-item custom-link" style="cursor: pointer;">
+                            <i class="fa fa-download" aria-hidden="true"></i> Download Manifest
+                        </a>
+                    </div>
+                   
+                </div>
+                
+            </div>
+        {% endfor %}
+        
+        {% comment %} <div class="card-enclosing row">
+            <!-- <div class="col-sm-1 icon-enclosing d-flex align-items-center"> -->
+                {% if i.gender == 'Female' %}
+                    <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/female-pink.svg" alt="female icon">
+                
+                {% else %}
+                    <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/Male.svg" alt="male icon">
+                {% endif %}
+            <!-- </div> -->
+            <div class="col-sm-10 details-enclosing">
+                <div class="mb-2">
+                    <div>Patient Name: <span class="patient-name">Aditya Tomar</span> </div>
+                    <div> Date: <span>{ i.date|date:'d-m-Y' }</span> </div>
+                    <div>Patient ID: <span>{i.name}</span> </div>
+                    <div>Order ID: <span>{ i.date|date:'d-m-Y' }</span> </div>
+                    <div>Order Status: <span>{i.status}</span></div>
+                </div>
+                <div class="">
+                    <div>Ship. ID: <span>{i.shipId}</span></div>
+                    <div>Ship. Date: <span>{i.shipDate}</span></div>
+                    <div>Ship. To: <span>{i.shipBy}</span></div>
+                    <div>Ship. By: <span>{i.shipTo}</span></div>
+                    <div>Ship. Status: <span>{i.shiptatus}</span></div>
+                </div>
+            </div>
+            <div class="col-sm-1 action-enclosing">
+
+                <span class="shipToAdd d-none">{add}</span>
+                <span class="shipToContact d-none">+645098640640</span>
+                <span class="shipToEmail d-none">{email}</span>
+                
+                <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                    id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                </button>
+                
+                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                    <a href="" class="dropdown-item shipment-booking" style="cursor: pointer;" >
+                        <i class="fa-regular fa-file-lines mr-2"></i> Book Shipment
+                    </a>
+                    <a href="" class="dropdown-item" style="cursor: pointer;" >
+                        <i class="fa-regular fa-file-lines mr-2"></i> Track Shipment
+                    </a>
+                    <a href="" class="dropdown-item" style="cursor: pointer;" >
+                        <i class="fa-solid fa-indian-rupee-sign mr-2"></i> Shipment History
+                    </a>
+                </div>
+               
+            </div>
+            
+        </div>
+        <div class="card-enclosing row">
+            <!-- <div class="col-sm-1 icon-enclosing d-flex align-items-center"> -->
+                {% if i.gender == 'Female' %}
+                    <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/female-pink.svg" alt="female icon">
+                
+                {% else %}
+                    <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/Male.svg" alt="male icon">
+                {% endif %}
+            <!-- </div> -->
+            <div class="col-sm-10 details-enclosing">
+                <div class="mb-2">
+                    <div>Patient Name: <span class="patient-name">Ashish Tomer</span> </div>
+                    <div> Date: <span>{ i.date|date:'d-m-Y' }</span> </div>
+                    <div>Patient ID: <span>{i.name}</span> </div>
+                    <div>Order ID: <span>{ i.date|date:'d-m-Y' }</span> </div>
+                    <div>Order Status: <span>{i.status}</span></div>
+                </div>
+                <div class="">
+                    <div>Ship. ID: <span>{i.shipId}</span></div>
+                    <div>Ship. Date: <span>{i.shipDate}</span></div>
+                    <div>Ship. To: <span>{i.shipBy}</span></div>
+                    <div>Ship. By: <span>{i.shipTo}</span></div>
+                    <div>Ship. Status: <span>{i.shiptatus}</span></div>
+                </div>
+            </div>
+            <div class="col-sm-1 action-enclosing">
+                
+                <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                    id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                </button>
+
+                
+                
+                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                    <a href="" class="dropdown-item" style="cursor: pointer;" >
+                        <i class="fa-regular fa-file-lines mr-2"></i> Book Shipment
+                    </a>
+                    <a href="" class="dropdown-item" style="cursor: pointer;" >
+                        <i class="fa-regular fa-file-lines mr-2"></i> Track Shipment
+                    </a>
+                    <a href="" class="dropdown-item" style="cursor: pointer;" >
+                        <i class="fa-solid fa-indian-rupee-sign mr-2"></i> Shipment History
+                    </a>
+                </div>
+               
+            </div>
+            
+        </div>
+        <div class="card-enclosing row">
+            <!-- <div class="col-sm-1 icon-enclosing d-flex align-items-center"> -->
+                {% if i.gender == 'Female' %}
+                    <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/female-pink.svg" alt="female icon">
+                
+                {% else %}
+                    <img class="col-sm-1 icon-enclosing pl-0 pr-0 mt-1" src="/static/svg_icons/Male.svg" alt="male icon">
+                {% endif %}
+            <!-- </div> -->
+            <div class="col-sm-10 details-enclosing">
+                <div class="mb-2">
+                    <div>Patient Name: <span class="patient-name">Abhishek Baliyan</span> </div>
+                    <div> Date: <span>{ i.date|date:'d-m-Y' }</span> </div>
+                    <div>Patient ID: <span>{i.name}</span> </div>
+                    <div>Order ID: <span>{ i.date|date:'d-m-Y' }</span> </div>
+                    <div>Order Status: <span>{i.status}</span></div>
+                </div>
+                <div class="">
+                    <div>Ship. ID: <span>{i.shipId}</span></div>
+                    <div>Ship. Date: <span>{i.shipDate}</span></div>
+                    <div>Ship. To: <span>{i.shipBy}</span></div>
+                    <div>Ship. By: <span>{i.shipTo}</span></div>
+                    <div>Ship. Status: <span>{i.shiptatus}</span></div>
+                </div>
+            </div>
+            <div class="col-sm-1 action-enclosing">
+                
+                <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                    id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                </button>
+                
+                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                    <a href="" class="dropdown-item" style="cursor: pointer;" >
+                        <i class="fa-regular fa-file-lines mr-2"></i> Book Shipment
+                    </a>
+                    <a href="" class="dropdown-item" style="cursor: pointer;" >
+                        <i class="fa-regular fa-file-lines mr-2"></i> Track Shipment
+                    </a>
+                    <a href="" class="dropdown-item" style="cursor: pointer;" >
+                        <i class="fa-solid fa-indian-rupee-sign mr-2"></i> Shipment History
+                    </a>
+                </div>
+               
+            </div>
+            
+        </div> {% endcomment %}
+
+    </div>
+    <div class="bottom-field">
+        <ul class="pagination" onclick="onPaginationClick(event)">
+            <li class="prev">
+                <a href="#1" id="prev">
+                    <img src="/static/svg_icons/pagination-left.svg" alt="">
+                </a>
+            </li>
+            <li class="last">
+                <a href="#1" id="last">
+                    <img src="/static/svg_icons/pagination-left.svg" alt="" style="transform: rotate(180deg);">
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form action="" method="post" class="col-12 pr-0 pl-0">
+                {% csrf_token %}
+                <div class="row m-2 enclosing-row shipment-details">
+                    <h5 class="col-12">Shipment Details</h5>
+                    <div class="col-md-4 border-left-0">
+                        <h6>Package Details</h6>
+                        <div class="form-group">
+                            <label for="weight">Weight (in kilograms)</label>
+                            <input name="weight" id="weight" class="form-control" type="number" placeholder="Enter Package Weight"></input>
+                            <small class="help-text" class="form-text text-muted">Max: 5 kg</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="length">Length (in inches)</label>
+                            <input type="number" class="form-control" name="length" id="length" placeholder="Enter Package Length">
+                            <small class="help-text" class="form-text text-muted">Max: 24 inches</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="width">Width (in inches)</label>
+                            <input type="number" class="form-control" name="width" id="width" placeholder="Enter Package Width">
+                            <small class="help-text" class="form-text text-muted">Max: 24 inches</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Height (in inches)</label>
+                            <input type="number" class="form-control" name="height" id="height" placeholder="Enter Package height">
+                            <small class="help-text" class="form-text text-muted">Max: 24 inches</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Pickup Address</h6>
+                        <div class="form-group">
+                            <label for="pickup-address">Address</label>
+                            <textarea name="pickup-adddress" id="pickup-adddress" class="form-control" rows="4" placeholder="Enter Pickup Address"></textarea>
+                            <small class="help-text" class="form-text text-muted">Letter Count: 15-100 </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickup-contact">contact</label>
+                            <input type="number" class="form-control" name="pickup-contact" id="pickup-contact" placeholder="+91 1234567890">
+                            <small class="help-text" class="form-text text-muted">Country code mandatory</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickup-email">Email</label>
+                            <input type="email" class="form-control" name="pickup-email" id="pickup-email" placeholder="abc@xyz.com">
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Delivery Address</h6>
+                        <div class="form-group">
+                            <label for="delivery-adddress">Address</label>
+                            <textarea  id="delivery-adddress" class="form-control" rows="4"></textarea>
+                            
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery-contact">contact</label>
+                            <input type="text" class="form-control" id="delivery-contact" >
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery-email">Email</label>
+                            <input type="email" class="form-control" id="delivery-email" >
+                        </div>
+                    </div>
+                    <div class="col-12 form-group d-flex justify-content-center mb-2 mt-2">
+                        <input type="checkbox" name="checkbox" id="check" required>
+                        <label for="check" class="mb-0 ml-2">I Accept All <a data-toggle="modal" href="#modaldemo8">Terms & Conditions</a></label>
+                        
+                    </div>
+                    <div class="payment-options col-12" >
+                        <a class="button button-secondary {{enableButton}}" id="payLater" disabled>Pay Later</a>
+                        <a class="button button-primary" id="payNow" disabled>Pay Now</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    //patient filling here
+    
+    let totalPatients = [];
+
+    totalPatients = document.querySelectorAll('.card-enclosing')
+    totalPatients = [...totalPatients];
+    totalPatients.reverse();
+    let allPatients = [...totalPatients]
+
+    document.querySelector('.result span').innerText = allPatients.length;
+    
+    //cards allowed per page
+    let cardsAllowed = 8;
+
+    function nosPaginationFunction(){
+        return Math.ceil(allPatients.length/cardsAllowed);
+    }
+    let nosPagination = 0;
+    // paginationNumbers here 
+    function paginationNumber(){
+        nosPagination = nosPaginationFunction();
+        for(let i= 1; i<=nosPagination; i++){
+
+            // li creation 
+            let li= document.createElement('li');
+            li.classList.add('list');
+            li.setAttribute('id', "item"+`${i}`);
+
+            // anchor creation 
+            let a= document.createElement('a');
+            a.href= '#1';
+            a.innerText = i;
+
+            // appending anchor to the list item
+            li.appendChild(a);
+            
+
+            // appending li to the ul 
+
+            document.querySelector('.pagination').insertBefore(li, document.querySelector('.last'));
+        }
+    }
+    paginationNumber();
+    
+    //current page: by default 1
+    currentPage = 1;
+    prevActiveLi = document.querySelector('.list');
+    prevActiveLi.classList.add('active');
+
+    // display the page 
+    function displayPage(){
+        document.querySelector('.main-content').innerHTML = '';
+        for(let i= 0; i<cardsAllowed; i++){
+            let exNum = allPatients[cardsAllowed*(currentPage-1)+i];
+            if(exNum){
+                document.querySelector('.main-content').appendChild(allPatients[cardsAllowed*(currentPage-1)+i]);
+            }
+        }
+        
+    }
+    displayPage();
+
+    // function to activate the list 
+    function liActive(){
+        for(let i of document.querySelectorAll('.list')){
+            console.log('inside liActive(): ', i.innerText);
+            if(i.innerText == currentPage){
+                i.classList.add('active');
+                prevActiveLi.classList.remove('active');
+                prevActiveLi = i;
+                break;
+            }
+            
+        } 
+    }
+
+    let currentPaginatioTarget = currentPage;
+
+    function onPaginationClick(event){
+        let target = event.target.tagName == 'IMG' ? event.target.parentElement : event.target;
+        
+        if(target.tagName == 'A' && target.getAttribute('id')!= 'prev' && target.getAttribute('id')!= 'last'){
+            currentPage = target.innerText;
+            currentPaginatioTarget = currentPage;
+            liActive();
+            displayPage();
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'prev' ){
+
+            currentPaginatioTarget -= 3;
+            if(currentPaginatioTarget < 1){
+                currentPaginatioTarget = 1;
+            }
+
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'last' ){
+                
+            currentPaginatioTarget = parseInt(currentPaginatioTarget) + 3;
+
+            if(currentPaginatioTarget>nosPagination){
+                currentPaginatioTarget = nosPagination;
+            }
+            
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+    }
+
+    function onSearchAnimate(target){
+        target.parentElement.querySelector('.search-box').classList.toggle('d-none');
+    }
+
+    function onNameSearch(name){
+        allPatients = [];
+        totalPatients.forEach(element => {
+            if(element.querySelector('.patient-name').innerText.toLowerCase().includes(name.toLowerCase())){
+                allPatients.push(element);
+            }
+        });
+        document.querySelector('.result span').innerText = allPatients.length;
+        for(let x of document.querySelectorAll('.list')){
+            x.remove();
+        }
+        paginationNumber();
+        currentPage = 1;
+        liActive();
+        displayPage();
+    }
+
+</script>
+
+<script>
+    document.querySelector('.main-content').addEventListener('click', (e)=>{
+        if(!e.target.classList.contains('custom-link') && !e.target.parentElement.classList.contains('custom-link')){
+            e.preventDefault();
+            console.log(e.target);
+            if(e.target.classList.contains('shipment-booking')){
+                e.target.setAttribute('data-toggle', 'modal');
+                e.target.setAttribute('data-target', '#exampleModalCenter');
+                let mainTarget = e.target.parentElement.parentElement;
+                document.querySelector('#delivery-adddress').value = mainTarget.querySelector('.shipToAdd').innerText;
+                document.querySelector('#delivery-contact').value = mainTarget.querySelector('.shipToContact').innerText;
+                document.querySelector('#delivery-email').value = mainTarget.querySelector('.shipToEmail').innerText;
+                document.querySelector('#exampleModalCenter').classList.add('show');
+            }
+        }
+    })
+</script>
+
+<script>
+
+    document.querySelector('.payment-options').addEventListener('click', (e)=>{
+        if(document.getElementById("check").checked){
+            if(service_order.preferredData == 'nonDigitalData'){
+                let form = document.querySelector('form');
+                if(!validatePackage('weight')){
+                    e.preventDefault();
+                    document.querySelector('#weight').focus();
+                    return;
+                }
+                if(!validatePackage('length')){
+                    e.preventDefault();
+                    document.querySelector('#length').focus();
+                    return;
+                }
+                if(!validatePackage('width')){
+                    e.preventDefault();
+                    document.querySelector('#width').focus();
+                    return;
+                }
+                if(!validatePackage('height')){
+                    e.preventDefault();
+                    document.querySelector('#height').focus();
+                    return;
+                }
+                if(!validateAddress){
+                    e.preventDefault();
+                    document.querySelector('#pickup-address').focus();
+                    return;
+                }
+                if(!validateContact){
+                    e.preventDefault();
+                    document.querySelector('#pickup-contact').focus();
+                    return;
+                }
+                if(!validateEmail){
+                    e.preventDefault();
+                    document.querySelector('#pickup-email').focus();
+                    return;
+                }
+                form.action = `/${e.target.id}`;
+                form.submit();
+            }
+            else{
+                window.location.href = `/${e.target.id}`;
+            }
+        }
+        e.preventDefault();
+        alert('Please accept the Terms and Conditions first')
+    });
+
+    function validateAddress(){
+        let regex = /^[a-zA-Z0-9\s,.'-:]{3,}$/;
+        let ctrl =  document.getElementById('pickup-address').value;
+        return regex.test(ctrl);
+    }
+    
+    function validateEmail(){
+        let regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        let ctrl = document.getElementById('pickup-email').value;
+        return regex.test(ctrl);
+    }
+    
+    function validateContact(){
+        let regex = /^(\+|00)[1-9][0-9 \-\(\)\.]{7,32}$/;
+        let ctrl = document.getElementById('pickup-contact').value;
+        return regex.test(ctrl);
+    }
+
+    function validatePackage(target){
+        let val = document.getElementById(target).value; 
+        if(target == 'weight')return val<=5;
+        else return val<=24;
+
+    }
+    
+</script>
+
+{% endif %}
+{%endblock%}

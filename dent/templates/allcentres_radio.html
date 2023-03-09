@@ -1,0 +1,98 @@
+{% extends 'radio_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>All Referring Centres</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+    <!-- Main content -->
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+                <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead>
+                  <tr>
+                   <th>Organisation Name</th>
+                      <th>Email</th>
+                      <th>Contact</th>
+                      <th>Contact Person</th>
+                      <th>Type</th>
+                      <th>Address</th>
+                      <th>Actions</th>
+
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                         {% for s in centres %}
+                  <tr>
+                    <td>{{ s.orgname }}</td>
+                    <td>{{ s.email }}</td>
+                    <td>{{ s.contact }}</td>
+                      <td>{{ s.ctperson_name }}</td>
+                    <td>{{ s.orgtype }}</td>
+                       <td>{{ s.address }}</td>
+  <td>
+                          <a class="btn btn-info btn-sm" href="/editcentre_radio/{{ s.id }}">
+                              <i class="fas fa-pencil-alt">
+                              </i>
+
+                          </a>
+                          <a class="btn btn-danger btn-sm" href="/deletecentre_radio/{{ s.id }}">
+                              <i class="fas fa-trash">
+                              </i>
+
+                          </a>
+
+
+                      </td>
+                  </tr>
+                {% endfor %}
+                  </tbody>
+
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+
+    <!-- /.content -->
+
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+      </div>
+
+{% endif %}
+{%endblock%}

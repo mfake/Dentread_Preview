@@ -1,0 +1,56 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="content-body">
+	<div class="container-fluid">
+    <div class="authincation h-100">
+      <div class="container h-100">
+        <div class="row justify-content-center h-100 align-items-center">
+          <div class="col-md-5">
+            <div class="form-input-content text-center error-page">
+              <h4><i class="fa fa-shield text-success fa-4x"></i> </h4>
+              <h5>You are being securely redirect to payment page....</h5>
+              <p>Please do not press back or refresh the page..</p>
+              <div>
+                <button class="btn btn-rounded btn-success" id="pay-btn">Click to Continue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Razorpay's Javascript code. -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  var options = {
+  // Enter the Key ID generated from the Dashboard
+    key: "{{ razorpay_merchant_key }}",
+    amount: "{{ razorpay_amount }}",
+    currency: "{{ currency }}",
+    name: "Dentread",
+    prefill: {
+      "name": "{{name}}",
+      "email": "{{email}}",
+      "contact": "{{phone}}"
+    },
+    order_id: "{{ razorpay_order_id }}",
+    callback_url: "{{ callback_url }}",
+  };
+
+  // initialise razorpay with the options.
+  var rzp1 = new Razorpay(options);
+  setTimeout(()=>{
+    rzp1.open();
+    }, 2000);
+  // add event listener to the payment button.
+  document.getElementById("pay-btn").onclick = function (e) {
+    rzp1.open();
+    e.preventDefault();
+  };
+</script>
+{% endif %}
+{% endblock %}

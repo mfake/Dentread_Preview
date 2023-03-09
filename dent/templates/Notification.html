@@ -1,0 +1,363 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .content{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        padding: 0.75rem 0 0.25rem 0;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+    
+    .header:last-of-type{
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    ul.noti-type{
+        padding-left: 0;
+        border-bottom: 2px solid #ABA8A880;
+        position: relative;
+        height: 42px;
+    }
+    ul.noti-type li{
+        display: inline-block;
+        padding: 0.5rem 2rem;
+        font-size: 16px;
+        line-height: 24px;
+        cursor: pointer;
+        position: absolute;
+    }
+    .active:not(.pagination *){
+        border-bottom: 2px solid #1F3F7F;
+    }
+    .unread-notification{
+        background: #b7dbfa;
+    }
+    .date-span{
+        font-family: Poppins;
+        font-size: 14px;
+        color: rgba(51, 51, 51, 0.6);
+    }
+    .yellow-circle{
+        width: 15px;
+        display: inline-block;
+        height: 15px;
+        background: green;
+        border-radius: 50%;
+        margin-left: 1rem;
+    }
+    .notification-enclosing{
+        gap: 1.5rem;
+        cursor: pointer;
+    }
+    .notification-enclosing:hover{
+        background-color: #b7dbfa;
+    }
+    .bottom-field{
+        width: 100%;
+        padding-top: 5px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+    .pagination{
+        display: flex;
+        width: 18%;
+        overflow: hidden;
+        align-items: center;
+        scroll-behavior: smooth;
+        background: rgba(31, 63, 127, 0.04);
+        box-shadow: inset 1px 4px 8px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    .pagination li{
+        list-style: none;
+        padding: 2px;
+        margin: 4px 5px;
+        flex-shrink: 0;
+        text-align: center;
+        border-radius: 5px;
+        /* border: 1px solid #999; */
+        color: #999;
+    }
+    .pagination li.active{
+        background: white;
+        color: black;
+        border-color: #B0B0B0;
+    }
+    .pagination li a{
+        text-decoration: none;
+        padding: 0 8px;
+        color: inherit;
+        display: block;
+        font-family: sans-serif;
+        font-size: 13px;
+    }
+    .prev, .last{
+        position: absolute;
+        border: 1px solid #999;
+        padding: 0;
+        border: none;
+        box-shadow: 1px 4px 14px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    a#prev, a#last{
+        padding: 0 6px;
+    }
+    .prev{
+        left: 33%;
+    }
+    .last{
+        right: 33%;
+    }
+    .myclassic{
+        font-size: 12px;
+        margin-left: 0.35rem;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5  onclick="history.back()" style="cursor: pointer;">Notification Centre</h5>
+    </div>
+    <ul onclick="onKindClick(event)" class="noti-type">
+        <li id="all" class="active">All <i class="fa myclassic" aria-hidden="true">({{total}})</i></li>
+        <li id="read" style="left: 114px;">Read <i class="fa myclassic" aria-hidden="true">({{read}})</i></li>
+        <li id="unread" style="left: 228px;">Unread <i class="fa myclassic" aria-hidden="true">({{unread}})</i></li>
+        {% if unread != 0 %}
+        <li id="read-all" style="float: right; position: relative;">
+            <a id="myId" href="/markAllAsRead">
+                <i class="fa fa-check-square-o" aria-hidden="true"></i> Mark all as read
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+    <div class="noti-group all">
+        {% for i in data %}
+            {% if i.read == 0 %}
+                <div class="content notification-enclosing unread-notification d-flex" onclick="onNotificationClick(this)">
+            {% else %}
+                <div class="content notification-enclosing d-flex" onclick="onNotificationClick(this)">
+            {% endif %}
+                <a href="/updateNotificationRead/{{i.id}}/{{i.hyperLink}}" class="hyperlink d-none" target="_blank"></a>
+                <div class="">
+                    <span class="yellow-circle"></span>
+                </div>
+                <div class="">
+                    <h6>{{i.event}}</h6>
+                    <div>
+                        {{i.details}}
+                    </div>
+                    <span class="date-span">{{i.date}}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="bottom-field">
+        <ul class="pagination" onclick="onPaginationClick(event)">
+            <li class="prev">
+                <a href="#1" id="prev">
+                    <img src="/static/svg_icons/pagination-left.svg" alt="">
+                </a>
+            </li>
+            <li class="last">
+                <a href="#1" id="last">
+                    <img src="/static/svg_icons/pagination-left.svg" alt="" style="transform: rotate(180deg);">
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    
+    //patient filling here
+    let allNotifications = [];
+    let readNotifications = [];
+    let unreadNotification = [];
+
+    for(let x of document.querySelectorAll('.notification-enclosing')){
+        allNotifications.push(x);
+        if(x.classList.contains('unread-notification')){
+            unreadNotification.push(x);
+        }
+        else{
+            readNotifications.push(x);
+        }
+    }
+    
+    allNotifications.reverse();
+    readNotifications.reverse();
+    unreadNotification.reverse();
+    
+    let allPatients = [...allNotifications]
+    
+    // document.querySelector('.result span').innerText = allPatients.length;
+    
+    //cards allowed per page
+    let cardsAllowed = 8;
+
+    function nosPaginationFunction(){
+        return Math.ceil(allPatients.length/cardsAllowed);
+    }
+    let nosPagination = 0;
+
+    // paginationNumbers here 
+    function paginationNumber(){
+        nosPagination = nosPaginationFunction();
+        for(let i= 1; i<=nosPagination; i++){
+            // li creation 
+            let li= document.createElement('li');
+            li.classList.add('list');
+            li.setAttribute('id', "item"+`${i}`);
+
+            // anchor creation 
+            let a= document.createElement('a');
+            a.href= '#1';
+            a.innerText = i;
+
+            // appending anchor to the list item
+            li.appendChild(a);
+            
+            // appending li to the ul 
+            document.querySelector('.pagination').insertBefore(li, document.querySelector('.last'));
+        }
+    }
+    paginationNumber();
+    
+    //current page: by default 1
+    currentPage = 1;
+    prevActiveLi = document.querySelector('.list');
+    prevActiveLi.classList.add('active');
+
+    // display the page 
+    function displayPage(){
+        document.querySelector('.noti-group').innerHTML = '';
+        for(let i= 0; i<cardsAllowed; i++){
+            let exNum = allPatients[cardsAllowed*(currentPage-1)+i];
+            if(exNum){
+                document.querySelector('.noti-group').appendChild(allPatients[cardsAllowed*(currentPage-1)+i]);
+            }
+        }
+        
+    }
+    displayPage();
+
+    // function to activate the list 
+    function liActive(){
+        for(let i of document.querySelectorAll('.list')){
+            console.log('inside liActive(): ', i.innerText);
+            if(i.innerText == currentPage){
+                i.classList.add('active');
+                prevActiveLi.classList.remove('active');
+                prevActiveLi = i;
+                break;
+            }
+            
+        } 
+    }
+
+    let currentPaginatioTarget = currentPage;
+
+    function onPaginationClick(event){
+        let target = event.target.tagName == 'IMG' ? event.target.parentElement : event.target;
+
+        // console.log(target);
+        if(target.tagName == 'A' && target.getAttribute('id')!= 'prev' && target.getAttribute('id')!= 'last'){
+            currentPage = target.innerText;
+            currentPaginatioTarget = currentPage;
+            liActive();
+            displayPage();
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'prev' ){
+
+            currentPaginatioTarget -= 3;
+            if(currentPaginatioTarget < 1){
+                currentPaginatioTarget = 1;
+            }
+
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'last' ){
+                
+            currentPaginatioTarget = parseInt(currentPaginatioTarget) + 3;
+
+            if(currentPaginatioTarget>nosPagination){
+                currentPaginatioTarget = nosPagination;
+            }
+            
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+    }
+
+    function onKindClick(event){
+    
+        if(event.target.id == 'all'){
+            allPatients = [...allNotifications];
+        }
+        else if(event.target.id == 'read'){
+            allPatients = [...readNotifications];
+        }
+        else if(event.target.id == 'unread'){
+            allPatients = [...unreadNotification];
+        }
+    
+        for(let x of document.querySelectorAll('.list')){
+            x.remove();
+        }
+
+        paginationNumber();
+        currentPage = 1;
+        prevActiveLi = document.querySelector('.list');
+        prevActiveLi.classList.add('active');
+        displayPage();
+
+        for(let x of event.target.parentElement.children){
+            if(x.classList.contains('active')){x.classList.remove('active')}
+        }
+        event.target.classList.add('active');
+
+    }
+
+    function onNotificationClick(target){
+        target.querySelector('a.hyperlink').click()
+    }
+</script>
+
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,467 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+<style>
+    .dropdown-menu a:hover{
+        color: white;
+    }
+    .modal-header-custom{
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    .plan-details{
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    .plan-details>*{
+        padding: 1.5rem;
+        border: 1px solid #ABA8A8;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 1rem;
+        cursor: pointer;
+    }
+    
+    .radio-group{
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+    .radio-group>*{
+        flex: 1;
+        text-align: center;
+        padding: 6px 0 0 0;
+        border: 0.5px solid grey;
+        border-radius: 21px;
+    }
+    .inclusions img{
+        margin-right: 0.5rem;
+    }
+    div.button{
+        max-width: 200px;
+        text-align: center;
+        color: #1F3F7F;
+        border-radius: 21px;
+    }
+    .special-button{
+        padding: 8px;
+        border: 1px solid;
+    }
+    .category-enclosing--section{
+        font-size: 16px;
+    }
+    .selected-plan{
+        background: rgb(165 165 165);
+        color: white;
+    }
+    .selected-plan .special-button{
+        color: white;
+        border: 1px solid white;
+    }
+    .button{
+        border: 1px solid #1F3F7F;
+        padding: 7px 30px;
+        border-radius: 4px;
+    }
+    .button-primary{
+        background: #1F3F7F;
+        color: white;
+    }
+    .button-secondary{
+        background-color: white;
+        margin-right: 1rem;
+    }
+    form input:checked+label:after, form input:checked+label::before{
+        display: none;
+    }
+    .modal-content{
+        border-radius: 8px;
+    }
+</style>
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="page-header">
+							<div>
+								<h4 class="text-primary" >All Organisations</h4>
+
+							</div>
+							<div class="d-flex">
+								<div class="justify-content-center">
+
+
+								</div>
+							</div>
+						</div>
+                        {% if message %}
+                                    <div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+                                        <strong></strong> {{message}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endif %}
+
+     <!-- /.container-fluid -->
+
+
+    <!-- Main content -->
+
+        <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+                <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead>
+                    <tr>
+                        <th style="background-color:#2f6ebb;color:white;">Registration Date</th>
+                        <th hidden> Date</th>
+                        <th style="background-color:#2f6ebb;color:white;">Org Name</th>
+                        <th style="background-color:#2f6ebb;color:white;">Org Type</th>
+                        <th style="background-color:#2f6ebb;color:white;">Status</th>
+                        <th style="background-color:#2f6ebb;color:white;">Actions</th>
+                        <th>
+                            {{i.subscription}}
+                        </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                   {% for i in centre %}
+                    <tr>
+                      <td>{{ i.date|date:'d-m-Y' }}</td>
+                      <td hidden>{{ i.date|date:'Y-m-d' }}</td>
+                      <td>{{ i.orgname }}</td>
+                      <td>{{ i.orgtype }}</td>
+                      <td>{{ i.status }}</td>
+                      <td>
+                          <div class="dropdown dropleft">
+                            <button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-sm btn-outline-primary" data-toggle="dropdown" id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i></button>
+                            <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                                <a class="dropdown-item" href="/orgdetails/{{ i.id }}"><i class="fas fa-eye"></i> View</a>
+                                <a onclick="onPlanSelectionAnchor('{{i.id}}', '{{i.subscription}}', '{{i.topUp}}')" class="dropdown-item" data-toggle="modal" data-target='#planModal'><i class="fa fa-handshake-o" aria-hidden="true"></i> Select Plan</a>
+                                <a class="dropdown-item" href="/orginvoices/{{ i.id }}"><i class="fe fe-file-text"></i> View Invoices</a>
+                                <a class="dropdown-item" href="/delete_org/{{ i.id }}"><i class="fas fa-trash"></i> Delete</a>
+                            </div>
+                          </div>
+
+                      </td>
+                    </tr>
+                   {% endfor %}
+                  </tbody>
+
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+
+    <!-- /.content -->
+  </div>
+      </div>
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+
+<div class="modal fade" id="planModal" tabindex="-1" role="dialog" aria-labelledby="planModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header-custom">
+                <h5>Select Plan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="plan-details d-flex" style="gap:2rem">
+                    
+                    <div class="basic-plan" style="flex:1">
+                        <h5>Dentread Basic</h5>
+                        <div class="button special-button">
+                            No Upfront Payment
+                        </div>
+                        <div class="inclusions">
+                            <div class=""><img src="/static/svg_icons/check.svg" alt=""><span>Inclusions:</span></div>
+                            <ul>
+                            <!-- django for loop here for inclusion details -->
+                            {% for i in details %}
+                                {% if i.packId == 1 %}
+                                    <li>{{i.packInfo}}</li>
+                                {% endif %}
+                            {% endfor %}
+                            <!-- django for loop ends here  -->
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="premium-plan" style="flex:1">
+                        <h5>Dentread Premium</h5>
+                        <div class="radio-group">
+                            <div class="">
+                                <input type="radio" name="premium" id="premium1" value="Month" checked>
+                                <label for="premium1">Rs. 3999/-</label>
+                            </div>
+                            <div class="">
+                                <input type="radio" name="premium" value="Quarter" id="premium2">
+                                <label for="premium2"> Rs. 9999/-</label>
+                            </div>
+                        </div>
+                        <div class="inclusions">
+                            <div class=""><img src="/static/svg_icons/check.svg" alt=""><span>Inclusions:</span></div>
+                            <ul>
+                            <!-- django for loop here for inclusion details -->
+                            {% for i in details %}
+                                {% if i.packId == 2 %}
+                                    <li>{{i.packInfo}}</li>
+                                {% endif %}
+                            {% endfor %}
+                            <!-- django for loop ends here  -->
+                            </ul>
+
+                        </div>
+
+                    </div>
+                    <div class="classic-plan" style="flex:1">
+                        <h5>Dentread Classic</h5>
+
+                        {% if organisation.paymentOption != 'payLater' %}
+                            <div class="pay-later--enclosing">
+                                <div class="payment-option">
+                                    <h6>Payment Option</h6>
+                                    <div class="">
+                                        <label for="payment-switch">Pay Later</label>
+                                        <input type="checkbox" onchange="onCheckboxChecked(this)" class="ml-3" value="payLater" name="payment-switch" id="payment-switch">
+                                    </div>
+                                    
+                                </div>
+                                <div class="payment-option price-option d-none">
+                                    <h6>Credit Limit</h6>
+                                    <div class="">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" checked name="credit" id="credit1" value="50000">
+                                            <label class="form-check-label" for="credit1">50,000/-</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="credit" id="credit2" value="75000">
+                                            <label class="form-check-label" for="credit2">75,000/-</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="credit" id="credit3" value="100000" >
+                                            <label class="form-check-label" for="credit3">1,00,000/-</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if organisation.paymentOption == 'payLater' %}
+                            <div class="pay-later--enclosing">
+                                <div class="payment-option">
+                                    <h6>Payment Option</h6>
+                                    <div class="">
+                                        <label for="payment-switch">Pay Later</label>
+                                        <input type="checkbox" onchange="onCheckboxChecked(this)" class="ml-3" value="payLater" name="payment-switch" id="payment-switch" checked >
+                                    </div>    
+                                </div>
+                                <div class="payment-option price-option">
+                                    <h6>Credit Limit </h6>
+                                    <div class="">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="credit" id="credit1" value="50000" {{check1}}>
+                                            <label class="form-check-label" for="credit1">50,000/-</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="credit" id="credit2" value="75000" {{check2}}>
+                                            <label class="form-check-label" for="credit2">75,000/-</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="credit" id="credit3" value="100000" {{check3}}>
+                                            <label class="form-check-label" for="credit3">1,00,000/-</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if organisation.topUpAvailable %}
+                                    <div class="payment-option price-option ml-3">
+                                        <h6>Available Balance </h6>
+                                        <span>₹ {{organisation.topUpAvailable}}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="inclusions">
+                            <div class=""><img src="/static/svg_icons/check.svg" alt=""><span>Inclusions:</span></div>
+                            <ul>
+                            <!-- django for loop here for inclusion details -->
+                            {% for i in details %}
+                                {% if i.packId == 3 %}
+                                    <li>{{i.packInfo}}</li>
+                                {% endif %}
+                            {% endfor %}
+                            <!-- django for loop ends here  -->
+                            </ul>
+
+                        </div>
+
+                    </div>
+                    
+                </div>
+                <form action="/activateSubscription" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="selected-plan" id="selected-plan" class="d-none">
+                    <input type="text" name="plan-amount" id="plan-amount" class="d-none">
+                    <input type="text" name="orgId" id="orgId" class="d-none">
+                    <div class="form-group text-right">
+                        <button type="reset" class="button button-secondary">Cancel</button>
+                        <button type="submit" class="button button-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- jQuery -->
+
+<!-- Page specific script -->
+<script>
+  $(function () {
+
+    $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false, "columnDefs" : [{"targets":1, "type":"date"}], "order": [[ 1, "desc" ]],
+      "buttons": [ "excel", "pdf",  "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
+
+<script>
+  window.alert = (function() {
+      var nativeAlert = window.alert;
+      return function(message) {
+          window.alert = nativeAlert;
+          message.indexOf("DataTables warning") === 0 ?
+              console.warn(message) :
+              nativeAlert(message);
+      }
+  })();
+</script>
+
+<script>
+    document.querySelector('.plan-details').addEventListener('click', function (e){
+        if(!e.target.classList.contains('plan-details')){
+            let tar = e.target;
+            while(!tar.classList.contains('basic-plan') && !tar.classList.contains('classic-plan') && !tar.classList.contains('premium-plan')){
+                tar = tar.parentElement;
+            }
+            console.log('tar is ', tar);
+            if(tar.classList.contains('classic-plan')){
+                tar.parentElement.parentElement.querySelector('form input#plan-amount').value = document.querySelector('input[name="credit"]:checked').value;
+            }
+            if(tar.classList.contains('premium-plan')){
+                tar.parentElement.parentElement.querySelector('form input#plan-amount').value = document.querySelector('input[name="premium"]:checked').value;
+            }
+            tar.parentElement.parentElement.querySelector('form input#selected-plan').value = tar.classList.item(0);
+            if(tar.parentElement.querySelector('.selected-plan')){
+                tar.parentElement.querySelector('.selected-plan').classList.remove('selected-plan');
+                tar.classList.add('selected-plan');
+            }
+            else{
+                tar.classList.add('selected-plan');
+            }
+        
+            
+        }
+        
+    })
+
+    function onCheckboxChecked(self){
+
+        if(self.checked){
+            document.querySelector('.price-option').classList.remove('d-none');
+            return;
+        }
+        document.querySelector('.price-option').classList.add('d-none');
+        
+    };
+
+    
+</script>
+<script>
+    function onPlanSelectionAnchor(id, plan, topup){
+        console.log('this id is ', id, plan, topup);
+        document.querySelector('#planModal input#orgId').value = id;
+        console.log(document.querySelector('#planModal input#orgId'));
+        console.log(document.querySelector('#planModal input#orgId').value);
+        if(document.querySelector('.selected-plan')){
+            document.querySelector('.selected-plan').classList.remove('selected-plan');
+        };
+        if(plan == 'Dentread Premium'){
+            document.querySelector('.premium-plan').classList.add('selected-plan');
+            {% for i in subscription %}
+                if ('{{i.orgid}}' == id){
+                    if('{{i.price}}' == '3999'){
+                        document.querySelector('#premium1').checked = true;
+                    }else{
+                        document.querySelector('#premium2').checked = true;
+                    }
+                }
+            {% endfor %}
+        }
+        else if(plan =='Dentread Classic'){
+            document.querySelector('.classic-plan').classList.add('selected-plan');
+            if(topup == '50000'){
+                document.querySelector('#credit1').checked = true;
+            }
+            else if(topup == '75000'){
+                document.querySelector('#credit2').checked = true;
+            }
+            else{
+                document.querySelector('#credit3').checked = true;
+            }
+            document.querySelector('.payment-option input[type="checkbox"]').checked = true;
+            onCheckboxChecked(document.querySelector('.payment-option input[type="checkbox"]'))
+        }
+        else{
+            document.querySelector('.basic-plan').classList.add('selected-plan'); 
+        }
+    }
+</script>
+
+</body>
+{% endif %}
+{%endblock%}

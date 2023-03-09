@@ -1,0 +1,221 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+	<div class="main-content pt-0">
+				<div class="container">
+					<div class="inner-body">
+
+
+    <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Add Invoice</h5></a></li>
+                    </ol>
+
+                 </div>
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+										<div class="card bg-primary custom-card card-box">
+											<div class="card-body p-4">
+												<div class="row align-items-center">
+													<div class="offset-xl-3 offset-sm-6 col-xl-8 col-sm-6 col-12 img-bg ">
+														<h4 class="d-flex  mb-3">
+															<span class="font-weight-bold text-white ">{{ patient.name }}, Patient id -{{ patient.pid }}</span>
+														</h4>
+
+														<p class="tx-white-7 mb-1">
+													</div>
+													<img src="{% static '/dentread/assets/img/pngs/work3.png' %}" alt="user-img" class="wd-200">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+ <!-- Main content -->
+
+
+          <!-- Profile Image -->
+
+            <div class="row row-sm">
+
+                <div class="col-md-12">
+                     <div class="row row-sm">
+                      <div class="col-12">
+            <div class="card">
+              <div class="card-header p-2  bg-primary text-white">
+                <ul class="nav nav-pills">
+                  <li ><a data-toggle="tab">Invoices</a></li>
+
+
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="active tab-pane" id="activity">
+
+
+              <!-- /.card-header -->
+                           <!-- Post -->
+
+                <table class="table table-bordered border-t0 key-buttons text-nowrap w-100" id="example2">
+                  <thead>
+                    <tr>
+                      <th >Date</th>
+                      <th>Study</th>
+                        <th>Patient Name</th>
+                        <th>Price</th>
+                        <th>Invoice ID</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for i in allinvoice %}
+                    <tr>
+                      <td>{{ i.date }}</td>
+                      <td>{{ i.stud }}</td>
+                        <td>{{ i.name }}</td>
+                         <td>{{ i.price }}</td>
+                        <td>{{ i.invid }}</td>
+
+
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+
+           </table>
+</div>
+          <!-- /.card-body -->
+
+
+</div>
+                </div>
+              </div>
+
+
+                      </div>
+                      <div class="col-12">
+            <div class="card">
+              <div class="card-header p-2  bg-primary text-white">
+                <ul class="nav nav-pills">
+
+                  <li ><a >Studies</a></li>
+
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="active tab-pane" id="activity1">
+
+
+              <!-- /.card-header -->
+
+<div class="table-responsive">
+                <table class="table table-bordered border-t0 key-buttons text-nowrap w-100" id="example1">
+                   <thead>
+                    <tr>
+                      <th >Date</th>
+
+                      <th>Study</th>
+                        <th>Remark</th>
+                        <th>Prescription</th>
+                      <th>Assigned To</th>
+                      <th>Status</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for i in service_order %}
+                    <tr>
+                      <td>{{ i.date }}</td>
+
+                      <td>{{ i.study }}</td>
+                         <td>{{ i.remark }}</td>
+                         <td>{% if i.prescription %}
+
+<a href="{{i.prescription}}" target="_blank">Prescription</a>
+                       {% endif %}  </td>
+                      <td>{{ i.repby }}
+                      </td>
+                      <td>{{ i.status }}</td>
+                          <td>
+
+                          <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Upload Files" href="/upload/{{ i.id }}" hidden>
+                              <i class="fas fa-upload">
+                              </i>
+
+
+                          </a>
+
+
+                          <a class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Create/Edit Report" href="/reporting/{{ i.id }}">
+                              <i class="fas fa-pencil-alt">
+                              </i>
+
+                          </a>
+
+
+
+                        <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Send Mail" href="/sendmail/{{ i.id }}" >
+                              <i class="fas fa-envelope">
+                              </i>
+
+                          </a>
+
+
+                      </td>
+
+                    </tr>
+
+    <!-- /.content -->
+       {% endfor %}
+                  </tbody>
+                </table>
+</div>
+              </div>
+              <!-- /.card-body -->
+
+          <!-- /.col -->
+                </div>
+
+
+
+</div>
+
+
+            </div>
+
+
+
+
+              </div>
+                     </div>
+                  </div>
+             </div>
+      </div>
+
+                </div>
+    </div>
+
+
+<!-- Page specific script -->
+                    		<script src="{% static '/dentread/assets/plugins/jquery/jquery.min.js' %}"></script>
+
+<script src="{% static '/dentread/assets/js/form-elements.js' %}"></script>
+
+
+   <!-- Main content -->
+
+{% endif %}
+{%endblock%}

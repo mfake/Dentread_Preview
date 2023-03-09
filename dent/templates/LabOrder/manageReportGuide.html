@@ -1,0 +1,531 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    .container{
+        max-width: 1200px;
+        margin-top: 1rem;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .header:last-of-type{
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    .enclosing-row{
+        /* background: aliceblue; */
+        box-shadow: 1px 4px 14px rgba(129, 119, 119, 0.1);
+        border-radius: 5px;
+        padding: 1rem;
+        align-items: center;
+        border: 1px solid #ededed;
+    }
+    
+    .name-heading, .heading{
+        font-size: 18px;
+        font-weight: 500;
+        margin-left: 0;
+    }
+    .gender-icon--enclosing{
+        
+        background: white;
+        border-radius: 50%;
+        text-align: center;
+        color: white;
+
+    }
+    .icon-image{
+        width: 50px !important;
+    }
+    
+    input, textarea, select, button{
+        font-size: 0.875rem !important;
+        letter-spacing: 1px;
+        border: 1px solid #e8e8f7;
+        color: #a8afc7;;
+        box-shadow: 1px 4px 10px rgba(129, 119, 119, 0.1);
+    }
+   
+    .main-footer{
+        box-shadow: 1px -3px 14px 0px #8177771A;
+    }
+    label:not(.card-body label){
+        letter-spacing: 1px;
+    }
+    .form-group{
+        margin-bottom: 1.3rem;
+    }
+   
+    .heading{
+        letter-spacing: 0.4px;
+    }
+   
+    .order-heading{
+        margin-left: auto;
+        margin-right: 1rem;
+        font-size: initial;
+        margin-bottom: 1rem;
+    }
+    .details-field{
+        margin-top: 10px;
+    }
+    .details-field span:not(.label-field) {
+        margin-left: 0.3rem;
+        font-weight: 500;
+    }
+
+    .property-box{
+        margin: 0.5rem 0;
+    }
+    .property-box>span:first-child{
+        margin-right: 1rem;
+        font-size: 14px;
+        font-weight: 400;
+    }
+    .property-box>span:last-child{
+        font-size: 15px;
+        font-weight: 500;
+    }
+    p {
+        margin-bottom: 1rem !important;
+    }
+    .change_para {
+        font-size: medium;
+        font-weight: 450;
+        margin: 1.5rem 0 !important;
+    }
+    .change_para:first-child {
+        margin-top: 0.3rem !important;
+    }
+    
+    @media (min-width: 576px) {
+        .modal-dialog {
+        max-width: 700px;
+        margin: 1.75rem auto;
+        }
+    }
+    #btn-later{
+        color: #1f3f7f !important;
+        border: 1px solid #1f3f7f !important;
+    }
+
+    .patient-information--enclosing{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 0.75rem;
+        border-right: 2px solid black;
+    }
+
+    @media (min-width: 576px){    
+        #chatBoxModal > .modal-dialog {
+            max-width: 500px;
+            margin: 6rem 8rem 6rem auto;
+        }
+    }
+    .back-button:hover{
+        cursor: pointer;
+    }
+
+    .floating-date-left{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      right: 5px;
+    }
+    .floating-date-right{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      right: 5px;
+    }
+    .dateEle{
+        text-align: center;
+        background: lavender;
+        font-size: 13px;
+        width: 100px;
+        margin: 2rem auto;
+        border-radius: 10px;
+    }
+    .admin-side--comment{
+      font-size: 14px;
+      position: relative;
+      margin: 17px 0;
+      color: black;
+      padding: 3px 55px 3px 10px;
+      width: 60%;
+      border-radius: 4px;
+      margin-left: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+      background: lavender;
+    }
+    .clinic-side--comment{
+      margin-right: 10px;
+      font-size: 14px;
+      position: relative;
+      margin: 17px 0;
+      color: black;
+      padding: 3px 55px 3px 10px;
+      width: 60%;
+      margin-left: auto;
+      border-radius: 4px;
+      margin-right: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+    }
+    .start-dot{
+        width: 20px;
+        height: 20px;
+        background: rgb(25, 122, 122);
+        border-radius: 50%;
+        border: 3px solid white;
+        left: 0;
+        top: -7px;
+    }
+    .end-dot{
+        width: 20px;
+        height: 20px;
+        background: grey;
+        /* border: 1px solid black; */
+        border: 3px solid white;
+        border-radius: 50%;
+        right: 0;
+        top: -7px;
+    }
+    
+    
+    .timeline{
+        height: 5px; 
+        background-color: #c0b5b5; 
+        width: 80%; 
+        border-radius: 5px; 
+        margin: 0 auto;
+    }
+    .timeline-over{
+        height: 7px; 
+        background-color: rgb(25, 122, 122);  
+        border-radius: 5px; 
+        margin: 0 auto;
+        left: 0;
+        top: -1px;
+    }
+    .footnotes-card{
+        min-width: 250px;
+        text-align: left;
+        margin: 1rem 1rem 1rem 0;
+    }
+    .details-button{
+        float: right;
+        padding: 0.5rem 1rem;
+        border: 1px solid #1f3f7f;
+        border-radius: 4px;
+        color: #1f3f7f;
+        background-color: white;
+    }
+    .details-button:hover{
+        color: white;
+        background-color: #1f3f7f;
+    }
+    #inputState{
+        font-weight: 500;
+        margin-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+</style>
+
+<div class="container mb-3">
+
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5  onclick="history.back()" style="cursor: pointer;">Order Details</h5>
+    </div>
+
+    <div class="row m-2 enclosing-row">
+        <div class="col-sm-6 col-md-4 d-flex">
+        <!-- <div class="col-sm-4 col-md-3 p-0 d-flex text-center align-items-center"> -->
+            <div class="gender-icon--enclosing">
+                {% if patient.gender == 'Female' %}
+                <img class="icon-image" src="/static/svg_icons/Female.svg" alt="">
+                {% endif %}
+                {% if patient.gender != 'Female' %}
+                <img class="icon-image" src="/static/svg_icons/Male.svg" alt="">
+                {% endif %}
+            </div>
+            <div class="d-flex flex-column ml-3">
+                <span class="name-heading">{{service_order.name}}</span>
+                <div class="details-field"><span  class="label-field">ID: </span><span>{{patient.pid}}</span></div>
+                
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="details-field"><span class="label-field">Service Date: </span><span>{{service_order.date}}</span></div>
+            <div class="details-field"><span class="label-field">Status: </span><span class="{{service_order.badge}}">{{service_order.status}}</span></div>
+        </div>
+        <div class="col-sm-6 col-md-4 d-flex">
+
+            <div class="form-inline">
+                <label for="inputState">Referred To: </label>
+                <span id="inputState">{{refer_id}}</span>
+            </div>
+            
+            <button class="btn btn-sm ml-1 chat-box--button" data-toggle="modal" data-target="#chatBoxModal">
+                <img src="/static/svg_icons/Group 98.svg" width="22px" />
+            </button>
+
+        </div>
+       
+    </div>
+
+    {% for item in pros %}
+
+        <div class="row m-2 mt-4 enclosing-row mb-4">
+            <!-- <h5 class="heading order-heading">
+                Total: <span style="margin-left: 0.5rem;">Rs</span> <span style="font-size: larger; color: #1f3f7f;">{{item.price}}/-</span>
+            </h5> -->
+            <div class="col-12 d-flex align-items-center">
+                <img src="/static/svg_icons/pointer_icon.svg" alt="">
+                <div class="heading ml-2">Implant Surgical Guide</div>
+                
+            </div>
+
+            <div class="col-sm-12 col-md-8 row mt-3 mb-3" style="font-weight: 500;">
+                {% if item.data_type1 != '' and item.data_type1 != 'NULL' and item.data_type1 != NULL %}
+                    <div class="col-sm-6 property-box">
+                        <span>Data Type 1: </span>
+                        <span>{{item.data_type1}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.data_type2 != '' and item.data_type2 != 'NULL' and item.data_type2 != NULL %}
+                    <div class="col-sm-6 property-box">
+                        <span>Data Type 2: </span>
+                        <span>{{item.data_type2}}</span>
+                    </div>
+                {% endif %}
+
+
+                {% if item.output_type %}
+                    <div class="col-sm-6 property-box">
+                        <span>Output Type: </span>
+                        <span>{{item.output_type}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.guide_type %}
+                    <div class="col-sm-6 property-box">
+                        <span>Guide Type: </span>
+                        <span>{{item.guide_type}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.planning_type %}
+                    <div class="col-sm-6 property-box">
+                        <span>Planning Type: </span>
+                        <span>{{item.planning_type}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.expectedDate %}
+                    <div class="col-sm-6 property-box">
+                        <span>Expected Date: </span>
+                        <span>{{item.expectedDate}}</span>
+                    </div>
+                {% endif %}
+                
+                {% if item.tooth %}
+                    <div class="col-sm-6 property-box">
+                        <span>Tooth Sites: </span>
+                        <span>{{item.tooth}}</span>
+                    </div>
+                {% endif %}
+                
+            </div>
+            <div class="col-sm-6 col-md-4 row justify-content-between">
+                <div class="property-box">
+                    <span>Price: </span>
+                    <span>{{item.price}}/-</span>
+                </div>
+            </div>
+
+            {% if item.remark %}
+                <div class="col-sm-12">
+                    <hr>
+                    <span style="margin-right: 1rem;">Clinical Notes: </span>
+                    <span>{{item.remark}}</span>
+                    <hr>
+                </div>
+            {% endif %}
+
+            <div class="col-sm-12 row align-items-center mt-3">
+                <div class="col-sm-10">
+                    <div class="timeline position-relative">
+                        <div class="timeline-over position-absolute"></div>
+                        <span class="position-absolute start-dot"></span>
+                        {% if item.status == 'Order Completed' %}
+                            <span class="position-absolute end-dot" style="background-color: rgb(25, 122, 122) !important;"></span>
+                        {% endif %}
+                        {% if item.status != 'Order Completed' %}
+                            <span class="position-absolute end-dot"></span>
+                        {% endif %}
+                        <span class="position-absolute" style="left: -91px; top: -8px;">Submit Order</span>
+                        <span class="position-absolute" style="right: -110px; top: -8px;">Order Completed</span>
+                    </div>
+                </div>
+
+                <div class="col-sm-2"> <a class=" details-button" style="float: right;" type="button" href="/lineOrderDetails/{{service_order.id}}/{{item.id}}">View Details</a> </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<!-- all modals are here  -->
+<!-- 1. share report modal  -->
+
+<div class="modal fade" id="chatBoxModal" tabindex="-1" role="dialog" aria-labelledby="chatBoxModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+        
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatBoxTitle">Case Chat</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div id="case-chat"></div>
+                <form class="form-inline" style="margin-top: 1rem" method="post" action="/labOrderCommentClinic/{{service_order.id}}">
+                    {% csrf_token %}
+
+                    <div class="input-group w-100">
+                        <input type="text" class="form-control" name="comment" placeholder="Type your comment here..." aria-label="Type your comment here..." aria-describedby="comment-send">
+                        <div class="input-group-append">
+                          <button  type="submit" class="btn" style="border-color: #e8e8f7;" id="comment-send"><i class="fa fa-sharp fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            
+      
+        </div>
+
+    </div>
+</div>
+
+<!-- ------------------our modals -----------------  -->
+<script>
+        
+    // chat section starts here
+    
+    let parent=  document.getElementById('case-chat')
+    let prevDate = ''
+    '{% for i in comments %}'
+        var ele= document.createElement('div');
+        
+        var date= document.createElement('span');
+        date.innerText=`{{i.date}}`.slice(15);
+        
+        if('{{i.date}}'.slice(0, 13) != prevDate ){
+            prevDate = '{{i.date}}'.slice(0, -11);
+            var dateEle= document.createElement('div');
+            dateEle.innerText = prevDate;
+            dateEle.classList.add('dateEle');
+            parent.appendChild(dateEle);
+        }
+        
+        var text= document.createElement('span');
+        text.innerText= `{{i.comment}}`
+        
+    
+        if(`{{i.orgid}}`=='{{org}}'){
+            
+            date.classList.add('floating-date-right');
+            ele.appendChild(date);
+            ele.appendChild(text);
+            ele.classList.add('clinic-side--comment');
+        }    
+        else{
+            date.classList.add('floating-date-left');
+            ele.appendChild(text);
+            ele.appendChild(date);
+            ele.classList.add('admin-side--comment')
+            
+        }    
+        parent.appendChild(ele);           
+        
+    '{% endfor %}'
+    
+    // chat section ends here
+
+    let timelineOverWidth = [];
+    let statuses = [];
+    '{% for item in pros %}'
+        statuses.push('{{item.status}}')
+        if( '{{item.status}}' == 'Validate Data' ){
+            timelineOverWidth.push(20);
+        }
+        else if( '{{item.status}}' == 'Share Plan' ){
+            timelineOverWidth.push(40);
+        }
+        else if( '{{item.status}}' == 'Review Plan' ){
+            timelineOverWidth.push(60);
+        }
+        else if( '{{item.status}}' == 'Share Design' ){
+            timelineOverWidth.push(80);
+        }
+        else if( '{{item.status}}' == 'Order Completed' ){
+            timelineOverWidth.push(100);
+        }
+        
+       
+    '{% endfor %}'
+    
+    let index= 0;
+    // console.log("the timeLine over width is", timelineOverWidth)
+    for(let i of document.getElementsByClassName('timeline-over')){
+        // console.log(i, timelineOverWidth[index]);
+        i.style.width = timelineOverWidth[index] + '%';
+        
+        let span= document.createElement('span');
+        span.classList.add('position-absolute');
+        span.innerText = statuses[index];
+        span.style.left= (timelineOverWidth[index++] - 5) + '%';
+        span.style.top= '-30px';
+        if(span.innerText != 'Submit Order' && span.innerText != 'Order Completed' && span.innerText != undefined && span.innerText != 'undefined'){
+            i.parentElement.appendChild(span);
+        }
+        
+    }
+    
+</script>
+
+<input id="service_orderid" name="service_orderid" value="{{service_order.id}}" hidden>
+
+{% endif %}
+{% endblock %}

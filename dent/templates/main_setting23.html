@@ -1,0 +1,1390 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    /* .content{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        padding: 2rem;
+        border-radius: 8px;
+    } */
+    .submit-button, .reset-button{
+        width: 161px;
+        height: 36px;
+        background: #1F3F7F;
+        border-radius: 8px;
+        color: white;
+    }
+    .reset-button{
+        background-color: white;
+        color: #1F3F7F;
+        border: 1px solid #1F3F7F;
+        margin-left: auto;
+    }
+    form>.form-group:not(.modal *){
+        display: flex;
+        margin-top: 1rem;
+        gap: 1.5rem;
+    }
+    .profile-pic{
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+        clip-path: circle(50%);
+    }
+    .diff-section{
+        border-bottom: 2px solid #ABA8A866;
+    }
+    .active{
+        border-bottom: 2px solid #1F3F7F;
+    }
+    .profile-pic{
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+        clip-path: circle(50%);
+    }
+    .category-enclosing--section > *{
+        cursor: pointer;
+    }
+    form{
+        padding: 2rem 0 1rem 0;
+    }
+    textarea{
+        resize: none;
+    }
+    .user-table{
+        width: 100%;
+        border: 1px solid #dfe2e9;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        text-align: center;
+    }
+    th, td{
+        padding: 0.75rem 1rem;
+    }
+    thead{
+        background-color: #1F3F7F;
+        color: white;
+    }
+    tbody tr{
+        border-bottom: 1px solid #dfe2e9;
+    }
+    .user-table th img{
+        margin-right: 0.5rem
+    }
+    .user-section{
+        margin-top: 2rem;
+    }
+    input, textarea, select{
+        color: #6876a3 !important;
+    }
+    .button{
+        /* border: 1px solid ; */
+        border: 1px solid #1F3F7F;
+        padding: 5px 8px;
+        border-radius: 4px;
+    }
+    .button-primary{
+        background: #1F3F7F;
+        color: white;
+    }
+    .button-secondary{
+        background-color: white;
+    }
+    .admin-details-section form{
+        padding-left: 5rem;
+    }
+    .modal-content{
+        padding: 2rem;
+        border-radius: 8px;
+    }
+    .modal-header{
+        padding: 0;
+        border-bottom: none;
+    }
+    .helping-text-ind img{
+        margin-right: 8px;
+    }
+    .modal button{
+        padding: 2px;
+    }
+    .dentread-plan-section>*:not(:first-child, .plan-details){
+        padding: 1.5rem 2rem;
+        margin-bottom: 1.5rem;
+    }
+    .wallet-terms, .payment-terms, .discount-terms{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        border-radius: 8px;
+    }
+    .info-box{
+        padding: 1rem;
+        text-align: center;
+        background: rgba(223, 177, 10, 0.04);
+        border: 0.4px solid #DFB10A;
+        border-radius: 5px;
+    }
+    .dentread-plan-section{
+        font-size: 15px;
+    }
+    .discount-cols>*{
+        background: rgba(255, 0, 127, 0.04);
+        border: 0.5px solid #FF007F;
+        text-align: center;
+        border-radius: 4px;
+        flex: 1;
+        padding: 8px;
+    }
+    .plan-details>*{
+        padding: 1.5rem;
+        border: 1px solid #ABA8A8;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 1rem;
+        cursor: pointer;
+    }
+    .plan-details{
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    .contact{
+        font-weight: 450;
+        color: #E500B2;
+    }
+    .contact a{
+        text-decoration: underline;
+        font-weight: 500;
+        color: #6876a3;
+    }
+    .radio-group{
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+    .radio-group>*{
+        flex: 1;
+        text-align: center;
+        padding: 6px 0 0 0;
+        border: 0.5px solid grey;
+        border-radius: 21px;
+    }
+    .inclusions img{
+        margin-right: 0.5rem;
+    }
+    div.button{
+        max-width: 200px;
+        text-align: center;
+        color: #1F3F7F;
+        border-radius: 21px;
+    }
+    .category-enclosing--section{
+        font-size: 16px;
+    }
+    .selected-plan{
+        background: rgba(31, 63, 127, 0.05);
+    }
+    .dropdown-item:hover{
+        color: white;
+    }
+    
+    form.dropdown-menu{
+        padding: 1rem;
+        background: white;
+        border-radius: 4px;
+        top: 27px;
+        transform: translate3d(124px, 0px, 0px) !important;
+        min-width: 235px;
+        color: black !important;
+    }
+    form.dropdown-menu h6{
+        font-weight: 400 !important;
+    }
+    form.dropdown-menu input, form.dropdown-menu select{
+        color: black !important;
+    }
+    form.dropdown-menu .form-control{
+        height: 33px !important;
+    }
+    .file-area .share-icon--parent{
+        position: absolute;
+        right: 25px;
+        top: 15px;
+    }
+    .share-icon--parent .share-icon{
+        font-size: 20px;
+        cursor: pointer;
+        color: #1f3f7f;
+    }
+    .dropleft form label{
+        margin-bottom: 0 !important;
+    }
+    .dropleft form .form-group{
+        gap: 0.5rem !important;
+    }
+    .form input:checked+label:before, form input:checked+label:before, 
+    .form input:checked+label:after, form input:checked+label::after{
+        display: none;
+    }
+    .dropleft .submit-button-dropleft{
+        padding: 0;
+        background-color: #1F3F7F;
+        color: white;
+        border-radius: 4px;
+        width: 100%;
+        cursor: pointer;
+        border: none;
+    }
+    .modal-header-custom{
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    .modal-content{
+        border-radius: 8px;
+    }
+    .help-text{
+        color: #635f5f;
+        font-size: 13px;
+    }
+    .transactions{
+        padding: 0.5rem 0rem 0.5rem 2.5rem;
+        border-left: 1px solid #dfdfe2;
+    }
+    .transaction-card{
+        padding: 1.5rem 1rem 0.75rem 1rem;
+        border-bottom: 1px solid #dfdfe2;
+    }
+    .meta-data{
+        font-size: 13px;
+    }
+    .meta-data>div:first-child{
+        color: grey;
+    }
+    .transaction-container{
+        font-size: 13.35px;
+        line-height: 20px;
+        margin-top: 1.5rem;
+    }
+    .logos{
+        max-width: 40px;
+        padding: 7px 5px;
+        border-radius: 50%;
+        box-shadow: 0.314675509929657px 0 7.411579px 0px #99999942;
+        margin-bottom: 0.5rem;
+        margin-right: 1rem;
+    }
+    .bottom-field{
+        width: 100%;
+        padding-top: 5px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    .pagination{
+        display: flex;
+        width: 15%;
+        overflow: hidden;
+        align-items: center;
+        scroll-behavior: smooth;
+        background: rgba(31, 63, 127, 0.04);
+        box-shadow: inset 1px 4px 8px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    .pagination li{
+        list-style: none;
+        padding: 2px;
+        margin: 4px 5px;
+        flex-shrink: 0;
+        text-align: center;
+        border-radius: 5px;
+        /* border: 1px solid #999; */
+        color: #999;
+    }
+    
+    .pagination li.active{
+        background: white;
+        color: black;
+        border-color: #B0B0B0;
+    }
+    .pagination li a{
+        text-decoration: none;
+        padding: 0 8px;
+        color: inherit;
+        display: block;
+        font-family: sans-serif;
+        font-size: 13px;
+    }
+   
+    .prev, .last{
+        position: absolute;
+        border: 1px solid #999;
+        padding: 0;
+        border: none;
+        box-shadow: 1px 4px 14px rgb(129 119 119 / 10%);
+        border-radius: 8px;
+    }
+    a#prev, a#last{
+        padding: 0 6px;
+    }
+    .prev{
+        left: 32%;
+    }
+    .last{
+        right: 32%;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5  onclick="history.back()" style="cursor: pointer;">Clinic Profile</h5>
+    </div>
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-12 row category-enclosing--section">
+                <div class="col-sm-3 p-2 text-center diff-section active">Clinic Details</div>
+                <div class="col-sm-3 p-2 text-center diff-section">Admin Details</div>
+                <div class="col-sm-3 p-2 text-center diff-section">Dentread Plan</div>
+                <div class="col-sm-3 p-2 text-center diff-section">Users</div>
+            </div>
+            <div class="col-sm-12 category-content--section mt-3">
+
+                <div class="clinic-profile-section row">
+                    <div class="col-sm-12 col-md-5 d-flex align-items-center">
+                        <img src="/static/svg_icons/clinic-profile-section.png"  alt="Clinic Details">
+                    </div>
+                    <div class="col-sm-12 col-md-7">
+                        <form  method="post" action="/editorgprofile" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                {% if message %}
+                                    <div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+                                        <strong></strong> {{message}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                                
+                                <div style="gap: 2rem" class="form-group col-sm-8 d-flex align-items-center mb-4 position-relative">
+    
+                                    {% if org.logo %}
+                                        <img alt="avatar" class="profile-pic" src="{{org.logo.url}}">
+                                    {% endif %}
+                                    {% if not org.logo %}
+                                        <img alt="avatar" class="profile-pic" src="{% static '/profilepic/propic.jpg' %}">
+                                    {% endif %}
+                                    <label for="logo" class="position-absolute" style="left: 13%; bottom: -6px;">
+                                        <img src="/static/svg_icons/profile-input.svg" alt="profile pic input" height="33px">
+                                    </label>
+                                    <input type="file" name="logo" id="logo" class="position-absolute" style="visibility: hidden;">
+                                    <div class="main-details">
+                                        <h5>{{org.orgname}}</h5>
+                                        <span>{{org.orgtype}}</span>
+                                    </div>
+                                </div>
+                                
+                                
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="orgName">Clinic Name <span class="tx-danger">*</span> </label>
+                                    <input type="text" class="form-control" id="orgName" value="{{org.orgname}}" name="orgname" placeholder="Clinic Name" >
+                                </div>
+                                <div class="col-md-6"></div>
+                                <div class="form-group col-sm-6">
+                                    <label for="address1">Address Line 1 <span class="tx-danger">*</span> </label>
+                                    <input type="text" class="form-control" id="address1" name="address1" value="{{org.address}}" placeholder="Enter Address Line 1" >    
+                                </div>
+    
+                                <div class="form-group col-sm-6">
+                                    <label for="address2">Address Line 2 <span class="tx-danger">*</span> </label>
+                                    <input type="text" class="form-control" id="address2" name="address2" value="{{org.address}}" placeholder="Enter Address Line 2" >    
+                                </div>
+        
+                                
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="city">City <span class="tx-danger">*</span> </label>
+                                    <input type="text" class="form-control" id="city" name="city" value="{{org.city}}" placeholder="Enter GST" required >
+                                </div>
+                                
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="pincode">Pincode <span class="tx-danger">*</span> </label>
+                                    <input type="number" class="form-control" id="pincode" name="pincode" value="{{org.pincode}}" placeholder="Enter Pincode" required >
+                                </div>
+                                
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="state">State <span class="tx-danger">*</span> </label>
+                                    <input type="text" class="form-control" id="state" name="state" value="{{org.state}}" placeholder="Enter State" required >
+                                </div>
+    
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="country">Country <span class="tx-danger">*</span> </label>
+                                    <select class="form-control" name="country" id="country" required>
+                                        <option value="{{org.country}}">{{org.country}}</option>
+                                        <option value="0" >Select Country</option>
+                                        <option value="AF">Afghanistan</option>
+                                        <option value="AL">Albania</option>
+                                        <option value="DZ">Algeria</option>
+                                        <option value="AS">American Samoa</option>
+                                        <option value="AD">Andorra</option>
+                                        <option value="AO">Angola</option>
+                                        <option value="AI">Anguilla</option>
+                                        <option value="AQ">Antarctica</option>
+                                        <option value="AR">Argentina</option>
+                                        <option value="AM">Armenia</option>
+                                        <option value="AW">Aruba</option>
+                                        <option value="AU">Australia</option>
+                                        <option value="AT">Austria</option>
+                                        <option value="AZ">Azerbaijan</option>
+                                        <option value="BS">Bahamas</option>
+                                        <option value="BH">Bahrain</option>
+                                        <option value="BD">Bangladesh</option>
+                                        <option value="BB">Barbados</option>
+                                        <option value="BY">Belarus</option>
+                                        <option value="BE">Belgium</option>
+                                        <option value="BZ">Belize</option>
+                                        <option value="BJ">Benin</option>
+                                        <option value="BM">Bermuda</option>
+                                        <option value="BT">Bhutan</option>
+                                        <option value="BO">Bolivia</option>
+                                        <option value="BW">Botswana</option>
+                                        <option value="BV">Bouvet Island</option>
+                                        <option value="BR">Brazil</option>
+                                        <option value="BN">Brunei Darussalam</option>
+                                        <option value="BG">Bulgaria</option>
+                                        <option value="BF">Burkina Faso</option>
+                                        <option value="BI">Burundi</option>
+                                        <option value="KH">Cambodia</option>
+                                        <option value="CM">Cameroon</option>
+                                        <option value="CA">Canada</option>
+                                        <option value="CV">Cape Verde</option>
+                                        <option value="KY">Cayman Islands</option>
+                                        <option value="CF">Central African Republic</option>
+                                        <option value="TD">Chad</option>
+                                        <option value="CL">Chile</option>
+                                        <option value="CN">China</option>
+                                        <option value="CX">Christmas Island</option>
+                                        <option value="CC">Cocos (Keeling) Islands</option>
+                                        <option value="CO">Colombia</option>
+                                        <option value="KM">Comoros</option>
+                                        <option value="CG">Congo</option>
+                                        <option value="CK">Cook Islands</option>
+                                        <option value="CR">Costa Rica</option>
+                                        <option value="CI">Cote d'Ivoire</option>
+                                        <option value="HR">Croatia (Hrvatska)</option>
+                                        <option value="CU">Cuba</option>
+                                        <option value="CY">Cyprus</option>
+                                        <option value="CZ">Czech Republic</option>
+                                        <option value="DK">Denmark</option>
+                                        <option value="DJ">Djibouti</option>
+                                        <option value="DM">Dominica</option>
+                                        <option value="DO">Dominican Republic</option>
+                                        <option value="EC">Ecuador</option>
+                                        <option value="EG">Egypt</option>
+                                        <option value="SV">El Salvador</option>
+                                        <option value="GQ">Equatorial Guinea</option>
+                                        <option value="ER">Eritrea</option>
+                                        <option value="EE">Estonia</option>
+                                        <option value="ET">Ethiopia</option>
+                                        <option value="FK">Falkland Islands (Malvinas)</option>
+                                        <option value="FO">Faroe Islands</option>
+                                        <option value="FJ">Fiji</option>
+                                        <option value="FI">Finland</option>
+                                        <option value="FR">France</option>
+                                        <option value="GF">French Guiana</option>
+                                        <option value="PF">French Polynesia</option>
+                                        <option value="GA">Gabon</option>
+                                        <option value="GM">Gambia</option>
+                                        <option value="GE">Georgia</option>
+                                        <option value="DE">Germany</option>
+                                        <option value="GH">Ghana</option>
+                                        <option value="GI">Gibraltar</option>
+                                        <option value="GR">Greece</option>
+                                        <option value="GL">Greenland</option>
+                                        <option value="GD">Grenada</option>
+                                        <option value="GP">Guadeloupe</option>
+                                        <option value="GU">Guam</option>
+                                        <option value="GT">Guatemala</option>
+                                        <option value="GN">Guinea</option>
+                                        <option value="GW">Guinea-Bissau</option>
+                                        <option value="GY">Guyana</option>
+                                        <option value="HT">Haiti</option>
+                                        <option value="HN">Honduras</option>
+                                        <option value="HK">Hong Kong</option>
+                                        <option value="HU">Hungary</option>
+                                        <option value="IS">Iceland</option>
+                                        <option value="IN">India</option>
+                                        <option value="ID">Indonesia</option>
+                                        <option value="IQ">Iraq</option>
+                                        <option value="IE">Ireland</option>
+                                        <option value="IL">Israel</option>
+                                        <option value="IT">Italy</option>
+                                        <option value="JM">Jamaica</option>
+                                        <option value="JP">Japan</option>
+                                        <option value="JO">Jordan</option>
+                                        <option value="KZ">Kazakhstan</option>
+                                        <option value="KE">Kenya</option>
+                                        <option value="KI">Kiribati</option>
+                                        <option value="KR">Korea, Republic of</option>
+                                        <option value="KW">Kuwait</option>
+                                        <option value="KG">Kyrgyzstan</option>
+                                        <option value="LV">Latvia</option>
+                                        <option value="LB">Lebanon</option>
+                                        <option value="LS">Lesotho</option>
+                                        <option value="LR">Liberia</option>
+                                        <option value="LY">Libyan Arab Jamahiriya</option>
+                                        <option value="LI">Liechtenstein</option>
+                                        <option value="LT">Lithuania</option>
+                                        <option value="LU">Luxembourg</option>
+                                        <option value="MO">Macau</option>
+                                        <option value="MG">Madagascar</option>
+                                        <option value="MW">Malawi</option>
+                                        <option value="MY">Malaysia</option>
+                                        <option value="MV">Maldives</option>
+                                        <option value="ML">Mali</option>
+                                        <option value="MT">Malta</option>
+                                        <option value="MH">Marshall Islands</option>
+                                        <option value="MQ">Martinique</option>
+                                        <option value="MR">Mauritania</option>
+                                        <option value="MU">Mauritius</option>
+                                        <option value="YT">Mayotte</option>
+                                        <option value="MX">Mexico</option>
+                                        <option value="MD">Moldova, Republic of</option>
+                                        <option value="MC">Monaco</option>
+                                        <option value="MN">Mongolia</option>
+                                        <option value="MS">Montserrat</option>
+                                        <option value="MA">Morocco</option>
+                                        <option value="MZ">Mozambique</option>
+                                        <option value="MM">Myanmar</option>
+                                        <option value="NA">Namibia</option>
+                                        <option value="NR">Nauru</option>
+                                        <option value="NP">Nepal</option>
+                                        <option value="NL">Netherlands</option>
+                                        <option value="AN">Netherlands Antilles</option>
+                                        <option value="NC">New Caledonia</option>
+                                        <option value="NZ">New Zealand</option>
+                                        <option value="NI">Nicaragua</option>
+                                        <option value="NE">Niger</option>
+                                        <option value="NG">Nigeria</option>
+                                        <option value="NU">Niue</option>
+                                        <option value="NF">Norfolk Island</option>
+                                        <option value="MP">Northern Mariana Islands</option>
+                                        <option value="NO">Norway</option>
+                                        <option value="OM">Oman</option>
+                                        <option value="PW">Palau</option>
+                                        <option value="PA">Panama</option>
+                                        <option value="PG">Papua New Guinea</option>
+                                        <option value="PY">Paraguay</option>
+                                        <option value="PE">Peru</option>
+                                        <option value="PH">Philippines</option>
+                                        <option value="PN">Pitcairn</option>
+                                        <option value="PL">Poland</option>
+                                        <option value="PT">Portugal</option>
+                                        <option value="PR">Puerto Rico</option>
+                                        <option value="QA">Qatar</option>
+                                        <option value="RE">Reunion</option>
+                                        <option value="RO">Romania</option>
+                                        <option value="RU">Russian Federation</option>
+                                        <option value="RW">Rwanda</option>
+                                        <option value="KN">Saint Kitts and Nevis</option>
+                                        <option value="LC">Saint LUCIA</option>
+                                        <option value="WS">Samoa</option>
+                                        <option value="SM">San Marino</option>
+                                        <option value="ST">Sao Tome and Principe</option>
+                                        <option value="SA">Saudi Arabia</option>
+                                        <option value="SN">Senegal</option>
+                                        <option value="SC">Seychelles</option>
+                                        <option value="SL">Sierra Leone</option>
+                                        <option value="SG">Singapore</option>
+                                        <option value="SK">Slovakia (Slovak Republic)</option>
+                                        <option value="SI">Slovenia</option>
+                                        <option value="SB">Solomon Islands</option>
+                                        <option value="SO">Somalia</option>
+                                        <option value="ZA">South Africa</option>
+                                        <option value="ES">Spain</option>
+                                        <option value="LK">Sri Lanka</option>
+                                        <option value="SH">St. Helena</option>
+                                        <option value="PM">St. Pierre and Miquelon</option>
+                                        <option value="SD">Sudan</option>
+                                        <option value="SR">Suriname</option>
+                                        <option value="SZ">Swaziland</option>
+                                        <option value="SE">Sweden</option>
+                                        <option value="CH">Switzerland</option>
+                                        <option value="SY">Syrian Arab Republic</option>
+                                        <option value="TW">Taiwan, Province of China</option>
+                                        <option value="TJ">Tajikistan</option>
+                                        <option value="TZ">Tanzania, United Republic of</option>
+                                        <option value="TH">Thailand</option>
+                                        <option value="TG">Togo</option>
+                                        <option value="TK">Tokelau</option>
+                                        <option value="TO">Tonga</option>
+                                        <option value="TT">Trinidad and Tobago</option>
+                                        <option value="TN">Tunisia</option>
+                                        <option value="TR">Turkey</option>
+                                        <option value="TM">Turkmenistan</option>
+                                        <option value="TC">Turks and Caicos Islands</option>
+                                        <option value="TV">Tuvalu</option>
+                                        <option value="UG">Uganda</option>
+                                        <option value="UA">Ukraine</option>
+                                        <option value="AE">United Arab Emirates</option>
+                                        <option value="GB">United Kingdom</option>
+                                        <option value="US">United States</option>
+                                        <option value="UY">Uruguay</option>
+                                        <option value="UZ">Uzbekistan</option>
+                                        <option value="VU">Vanuatu</option>
+                                        <option value="VE">Venezuela</option>
+                                        <option value="VN">Viet Nam</option>
+                                        <option value="VG">Virgin Islands (British)</option>
+                                        <option value="VI">Virgin Islands (U.S.)</option>
+                                        <option value="WF">Wallis and Futuna Islands</option>
+                                        <option value="EH">Western Sahara</option>
+                                        <option value="YE">Yemen</option>
+                                        <option value="ZM">Zambia</option>
+                                        <option value="ZW">Zimbabwe</option>                                    
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="regFile">Dental Council Reg. No. <span class="tx-danger">*</span> </label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="regFile">
+                                        <label class="custom-file-label" for="regFile">Choose file</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12 col-md-6">
+                                    <label for="gstinFile">GSTIN <span class="tx-danger">*</span> </label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="gstinFile">
+                                        <label class="custom-file-label" for="gstinFile">Choose file</label>
+                                    </div>
+                                </div>
+            
+                                <div class="form-group col-sm-12">
+                                    <label for="pickup" class="w-100">Pickup Address <a href="" class="float-right tx-bold">Verify</a> </label>
+                                    <textarea name="pickup" id="pickup" rows="2" class="form-control"></textarea>
+                                </div>
+    
+                            </div>
+                            <div class="form-group">
+                                <button type="reset" class="btn reset-button">Reset</button>
+                                <button type="submit" class="btn submit-button">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="admin-details-section row d-none">
+                    <div class="col-sm-12 col-md-5 d-flex align-items-center">
+                        <img src="/static/svg_icons/admin-details-section.png"  alt="Clinic Details">
+                    </div>
+                    <div class="col-sm-12 col-md-7">
+                        <form  method="post" action="/editorgprofile" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                {% if message %}
+                                    <div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+                                        <strong></strong> {{message}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                                
+                                <div style="gap: 2rem" class="form-group col-sm-7 d-flex align-items-center mb-4 position-relative">
+    
+                                    {% if org.logo %}
+                                        <img alt="avatar"  class="profile-pic" src="{{org.logo.url}}">
+                                    {% endif %}
+                                    {% if not org.logo %}
+                                        <img alt="avatar"  class="profile-pic" src="{% static '/profilepic/propic.jpg' %}">
+                                    {% endif %}
+                                    <label for="logo" class="position-absolute" style="left: 13%; bottom: -6px;">
+                                        <img src="/static/svg_icons/profile-input.svg" alt="profile pic input" height="33px">
+                                    </label>
+                                    <input type="file" name="logo" id="logo" class="position-absolute" style="visibility: hidden;">
+                                    <div class="main-details">
+                                        <h5>{{org.name}}</h5>
+                                        <span>{{org.orgType}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <button class="button button-key button-secondary" data-toggle="modal" data-target="#pwdResetModalActual">
+                                        <img src="/static/svg_icons/key.svg" alt="password key ">
+                                    </button>
+                                </div>
+                                
+                                <div class="form-group col-sm-12 col-md-7">
+                                    <label for="name">Full Name <span class="tx-danger">*</span> </label>
+                                    <input type="text" class="form-control" id="name" value="{{org.orgname}}" name="name" placeholder="Full Name" >
+                                </div>
+                               
+                                <div class="form-group col-sm-12 col-md-7">
+                                    <label for="email">Email <span class="tx-danger">*</span> </label>
+                                    <input type="email" class="form-control" id="email" value="{{org.orgname}}" name="email" placeholder="Email ID" >
+                               
+                                </div>
+                               
+                                <div class="form-group col-sm-12 col-md-7">
+                                    <label for="mobile">Mobile Number <span class="tx-danger">*</span> </label>
+                                    <input type='number' class="form-control" id="mobile" value="{{org.orgname}}" name="mobile" placeholder="Mobile Number" >
+                               
+                                </div>
+                               
+                                <div class="form-group col-sm-12 col-md-7">
+                                    <label for="role">Role <span class="tx-danger">*</span> </label>
+                                    <select name="role" id="role" class="form-control">
+                                        <option value="{{val}}">{{val}}</option>
+                                        <option value="Administrator">Administrator</option>
+                                        <option value="Clinical Associate">Clinical Associate</option>
+                                        <option value="Hygenist">Hygenist</option>
+                                        <option value="Technician">Technician</option>
+                                        
+                                    </select>
+                               
+                                </div>
+                               
+                                <div class="form-group col-sm-12 col-md-7">
+                                    <label for="status">Status <span class="tx-danger">*</span> </label>
+                                    <!-- <input type="email" class="form-control" id="role" value="{{org.orgname}}" name="email" placeholder="" > -->
+                                    <select name="role" id="role" class="form-control">
+                                        <option value="{{val}}">{{val}}</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                               
+                                </div>
+
+    
+                            </div>
+                            <div class="form-group">
+                                <button type="reset" class="btn reset-button">Reset</button>
+                                <button type="submit" class="btn submit-button">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="dentread-plan-section d-none">
+
+                    <div>Current Plan</div>
+                    <div class="plan-details d-flex" style="gap:2rem">
+
+                        <div class="basic-plan" style="flex:1">
+                            <h5>Dentread Basic</h5>
+                            <div class="button">
+                                No Upfront Payment
+                            </div>
+                            <div class="inclusions">
+                                <div class=""><img src="/static/svg_icons/check.svg" alt=""><span>Inclusions:</span></div>
+                                <ul>
+                                <!-- django for loop here for inclusion details -->
+                                    <li>{inclusions here}</li>
+                                <!-- django for loop ends here  -->
+                                </ul>
+
+                            </div>
+
+
+                        </div>
+                        
+                        <!-- django if loop here if pay later enabled -->
+                        <div class="classic-plan" style="flex:1">
+                            <h5>Dentread Classic</h5>
+
+                            <div><span>Payment Terms: </span> <span class="ml-3"><input type="checkbox" name="" id="" checked> Pay Later</span></div>
+                            <div><span>Credit Limit:</span> <span style="color: green;">Rs. {amount here}/-</span></div>
+                            
+                            <div class="inclusions">
+                                <div class=""><img src="/static/svg_icons/check.svg" alt=""><span>Inclusions:</span></div>
+                                <ul>
+                                <!-- django for loop here for inclusion details -->
+                                    <li>{inclusions here}</li>
+                                <!-- django for loop ends here  -->
+                                </ul>
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="premium-plans" style="flex:1">
+                            <div class="contact">
+                                Contact Dentread Sales to learn and avail this package. <a href="" class="text-decoration-underline" >Contact</a>
+                            </div>
+                            <h5>Dentread Premium</h5>
+                            <div class="radio-group">
+                                <div class="">
+                                    <input type="radio" name="premium" id="premium1" checked>
+                                    <label for="premium1">{price1}</label>
+                                </div>
+                                <div class="">
+                                    <input type="radio" name="premium" id="premium2">
+                                    <label for="premium2">{price1}</label>
+                                </div>
+                            </div>
+                            <div class="inclusions">
+                                <div class=""><img src="/static/svg_icons/check.svg" alt=""><span>Inclusions:</span></div>
+                                <ul>
+                                <!-- django for loop here for inclusion details -->
+                                    <li>{inclusions here}</li>
+                                <!-- django for loop ends here  -->
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    
+                    <div class="col-sm-12 wallet-terms">
+                        <h5 class="mb-3">Dentread Wallet </h5>
+                        <div class="wallet-cols row">
+                            <div class="col-sm-6 d-flex">
+                                <div class="p-2 text-center">
+                                    <div style="font-size: 15px;">Available Balance</div>
+                                    <div style="font-size: 1rem; color: green; font-weight: 450;">{balance here}</div>
+                                </div>
+                                <div class="p-2 text-center d-flex flex-column ml-4">
+                                    <div class="dropleft share-icon--parent">
+                                        <button class="button button-primary" data-toggle="dropdown" id="dropdownShare" aria-expanded="false" aria-haspopup="true" >
+                                            <img src="/static/svg_icons/wallet.svg" alt="">
+                                            <span> Load Wallet</span>
+                                        </button>
+                                        <!-- <i class="fa-solid fa-share-nodes mr-2 share-icon" data-toggle="dropdown" id="dropdownShare" aria-expanded="false" aria-haspopup="true" ></i> -->
+                                        <form action="/sendmail_clinic/{{service_order.id}}/{{item.id}}" method="post" aria-labelledby="dropdownShare" class="dropdown-menu">
+                                            {% csrf_token %}
+                                            <h6>Select Amount</h6>
+                                            <!-- <select name="data" id="share" class="form-control mb-2">
+                                                <option value="report">Report(s)</option>
+                                                <option value="image-pdfs">Images PDF(s)</option>
+                                                <option value="report-n-image">Report(s) and Image PDF(s)</option>
+                                            </select> -->
+                                            <div class="form-group">
+                                                <input type="radio" name="amount"  id="10000">
+                                                <label for="10000">10000/-</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="radio" name="amount"  id="15000">
+                                                <label for="15000">15000/-</label>
+                                            </div>
+                                            <div class="form-group">
+
+                                                <input type="radio" name="amount"  id="20000">
+                                                <label for="20000">20000/-</label>
+                                            </div>
+
+                                            <!-- <input type="email" name="email" id="email" placeholder="Email" class="form-control mb-2"> -->
+                                            <button type="submit" class="submit-button-dropleft">OK</button>
+                                        </form> 
+                                    </div>
+                                    <a href="" style="text-decoration: underline;" class="mt-1" data-toggle="modal" data-target="#transactionHistory">Show Transaction History</a>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="info-box">
+                                    Free Dentread Credits on Registration. Credits can be used for Radiology Services
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    
+
+                    <!-- django if loop here if discount enabled -->
+                    <div class="col-sm-12 discount-terms">
+                        <h5 class="mb-3">Discount </h5>
+                        <div class="discount-cols d-flex" style="gap:1.5rem">
+                            <!-- django if loop if discount on radio Services -->
+                            <div class=""><img src="/static/svg_icons/discount-badge.svg" alt=""><span style="color: #FF007F">{dash} % OFF</span> on Radiology Services</div>
+                            <!-- django if loop ends here  -->
+
+                            <!-- django if loop if discount on implant Services -->
+                            <div class=""><img src="/static/svg_icons/discount-badge.svg" alt=""><span style="color: #FF007F">{dash} % OFF</span> on Implantology Services</div>
+                            <!-- django if loop ends here  -->
+
+                             <!-- django if loop if discount on lab Services -->
+                            <div class=""><img src="/static/svg_icons/discount-badge.svg" alt=""><span style="color: #FF007F">{dash} % OFF</span>on Digital Lab Services</div>
+                            <!-- django if loop ends here  -->
+
+                        </div>
+                    </div>
+                    <!-- django if loop ends here  -->
+
+                </div>
+                
+                <div class="user-section row d-none">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th><img src="/static/svg_icons/name.svg" alt="name"> Name</th>
+                                <th><img src="/static/svg_icons/email.svg" alt="name"> Email</th>
+                                <th><img src="/static/svg_icons/contact.svg" alt="name">Contact</th>
+                                <th><img src="/static/svg_icons/department.svg" alt="name">Department</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in users %}
+                                <tr>
+                                    <td>{{ i.name }}</td>
+                                    <td>{{ i.email }}</td>
+                                    <td>{{ i.contact }}</td>
+                                    <td>{{ i.department }}</td>
+                                    <td>{{ i.status }}
+                                    </td>
+                                    <td>
+                                        <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                                            id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                                        </button>
+                                        
+                                        <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                                            <a class="dropdown-item" style="cursor: pointer;" href="/edit_user/{{ i.id }}">
+                                                Edit
+                                            </a>
+                                            <a class="dropdown-item" style="cursor: pointer;" href="/delete_user/{{ i.id }}">
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="pwdResetModalActual" tabindex="-1" role="dialog" aria-labelledby="pwdResetModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <h5 class="modal-title" id="pwdResetModal">Modal title</h5> -->
+                <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="actual-content content row">
+                <h5 class="col-12">Password Reset</h5>
+                <form action="" class="pwdForm col-sm-6">
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="New Password">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Re-Enter Password">
+                        <small class="form-text help-text tx-success d-none float-right">Password Matched</small>
+                        <small class="form-text help-text tx-danger d-none float-right">Password Mis-matched</small>
+ 
+                        
+                    </div>
+                    <button class="button button-primary w-25">Save</button>
+                </form>
+                <div class="helping-text col-sm-5 offset-sm-1">
+                    <div class="">Password must include</div>
+                    <div class="helping-text-ind enough-length">
+                        <img src="/static/svg_icons/tick-grey.svg" alt="tick">
+                        <span class="helping-content">6-20 Characters</span>
+                    </div>
+                    <div class="helping-text-ind one-capital">
+                        <img src="/static/svg_icons/tick-grey.svg" alt="tick">
+                        <span class="helping-content">Atleast one capital letter</span>
+                    </div>
+                    <div class="helping-text-ind one-number">
+                        <img src="/static/svg_icons/tick-grey.svg" alt="tick">
+                        <span class="helping-content">Atleast one number</span>
+                    </div>
+                    <div class="helping-text-ind special-char">
+                        <img src="/static/svg_icons/tick-grey.svg" alt="tick">
+                        <span class="helping-content">Atleast one special character</span>
+                    </div>
+                    <div class="helping-text-ind no-spaces">
+                        <img src="/static/svg_icons/tick-grey.svg" alt="tick">
+                        <span class="helping-content">No spaces</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="transactionHistory" tabindex="-1" role="dialog" aria-labelledby="transactionHistoryTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header-custom">
+                <h5>Transaction History</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="transaction-container">
+                    {% if WalletExp %}
+                    {% for i in WalletExp %}
+                        <div class="transaction-card">
+                            <div class="details d-flex">
+                                <img src="{{i.logo}}" class="logos" height="40px" alt="logo">
+                                <div class="info">
+                                    <div class="title">{{ i.organisationName }}</div>
+                                </div>
+                                <span class="ml-auto">{{ i.amount }}</span>
+                            </div>
+                            <div class="meta-data d-flex justify-content-between">
+                                <div>{{ i.date }}</div>
+                                <div class="status-text">{{ i.status }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% else %}
+                        <div class="transaction-card">
+                            <h4 id="myText"><i class="fa fa-meh-o" aria-hidden="true"> Oops ! No data available </i></h4>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if walletCount != 0 and walletCount != 1 and walletCount != 2 and walletCount != 3 %}
+                    <div class="bottom-field">
+                        <ul class="pagination" >
+                            <li class="prev">
+                                <a href="#1" id="prev">
+                                    <img src="/static/svg_icons/pagination-left.svg" alt="">
+                                </a>
+                            </li>
+                            <li class="last">
+                                <a href="#1" id="last">
+                                    <img src="/static/svg_icons/pagination-left.svg" alt="" style="transform: rotate(180deg);">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    let cndn1 = cndn2 = cndn3 = cndn4 = cndn5 = cndn6 = false;
+
+    document.querySelector('#regFile').addEventListener('change', function (e){
+        let fileName = e.target.files[0].name;
+        this.nextElementSibling.innerText = fileName;
+    })
+
+    document.querySelector('#gstinFile').addEventListener('change', function (e){
+        let fileName = e.target.files[0].name;
+        this.nextElementSibling.innerText = fileName;
+    })
+
+    document.querySelector('input[type="password"]').addEventListener('keyup', function (){
+
+        // conditions for a number
+        const re1 = /\d/;
+
+        // conditions for a capital number 
+        const re2 = /[A-Z]/;
+
+        // condtiions for atleast one special character
+        const re3 = /[!@#$%&*()_=|<>?{}~]/;
+
+        if(re1.test(this.value)){
+            cndn1 = true;
+            document.querySelector('.one-number img').src = '/static/svg_icons/tick-green.svg';
+        }
+        else{
+            cndn1 = false;
+            document.querySelector('.one-number img').src = '/static/svg_icons/tick-grey.svg';
+        }
+
+        if(re2.test(this.value)){
+            cndn2 = true;
+            document.querySelector('.one-capital img').src = '/static/svg_icons/tick-green.svg';
+        }
+        else{
+            cndn2 = false;
+            document.querySelector('.one-capital img').src = '/static/svg_icons/tick-grey.svg';
+        }
+
+        if(re3.test(this.value)){
+            cndn3 = true;
+            console.log('oinside the special char image if statement ')
+            document.querySelector('.special-char img').src = '/static/svg_icons/tick-green.svg';
+        }
+        else{
+            cndn3 = false;
+            console.log('oinside the special char image else statement ')
+            document.querySelector('.special-char img').src = '/static/svg_icons/tick-grey.svg';
+        }
+
+        if(!this.value.includes(' ')){
+            cndn4 = true;
+            document.querySelector('.no-spaces img').src = '/static/svg_icons/tick-green.svg';
+        }
+        else{
+            cndn4 = false;
+            document.querySelector('.no-spaces img').src = '/static/svg_icons/tick-grey.svg';
+        }
+
+        if(this.value.length>=6 && this.value.length<=20){
+            cndn5 = true;
+            document.querySelector('.enough-length img').src = '/static/svg_icons/tick-green.svg';
+        }
+        else{
+            cndn5 = false;
+            document.querySelector('.enough-length img').src = '/static/svg_icons/tick-grey.svg';
+        }
+
+
+
+    })
+
+    document.querySelector('.pwdForm input[type = "text"]').addEventListener('keyup', function(){
+        if(this.value == document.querySelector('.pwdForm input[type= "password"]').value){
+            cndn6 = true;
+            document.querySelector('.modal form .tx-success').classList.remove('d-none');
+            document.querySelector('.modal form .tx-danger').classList.add('d-none');
+        }
+        else{
+            cndn6 = false;
+            document.querySelector('.modal form .tx-success').classList.add('d-none');
+            document.querySelector('.modal form .tx-danger').classList.remove('d-none');
+
+        }
+    })
+
+    document.querySelector('.modal form').addEventListener('submit', function (e){
+        if(!(cndn1 && cndn2 && cndn3 && cndn4 && cndn5 && cndn6)){
+            e.preventDefault();
+            alert('Please complete all the password necessities');
+        }
+
+    })
+
+    document.querySelector('.category-enclosing--section').addEventListener('click', function (e){
+        if(e.target.innerText == 'Clinic Details'){
+            for(let i of document.querySelectorAll('.category-content--section>*')){
+                if(i.classList.contains('clinic-profile-section')){
+                    i.classList.remove('d-none');
+                }
+                else{
+                    i.classList.add('d-none');
+                }
+            }
+            
+        }
+        else if(e.target.innerText == 'Admin Details'){
+            for(let i of document.querySelectorAll('.category-content--section>*')){
+                if(i.classList.contains('admin-details-section')){
+                    i.classList.remove('d-none');
+                }
+                else{
+                    i.classList.add('d-none');
+                }
+            }
+        }
+        else if(e.target.innerText == 'Dentread Plan'){
+            for(let i of document.querySelectorAll('.category-content--section>*')){
+                if(i.classList.contains('dentread-plan-section')){
+                    i.classList.remove('d-none');
+                }
+                else{
+                    i.classList.add('d-none');
+                }
+            }
+        }
+        else{
+            for(let i of document.querySelectorAll('.category-content--section>*')){
+                if(i.classList.contains('user-section')){
+                    i.classList.remove('d-none');
+                }
+                else{
+                    i.classList.add('d-none');
+                }
+            }
+        }
+    
+        this.querySelector('.active').classList.remove('active');
+        e.target.classList.add('active');
+    })
+
+    document.querySelector('.clinic-profile-section form').addEventListener('change', function (){
+        console.log(this.querySelectorAll('input'));
+        this.querySelector('form textarea').value = Array.from(this.querySelectorAll('input:not([type= "hidden"], [type= "file"]), select')).reduce((acc, cur)=>{
+            return (acc + ", " + cur.value)
+        },  0).slice(3)
+    })
+</script>
+
+<script>
+    document.querySelector('.share-icon--parent form').addEventListener('click', onFormClick);
+    function onFormClick(e){
+        console.log('trying to stop propgatin')
+        e.stopPropagation();
+    }
+
+    // active plan status here 
+    if('{{plan}}'=='Premium'){
+        document.querySelector('.premium-plans').classList.add('selected-plan');
+    }
+    else if('{{plan}}'=='Classic'){
+        document.querySelector('.classic-plan').classList.add('selected-plan');
+    }
+    else{
+        document.querySelector('.basic-plan').classList.add('selected-plan');
+    }
+
+</script>
+
+<script>
+    //patient filling here
+    
+    let totalPatients = [];
+
+    totalPatients = document.querySelectorAll('.transaction-card')
+    totalPatients = [...totalPatients];
+    totalPatients.reverse();
+    let allPatients = [...totalPatients]
+
+    // document.querySelector('.result span').innerText = allPatients.length;
+    
+    //cards allowed per page
+    let cardsAllowed = 4;
+
+    function nosPaginationFunction(){
+        return Math.ceil(allPatients.length/cardsAllowed);
+    }
+    let nosPagination = 0;
+    // paginationNumbers here 
+    function paginationNumber(){
+        nosPagination = nosPaginationFunction();
+        for(let i= 1; i<=nosPagination; i++){
+
+            // li creation 
+            let li= document.createElement('li');
+            li.classList.add('list');
+            li.setAttribute('id', "item"+`${i}`);
+
+            // anchor creation 
+            let a= document.createElement('a');
+            a.href= '#1';
+            a.innerText = i;
+
+            // appending anchor to the list item
+            li.appendChild(a);
+            
+
+            // appending li to the ul 
+
+            document.querySelector('.pagination').insertBefore(li, document.querySelector('.last'));
+        }
+    }
+    paginationNumber();
+    
+    //current page: by default 1
+    currentPage = 1;
+    prevActiveLi = document.querySelector('.list');
+    prevActiveLi.classList.add('active');
+
+    // display the page 
+    function displayPage(){
+        document.querySelector('.transaction-container').innerHTML = '';
+        for(let i= 0; i<cardsAllowed; i++){
+            let exNum = allPatients[cardsAllowed*(currentPage-1)+i];
+            if(exNum){
+                document.querySelector('.transaction-container').appendChild(allPatients[cardsAllowed*(currentPage-1)+i]);
+            }
+        }
+        
+    }
+    displayPage();
+
+    // function to activate the list 
+    function liActive(){
+        for(let i of document.querySelectorAll('.list')){
+            console.log('inside liActive(): ', i.innerText);
+            if(i.innerText == currentPage){
+                i.classList.add('active');
+                prevActiveLi.classList.remove('active');
+                prevActiveLi = i;
+                break;
+            }
+            
+        } 
+    }
+
+    let currentPaginatioTarget = currentPage;
+
+    document.querySelector('.pagination').addEventListener('click', e =>{
+        let target = event.target.tagName == 'IMG' ? event.target.parentElement : event.target;
+        if(target.tagName == 'A' && target.getAttribute('id')!= 'prev' && target.getAttribute('id')!= 'last'){
+            currentPage = target.innerText;
+            currentPaginatioTarget = currentPage;
+            liActive();
+            displayPage();
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'prev' ){
+
+            currentPaginatioTarget -= 3;
+            if(currentPaginatioTarget < 1){
+                currentPaginatioTarget = 1;
+            }
+
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+        else if(target.tagName == 'A' && target.getAttribute('id') == 'last' ){
+                
+            currentPaginatioTarget = parseInt(currentPaginatioTarget) + 3;
+
+            if(currentPaginatioTarget>nosPagination){
+                currentPaginatioTarget = nosPagination;
+            }
+            
+            target.href = '#item'+`${currentPaginatioTarget}`;
+            // console.log("new target is", target.href);
+            
+        }
+    });
+
+</script>
+
+{% endif %}
+{% endblock %}

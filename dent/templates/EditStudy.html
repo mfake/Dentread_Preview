@@ -1,0 +1,120 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Edit Study</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+
+    <!-- Main content -->
+
+
+
+
+
+            <!-- /.card -->
+
+
+
+
+    <!-- Main content -->
+
+    <form  method="post" action="/edit_study/{{ study.id }}">
+        {% csrf_token %}
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+        <div class="row">
+          <div class="col-md-12">
+
+            <div class="card card-success">
+              <div class="card-header text-white" style="background-color:#2f6ebb;">
+                <h5 class="card-title">Study Details</h5>
+              </div>
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Top Category</label>
+                       <select  id="topcat" name="topcat" class="form-control  select2" required>
+                           <option value="{{ study.topcat }}" selected>{{ study.topcat }}</option>
+                           {% for i in topcat %}
+												<option value="{{i.topcat}}">{{i.topcat}}</option>
+
+                           {% endfor %}
+											</select>
+
+                      </div>
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Study Title</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ study.title }}" placeholder="Study Title">
+                      </div>
+
+
+                <!-- phone mask -->
+                <div class="form-group">
+                        <label for="exampleInputPassword1">Main Category</label>
+                        <input type="text" class="form-control" id="maincat" name="maincat" value="{{ study.maincat }}" placeholder="Main Category">
+                      </div>
+                <!-- /.form group -->
+
+                <!-- phone mask -->
+          <div class="form-group">
+                        <label for="exampleInputPassword1">Sub Category</label>
+                        <input type="text" class="form-control" id="subcat" name="subcat" value="{{ study.subcat }}" placeholder="Sub Category">
+                      </div>
+                <!-- /.form group -->
+
+                <!-- IP mask -->
+             <div class="form-group">
+                        <label for="exampleInputPassword1">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" value="{{ study.price }}" placeholder="Price">
+                      </div>
+                <!-- /.form group -->
+
+
+            <!-- /.card -->
+
+
+
+
+<div class="col-md-12">
+<div class="row">
+
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary">Update</button>
+                  </div>
+
+
+
+     </div>
+      </div>
+                       </div>
+              <!-- /.card-body -->
+            </div>
+              </div>
+              </form>
+   </div>
+      </div>
+ </div>
+
+</div>
+</div>
+</div>
+{% endif %}
+{%endblock%}

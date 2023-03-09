@@ -1,0 +1,1806 @@
+{% extends 'dentreadbase.html' %} 
+{% load static %} 
+{% block content %}
+
+<style>
+    body{
+        margin: 0;
+        padding: 1rem;
+        background: white;
+        overflow-x: hidden;
+    }
+    .registration-section{
+        padding: 0 5rem;
+        display: flex;
+        flex-direction: column;
+        /* align-items: center; */
+        justify-content: center;
+        /* max-width: 500px; */
+        
+    }
+    form.form-{
+        max-width: 500px;
+    }
+    .submit-button{
+        padding: 12px;
+        width: 100%;
+        border: none;
+        background: #1f3f7f;
+        border-radius: 4px;
+        color: white;
+    }
+    .help-text{
+        float: right;
+        /* color: green; */
+    }
+    .extra-content{
+        font-size: 15px;
+        font-weight: 500;
+        text-align: center;
+    }
+    .extra-content a{
+        text-decoration: underline;
+    }
+</style>
+
+<div>
+    <header class="logo">
+        <img height="75" src="/static/svg_icons/dentread_logo_image.svg" alt="dentread logo">
+    </header>
+    <div class="main-content- row mb-2">
+        <div class="image-section col d-flex align-items-center justify-content-center">
+            <img src="/static/svg_icons/registration-image-lab.png" alt="registration image">
+        </div>
+        <div class="registration-section col">
+            <h2 class="mb-4">Register Dental Lab</h2>
+            <form action="" class="form-">
+                <div class="form-group">
+                    <label for="name">Dental Lab Name <span class="tx-danger">*</span></label>
+                    <input type="text" placeholder="Dental Lab Name" required name="name" id="name" class="form-control">
+                    <small class="help-text" class="form-text text-muted">minimum 3 characters</small>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email ID <span class="tx-danger">*</span></label>
+                    <input type="email" placeholder="Email ID" name="email" required id="email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile Number <span class="tx-danger">*</span></label>
+                    <input type="number" placeholder="+91 1234567890" name="mobile" required id="mobile" class="form-control">
+                    <small class="help-text" class="form-text text-muted">country code mandatory</small>
+                </div>
+                <div class="form-group">
+                    <label for="password">Create Password <span class="tx-danger">*</span></label>
+                    <input type="password" placeholder="Password" name="password" required id="password" class="form-control">
+                    <small class="help-text w-50" class="form-text text-muted">minimum one uppercase letter, one lowercase letter, one special character and a number</small>
+                </div>
+                <div class="form-group mt-4">
+                    <label for="re-password">Confirm Password <span class="tx-danger">*</span></label>
+                    <input type="text" name="re-password" required placeholder="Re-Enter Password" id="re-password" class="form-control">
+                    <small class="help-text d-none form-text text-muted red-mark float-left" style="color: red !important;">password mis-macthed</small>
+                    <small class="help-text d-none form-text text-muted green-mark float-left" style="color: green !important;">password matched</small>
+                  
+                </div>
+                <button type="submit" class="submit-button mt-3">Register</button>
+            </form>
+            <div class="extra-content mt-4">
+                <span class="ml-auto mr-auto">Already have an account? <a href="/">Sign In</a></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function (){
+
+        if(!validateName('name')){
+            document.getElementById('name').focus();
+            return;
+        }
+        if(!validateEmail('email')){
+            document.getElementById('email').focus();
+            return;
+        }
+        if(!validateContact('mobile')){
+            document.getElementById('mobile').focus();
+            return;
+        }
+        if(!validatePassword()){
+            document.getElementById('password').focus();
+            e.preventDefault();
+            return;
+        }
+        if(!passwordMatch()){
+            document.getElementById('re-password').focus();
+            e.preventDefault();
+            return;
+        }
+
+        function passwordMatch(){
+            return document.getElementById('password').value == document.getElementById('re-password').value;
+        }
+
+        function validatePassword(){
+            let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s]).{6,}$/;
+            let ctrl =  document.getElementById('password').value;
+            return regex.test(ctrl);   
+        }
+
+        function validateName(target){
+            let regex = /^[a-zA-Z ]{3,30}$/;
+            if(target == 'orgname'){
+                regex = /^[a-zA-Z0-9\s,.'-@#$&*();]{3,}$/;
+            }
+            let ctrl =  document.getElementById(target).value;
+            return regex.test(ctrl);
+        }
+        // if(!validateEmail('email')){
+        //     document.getElementById('email').focus();
+        //     e.preventDefault();
+        //     return;
+        // }
+        // if(!validateContact('contact')){
+        //     document.getElementById('contact').focus();
+        //     e.preventDefault();
+        //     return;
+        // }
+    })
+
+    document.querySelector('#re-password').addEventListener('input', function (){
+        if(this.value == '')return;  
+        if( !passwordMatch()){
+            document.getElementById('re-password').focus();
+            document.querySelector('.red-mark').classList.remove('d-none');
+            document.querySelector('.green-mark').classList.add('d-none');
+        }
+        else{
+            document.querySelector('.red-mark').classList.add('d-none');
+            document.querySelector('.green-mark').classList.remove('d-none');
+        }
+        function passwordMatch(){
+            return document.getElementById('password').value == document.getElementById('re-password').value;
+        }
+    });
+
+</script>
+
+<!-- <style>
+  body{
+    margin: 0;
+    padding: 1rem 2.5rem;
+    background: white;
+    --primary-color : #1F3F7F;
+  }
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  header{
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+  }
+  .logo{
+    display: flex;
+  }
+  .logo img{
+      width: 55px;
+  }
+  .helper-text{
+    margin-left: 1rem;
+  }
+  .helper-text span{
+    display: block;
+  }
+  .primary-button{
+    padding: 8px 30px;
+    background: white;
+    border: 1px solid var(--primary-color);
+    font-weight: 500;
+    font-size: 15px;
+    border-radius: 8px;
+    color: var(--primary-color);
+  }
+  .primary-button:hover{
+    color: white;
+    background-color: var(--primary-color);
+  }
+  .progress-bar--inner{
+    position: relative;
+    height: 6px;
+    background-color: #33333333;
+    border-radius: 6px;
+    margin-bottom: 3rem;
+  }
+  .progress-bar--outer{
+    position: absolute;
+    width: 33%;
+    bottom: 0;
+    height: 6px;
+    background-color: green;
+    border-radius: 6px;
+
+  }
+  .submit-button, .proceed-button{
+    width: 161px;
+    height: 36px;
+    background: #1F3F7F;
+    border-radius: 8px;
+    color: white;
+    float: right;
+  }
+  .submit-button:hover, .proceed-button:hover{
+    color: white;
+    cursor: pointer;
+  }
+  .submit-button{
+    float: inherit;
+    margin: 0 auto;
+  }
+  form>.form-group{
+    display: flex;
+    margin-top: 1rem;
+    gap: 1.5rem;
+  }
+  .profile-pic{
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    clip-path: circle(50%);
+  }
+  /* .form-enclosing{
+    box-shadow: 1px 2px 10px 0px #79797942;
+    padding: 0 2rem;
+    border-radius: 8px;
+  } */
+  .image-enclosing{
+      padding-right: 1.5rem;
+  }
+  .image-enclosing img{
+    height: 100%;
+  }
+  .row{
+    margin: 0;
+  }
+  .content.row{
+    margin-bottom: 2rem;
+  }
+  .admin-details, .clinic-details, .bank-details{
+    box-shadow: 1px 2px 10px 0px #79797942;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    /* margin-bottom: 1rem; */
+  }
+  .bank-details{
+    margin-bottom: 2rem;
+  }
+  a[data-toggle]{
+    color: var(--primary-color);
+  }
+  .form input:checked+label:after, form input:checked+label:after, .form input:checked+label:before, form input:checked+label::before{
+    display: none;
+  } 
+  p {
+    margin-bottom: 1rem !important;
+  }
+  .change_para {
+    font-size: medium;
+    font-weight: 450;
+    margin: 1.5rem 0 !important;
+  }
+  .change_para:first-child {
+    margin-top: 0.3rem !important;
+  }
+  @media (min-width: 576px) {
+    .modal-dialog {
+    max-width: 700px;
+    margin: 1.75rem auto;
+    }
+  }
+
+
+  /* multiple selection  */
+  .multiselect {
+    width: 100%;
+  }
+
+  .selectBox {
+    position: relative;
+  }
+
+  .selectBox select {
+    width: 100%;
+  }
+
+  .overSelect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+
+  #mySelectOptions {
+    display: none;
+    border: 0.5px #7c7c7c solid;
+    background-color: #ffffff;
+    max-height: 150px;
+    overflow-y: scroll;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    overflow: auto;
+  }
+
+  #mySelectOptions label {
+    display: block;
+    font-weight: normal;
+    display: block;
+    white-space: nowrap;
+    min-height: 1.2em;
+    background-color: #ffffff00;
+    padding: 0 2.25rem 0 .75rem;
+    margin-bottom: 0;
+    padding: 5px 15px;
+  }
+
+  #mySelectOptions label:hover {
+    background-color: #e8e8f7;
+  }
+  #mySelectOptions input{
+    margin-right: 6px;
+  }
+  #myMultiSelect{
+    position: relative;
+  }
+  .help-text{
+    float: right;
+    color: darkgreen;
+  }
+</style>
+
+<div class="enclosing-div">
+    <header>
+        <div class="logo">
+            <img src="/static/svg_icons/dentread-logo.png" alt="logo">
+            <div class="helper-text">
+                <span>Dentread</span>
+                <span>Digital Dentistry Platform</span>
+            </div>
+        </div>
+        <a class="primary-button signin ml-auto" href="/">Sign In</a>
+    </header>
+
+    <div class="progress-bar--inner">
+        <div class="progress-bar--outer"></div>
+    </div>
+
+    <div class="content row">
+        <div class="d-none d-md-block col-md-5 image-enclosing">
+            <img src="/static/svg_icons/radio-analysis.png" alt="">
+        </div> 
+        <div class="col-sm-12 col-md-7 form-enclosing">
+            <form  method="post" action="/lab_reg" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-row clinic-details">
+                    {% if message %}
+                        <div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+                            <strong></strong> {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="form-group col-sm-12 d-flex mb-4 position-relative">
+
+                        
+                        <img alt="avatar"  class="ml-auto mr-auto profile-pic" src="{% static '/profilepic/propic.jpg' %}">
+                        
+                        <label for="logo" class="position-absolute" style="left: 52%; bottom: -6px;">
+                            <img src="/static/svg_icons/profile-input.svg" alt="profile pic input" height="28px">
+                        </label>
+                        <input type="file" name="logo" id="logo" class="position-absolute" style="visibility: hidden;" onchange="onLogoChange(this)" required>
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="orgname">Lab Name <span class="tx-danger"> *</span></label>
+                        <input type="text" class="form-control" id="orgname" name="orgname" placeholder="Enter Lab Name">
+                        <small class="help-text" class="form-text text-muted">Minimum 3 characters</small>
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6">    
+                        <label for="orgemail">Email <span class="tx-danger"> *</span></label>
+                        <input type="email" class="form-control" id="orgemail" name="orgemail" placeholder="abc@xyz.com"  >
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="gstin">GSTIN <span class="tx-danger"> *</span></label>
+                        <input type="text" class="form-control" id="gstin" name="gstin" placeholder="Enter GSTIN"  >
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="pan">PAN <span class="tx-danger"> *</span></label>
+                        <input type="text" class="form-control" id="pan" name="pan" placeholder="Enter PAN"  >
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="cin">CIN <span class="tx-danger"> *</span></label>
+                        <input type="text" class="form-control" id="cin" name="cin" placeholder="Enter CIN"  >
+                    </div>
+                    
+                    <div class="form-group col-sm-12 col-md-6">    
+                        <label for="regNo">Trade Reg. No. <span class="tx-danger"> *</span></label>
+                        <input type="text" class="form-control" id="regNo" name="regNo" placeholder="Enter Reg. No."  >
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="orgcontact">Contact <span class="tx-danger"> *</span></label>
+                        <input type="tel" class="form-control" id="orgcontact" name="orgcontact" placeholder="+12 0123456789">
+                        <small class="help-text" class="form-text text-muted">Country code mandatory</small>
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="myMultiselect">Services Offered (multiple) <span class="tx-danger">*</span></label>
+                        <div id="myMultiselect" class="multiselect">
+                            <div id="mySelectLabel" class="selectBox" onclick="toggleCheckboxArea()">
+                                <select class="form-control">
+                                    <option>somevalue</option>
+                                </select>
+                                <div class="overSelect"></div>
+                            </div>
+                            <div id="mySelectOptions">
+                                <label for="Prosthetics"><input type="checkbox" id="Prosthetics" onchange="checkboxStatusChange()" value="Prosthetics" /> Prosthetics</label>
+                                <label for="models"><input type="checkbox" id="models" onchange="checkboxStatusChange()" value="3D Printed Models" /> 3D Printed Models</label>
+                                <label for="surgical"><input type="checkbox" id="surgical" onchange="checkboxStatusChange()" value="Implant Surgical Guide" /> Implant Surgical Guide</label>
+                                <label for="all"><input type="checkbox" id="all" onchange="checkboxStatusChange()" value="all" /> All</label>
+                            </div>
+                        </div>
+                        <small class="help-text" class="form-text text-muted">Multiple selections possible</small>
+                    </div>
+
+                    <div class="form-group col-sm-12">
+                        <label for="address">Address <span class="tx-danger"> *</span></label>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Enter Your Address"  >
+                        <small class="help-text" class="form-text text-muted">Letters Count: 15-100 </small>    
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="cityname">City <span class="tx-danger"> *</span></label>
+                        <input type="text" class="form-control" id="cityname" name="cityname" placeholder="Enter Your City Name">
+                        <small class="help-text" class="form-text text-muted">Minimum 3 characters</small>
+                    </div>
+                    
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="pincode">Pincode <span class="tx-danger"> *</span></label>
+                        <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Enter Pincode"  >
+                    </div>
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="statename">State <span class="tx-danger"> *</span></label>
+                        <input type="text" class="form-control" id="statename" name="statename" placeholder="Enter State"  >
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="country">Country <span class="tx-danger"> *</span></label>
+                        <select class="form-control" name="country" id="country" >
+                            <option value="0" >Select Country</option>
+                            <option value="AF">Afghanistan</option>
+                            <option value="AL">Albania</option>
+                            <option value="DZ">Algeria</option>
+                            <option value="AS">American Samoa</option>
+                            <option value="AD">Andorra</option>
+                            <option value="AO">Angola</option>
+                            <option value="AI">Anguilla</option>
+                            <option value="AQ">Antarctica</option>
+                            <option value="AR">Argentina</option>
+                            <option value="AM">Armenia</option>
+                            <option value="AW">Aruba</option>
+                            <option value="AU">Australia</option>
+                            <option value="AT">Austria</option>
+                            <option value="AZ">Azerbaijan</option>
+                            <option value="BS">Bahamas</option>
+                            <option value="BH">Bahrain</option>
+                            <option value="BD">Bangladesh</option>
+                            <option value="BB">Barbados</option>
+                            <option value="BY">Belarus</option>
+                            <option value="BE">Belgium</option>
+                            <option value="BZ">Belize</option>
+                            <option value="BJ">Benin</option>
+                            <option value="BM">Bermuda</option>
+                            <option value="BT">Bhutan</option>
+                            <option value="BO">Bolivia</option>
+                            <option value="BW">Botswana</option>
+                            <option value="BV">Bouvet Island</option>
+                            <option value="BR">Brazil</option>
+                            <option value="BN">Brunei Darussalam</option>
+                            <option value="BG">Bulgaria</option>
+                            <option value="BF">Burkina Faso</option>
+                            <option value="BI">Burundi</option>
+                            <option value="KH">Cambodia</option>
+                            <option value="CM">Cameroon</option>
+                            <option value="CA">Canada</option>
+                            <option value="CV">Cape Verde</option>
+                            <option value="KY">Cayman Islands</option>
+                            <option value="CF">Central African Republic</option>
+                            <option value="TD">Chad</option>
+                            <option value="CL">Chile</option>
+                            <option value="CN">China</option>
+                            <option value="CX">Christmas Island</option>
+                            <option value="CC">Cocos (Keeling) Islands</option>
+                            <option value="CO">Colombia</option>
+                            <option value="KM">Comoros</option>
+                            <option value="CG">Congo</option>
+                            <option value="CK">Cook Islands</option>
+                            <option value="CR">Costa Rica</option>
+                            <option value="CI">Cote d'Ivoire</option>
+                            <option value="HR">Croatia (Hrvatska)</option>
+                            <option value="CU">Cuba</option>
+                            <option value="CY">Cyprus</option>
+                            <option value="CZ">Czech Republic</option>
+                            <option value="DK">Denmark</option>
+                            <option value="DJ">Djibouti</option>
+                            <option value="DM">Dominica</option>
+                            <option value="DO">Dominican Republic</option>
+                            <option value="EC">Ecuador</option>
+                            <option value="EG">Egypt</option>
+                            <option value="SV">El Salvador</option>
+                            <option value="GQ">Equatorial Guinea</option>
+                            <option value="ER">Eritrea</option>
+                            <option value="EE">Estonia</option>
+                            <option value="ET">Ethiopia</option>
+                            <option value="FK">Falkland Islands (Malvinas)</option>
+                            <option value="FO">Faroe Islands</option>
+                            <option value="FJ">Fiji</option>
+                            <option value="FI">Finland</option>
+                            <option value="FR">France</option>
+                            <option value="GF">French Guiana</option>
+                            <option value="PF">French Polynesia</option>
+                            <option value="GA">Gabon</option>
+                            <option value="GM">Gambia</option>
+                            <option value="GE">Georgia</option>
+                            <option value="DE">Germany</option>
+                            <option value="GH">Ghana</option>
+                            <option value="GI">Gibraltar</option>
+                            <option value="GR">Greece</option>
+                            <option value="GL">Greenland</option>
+                            <option value="GD">Grenada</option>
+                            <option value="GP">Guadeloupe</option>
+                            <option value="GU">Guam</option>
+                            <option value="GT">Guatemala</option>
+                            <option value="GN">Guinea</option>
+                            <option value="GW">Guinea-Bissau</option>
+                            <option value="GY">Guyana</option>
+                            <option value="HT">Haiti</option>
+                            <option value="HN">Honduras</option>
+                            <option value="HK">Hong Kong</option>
+                            <option value="HU">Hungary</option>
+                            <option value="IS">Iceland</option>
+                            <option value="IN">India</option>
+                            <option value="ID">Indonesia</option>
+                            <option value="IQ">Iraq</option>
+                            <option value="IE">Ireland</option>
+                            <option value="IL">Israel</option>
+                            <option value="IT">Italy</option>
+                            <option value="JM">Jamaica</option>
+                            <option value="JP">Japan</option>
+                            <option value="JO">Jordan</option>
+                            <option value="KZ">Kazakhstan</option>
+                            <option value="KE">Kenya</option>
+                            <option value="KI">Kiribati</option>
+                            <option value="KR">Korea, Republic of</option>
+                            <option value="KW">Kuwait</option>
+                            <option value="KG">Kyrgyzstan</option>
+                            <option value="LV">Latvia</option>
+                            <option value="LB">Lebanon</option>
+                            <option value="LS">Lesotho</option>
+                            <option value="LR">Liberia</option>
+                            <option value="LY">Libyan Arab Jamahiriya</option>
+                            <option value="LI">Liechtenstein</option>
+                            <option value="LT">Lithuania</option>
+                            <option value="LU">Luxembourg</option>
+                            <option value="MO">Macau</option>
+                            <option value="MG">Madagascar</option>
+                            <option value="MW">Malawi</option>
+                            <option value="MY">Malaysia</option>
+                            <option value="MV">Maldives</option>
+                            <option value="ML">Mali</option>
+                            <option value="MT">Malta</option>
+                            <option value="MH">Marshall Islands</option>
+                            <option value="MQ">Martinique</option>
+                            <option value="MR">Mauritania</option>
+                            <option value="MU">Mauritius</option>
+                            <option value="YT">Mayotte</option>
+                            <option value="MX">Mexico</option>
+                            <option value="MD">Moldova, Republic of</option>
+                            <option value="MC">Monaco</option>
+                            <option value="MN">Mongolia</option>
+                            <option value="MS">Montserrat</option>
+                            <option value="MA">Morocco</option>
+                            <option value="MZ">Mozambique</option>
+                            <option value="MM">Myanmar</option>
+                            <option value="NA">Namibia</option>
+                            <option value="NR">Nauru</option>
+                            <option value="NP">Nepal</option>
+                            <option value="NL">Netherlands</option>
+                            <option value="AN">Netherlands Antilles</option>
+                            <option value="NC">New Caledonia</option>
+                            <option value="NZ">New Zealand</option>
+                            <option value="NI">Nicaragua</option>
+                            <option value="NE">Niger</option>
+                            <option value="NG">Nigeria</option>
+                            <option value="NU">Niue</option>
+                            <option value="NF">Norfolk Island</option>
+                            <option value="MP">Northern Mariana Islands</option>
+                            <option value="NO">Norway</option>
+                            <option value="OM">Oman</option>
+                            <option value="PW">Palau</option>
+                            <option value="PA">Panama</option>
+                            <option value="PG">Papua New Guinea</option>
+                            <option value="PY">Paraguay</option>
+                            <option value="PE">Peru</option>
+                            <option value="PH">Philippines</option>
+                            <option value="PN">Pitcairn</option>
+                            <option value="PL">Poland</option>
+                            <option value="PT">Portugal</option>
+                            <option value="PR">Puerto Rico</option>
+                            <option value="QA">Qatar</option>
+                            <option value="RE">Reunion</option>
+                            <option value="RO">Romania</option>
+                            <option value="RU">Russian Federation</option>
+                            <option value="RW">Rwanda</option>
+                            <option value="KN">Saint Kitts and Nevis</option>
+                            <option value="LC">Saint LUCIA</option>
+                            <option value="WS">Samoa</option>
+                            <option value="SM">San Marino</option>
+                            <option value="ST">Sao Tome and Principe</option>
+                            <option value="SA">Saudi Arabia</option>
+                            <option value="SN">Senegal</option>
+                            <option value="SC">Seychelles</option>
+                            <option value="SL">Sierra Leone</option>
+                            <option value="SG">Singapore</option>
+                            <option value="SK">Slovakia (Slovak Republic)</option>
+                            <option value="SI">Slovenia</option>
+                            <option value="SB">Solomon Islands</option>
+                            <option value="SO">Somalia</option>
+                            <option value="ZA">South Africa</option>
+                            <option value="ES">Spain</option>
+                            <option value="LK">Sri Lanka</option>
+                            <option value="SH">St. Helena</option>
+                            <option value="PM">St. Pierre and Miquelon</option>
+                            <option value="SD">Sudan</option>
+                            <option value="SR">Suriname</option>
+                            <option value="SZ">Swaziland</option>
+                            <option value="SE">Sweden</option>
+                            <option value="CH">Switzerland</option>
+                            <option value="SY">Syrian Arab Republic</option>
+                            <option value="TW">Taiwan, Province of China</option>
+                            <option value="TJ">Tajikistan</option>
+                            <option value="TZ">Tanzania, United Republic of</option>
+                            <option value="TH">Thailand</option>
+                            <option value="TG">Togo</option>
+                            <option value="TK">Tokelau</option>
+                            <option value="TO">Tonga</option>
+                            <option value="TT">Trinidad and Tobago</option>
+                            <option value="TN">Tunisia</option>
+                            <option value="TR">Turkey</option>
+                            <option value="TM">Turkmenistan</option>
+                            <option value="TC">Turks and Caicos Islands</option>
+                            <option value="TV">Tuvalu</option>
+                            <option value="UG">Uganda</option>
+                            <option value="UA">Ukraine</option>
+                            <option value="AE">United Arab Emirates</option>
+                            <option value="GB">United Kingdom</option>
+                            <option value="US">United States</option>
+                            <option value="UY">Uruguay</option>
+                            <option value="UZ">Uzbekistan</option>
+                            <option value="VU">Vanuatu</option>
+                            <option value="VE">Venezuela</option>
+                            <option value="VN">Viet Nam</option>
+                            <option value="VG">Virgin Islands (British)</option>
+                            <option value="VI">Virgin Islands (U.S.)</option>
+                            <option value="WF">Wallis and Futuna Islands</option>
+                            <option value="EH">Western Sahara</option>
+                            <option value="YE">Yemen</option>
+                            <option value="ZM">Zambia</option>
+                            <option value="ZW">Zimbabwe</option>                                    
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-12 mt-2">
+                        <button type="button" class="btn proceed-button">Proceed</button>
+                    </div>
+                </div>
+                <div class="form-row bank-details d-none">
+                    <h5 class="col-md-12 mb-4">Bank Details</h5>                
+                    <div class="form-group col-md-6">
+                        <label>Bank Name<span class="tx-danger"> *</span></label>
+                        <input class="form-control" placeholder="Enter your Bank name" type="text" id="bankName" name="bankName"  />
+                        <small class="help-text" class="form-text text-muted">Minimum 3 characters</small>
+                    </div>
+                    <div class="form-group col-md-6 ">
+                        <label>IFSC Code<span class="tx-danger"> *</span></label>
+                        <input class="form-control" placeholder="Enter IFSC Code" type="text" id="ifsc" name="ifsc"  />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Account Number<span class="tx-danger"> *</span></label>
+                        <input class="form-control" placeholder="Enter Account Number" type="number" id="accountNumber" name="accountNumber"  />                                                      
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Re-Enter Account Number<span class="tx-danger"> *</span></label>
+                        <input class="form-control" placeholder="Re-Enter Account Number" type="number" id="re-accountNumber" name="re-accountNumber"  />                                                      
+                    </div>
+
+                    <div class="form-group col-sm-12">
+                        <label>Upload Cancelled Cheque Image here<span class="tx-danger"> *</span></label>
+                        <div class="form-control custom-file">
+                            <input type="file" class="custom-file-input" name="customFile" id="validatedCustomFile" required onchange="onFileChange(this)">
+                            <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row admin-details d-none">
+                    <h5 class="col-md-12 mb-4">Lab Admin Details</h5>                
+                    <div class="form-group col-md-6">
+                        <label>Name<span class="tx-danger"> *</span></label>
+                        <input class="form-control" placeholder="Enter your name" type="text" id="name" name="name"  />
+                        <small class="help-text" class="form-text text-muted">Minimum 3 characters</small>
+                    </div>
+                    <div class="form-group col-md-6 ">
+                        <label>Email<span class="tx-danger"> *</span></label>
+                        <input class="form-control" placeholder="abc@xyz.com" type="email" id="email" name="email"  />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Contact<span class="tx-danger"> *</span></label>
+                        <input class="form-control" placeholder="+91 1234567890" type="tel" id="contact" name="contact"  />
+                        <small class="help-text" class="form-text text-muted">Country code mandatory</small>                                                      
+                    </div>
+                    <div class="col-md-6"></div>
+                      
+                    <div class="form-group col-md-6">
+                        <label>Password<span class="tx-danger" id="message"> *</span></label>
+                        <input class="form-control" placeholder="Enter Password" id="password" name="password" type="password"  />
+                        <small class="help-text" class="form-text text-muted">Minimum one - uppercase letter, lowercase letter, special character, number</small>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Confirm Password<span class="tx-danger">*</span></label>
+                        <input class="form-control" placeholder="Re-type your password" id="confirm-password" onkeyup="myFunction()" type="text" name="confirm_password"  />
+                    </div>
+                    <div class="form-group col-md-12 text-center mt-2">
+                        <input type="checkbox" name="terms" id="terms" class="form-contorl">
+                        <label for="terms">Yes, I accept all the <a data-toggle="modal" data-target='#modaldemo8' style="color: #1F3F7F; cursor: pointer;">Terms & Conditions</a> </label>
+                    </div>
+                    <div class="form-group col-md-12 d-flex">
+                        <button type="submit" class="btn submit-button">Create Account</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    document.querySelector('.proceed-button').addEventListener('click', e =>{
+
+        if(!validateName('orgname')){
+            document.getElementById('orgname').focus();
+            return;
+        }
+        if(!validateEmail('orgemail')){
+            document.getElementById('orgemail').focus();
+            return;
+        }
+        // if(!validateGSTIN()){
+        //     document.getElementById('gstin').focus();
+        //     return;
+        // }
+        if(!validatePancard()){
+            document.getElementById('pan').focus();
+            return;
+        }
+        if(!validateCin()){
+            document.getElementById('cin').focus();
+            return;
+        }
+        // if(!validateDCI()){
+        //     document.getElementById('regNo').focus();
+        //     return;
+        // }
+        if(!validateContact('orgcontact')){
+            document.getElementById('orgcontact').focus();
+            return;
+        }
+
+        if(!validateService()){
+            document.querySelector('#mySelectLabel select').focus();
+            return;
+        }
+
+        if(!validateAddress()){
+            document.getElementById('address').focus();
+            return;
+        }
+        if(!validateName('cityname')){
+            document.getElementById('cityname').focus();
+            return;
+        }
+        if(!validatePincode()){
+            document.getElementById('pincode').focus();
+            return;
+        }
+        if(!validateState()){
+            document.getElementById('statename').focus();
+            return;
+        }
+        if(!validateCountry()){
+            document.getElementById('country').focus();
+            return;
+        }
+        
+        document.querySelector('.clinic-details').classList.add('d-none');
+        document.querySelector('.bank-details').classList.remove('d-none');
+        document.querySelector('.admin-details').classList.remove('d-none');
+        document.querySelector('.progress-bar--outer').style.width = '66%'; 
+    })
+
+    document.querySelector('form').addEventListener('submit', e =>{
+       
+        console.log("validate name: ", validateName('name'));
+        console.log("validate email: ", validateEmail('email'));
+        console.log("validate contact: ", validateName('contact'));
+        console.log("validate password: ", validatePassword());
+        console.log("validate re-password: ", passwordMatch());
+
+        if(!validateName('bankName')){
+            document.getElementById('bankName').focus();
+            e.preventDefault();
+            return;
+        }
+        
+        if(!validateIfsc()){
+            document.getElementById('ifsc').focus();
+            e.preventDefault();
+            return;
+        }
+
+        if(!validateBank()){
+            document.getElementById('accountNumber').focus();
+            e.preventDefault();
+            return;
+        }
+        
+        if(!accountNumberMatch()){
+            document.getElementById('re-accountNumber').focus();
+            e.preventDefault();
+            return;
+        }
+        
+        if(!validateFile()){
+            document.getElementById('validatedCustomFile').focus();
+            e.preventDefault();
+            return;
+        }
+
+        if(!validateName('name')){
+            document.getElementById('name').focus();
+            e.preventDefault();
+            return;
+        }
+        if(!validateEmail('email')){
+            document.getElementById('email').focus();
+            e.preventDefault();
+            return;
+        }
+        if(!validateContact('contact')){
+            document.getElementById('contact').focus();
+            e.preventDefault();
+            return;
+        }
+        if(!validatePassword()){
+            document.getElementById('password').focus();
+            e.preventDefault();
+            return;
+        }
+        if(!passwordMatch()){
+            document.getElementById('confirm-password').focus();
+            e.preventDefault();
+            return;
+        }
+        if(!document.getElementById('terms').checked){
+            alert("Please accept our 'Terms and Conditions' to proceed")
+            e.preventDefault();
+            return;
+        }
+        
+    });
+
+    function validateService(){
+        return document.querySelector('#mySelectLabel select').value != 'Select Services';
+    }
+
+    function validateFile(){
+        return document.getElementById("validatedCustomFile").value.length != 0;
+    }
+
+    function validateCin(){
+        let regex = /^([LUu]{1})([0-9]{5})([A-Za-z]{2})([0-9]{4})([A-Za-z]{3})([0-9]{6})$/;
+        let ctrl =  document.getElementById('cin').value;
+        return regex.test(ctrl);   
+    }
+
+    function accountNumberMatch(){
+        return document.getElementById('accountNumber').value == document.getElementById('re-accountNumber').value;
+    }
+    
+    function validateBank(){
+        let regex = /^\d{9,18}$/;
+        let ctrl =  document.getElementById('accountNumber').value;
+        return regex.test(ctrl);   
+        
+    }
+    
+    function validateIfsc(){
+        let regex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+        let ctrl =  document.getElementById('ifsc').value;
+        return regex.test(ctrl);   
+    }
+
+    function validatePancard(){
+        let regex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+        let ctrl =  document.getElementById('pan').value;
+        return regex.test(ctrl);   
+    }
+
+    function passwordMatch(){
+        return document.getElementById('password').value == document.getElementById('confirm-password').value;
+    }
+
+    function validatePassword(){
+        let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s]).{6,}$/;
+        let ctrl =  document.getElementById('password').value;
+        return regex.test(ctrl);   
+    }
+
+    function validateName(target){
+        let regex = /^[a-zA-Z]{3,30}$/;
+        if(target == 'orgname'){
+            regex = /^[a-zA-Z0-9\s,.'-@#$&*();]{3,}$/;
+        }
+        let ctrl =  document.getElementById(target).value;
+        return regex.test(ctrl);
+    }
+
+    function validateState(){
+        let regex = /^[a-zA-Z ]{2,30}$/;
+        let ctrl =  document.getElementById('statename').value;
+        return regex.test(ctrl);
+    }
+    
+    function validateAddress(){
+        let regex = /^[a-zA-Z0-9\s,.'-:]{3,}$/;
+        let ctrl =  document.getElementById('address').value;
+        return regex.test(ctrl);
+    }
+    
+    function validateEmail(target){
+        let regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        let ctrl = document.getElementById(target).value;
+        return regex.test(ctrl);
+    }
+
+    function validateDCI(){
+        let regex = /^[a-zA-Z]{1}\d{5}$/;
+        let ctrl = document.getElementById('regNo').value;
+        return regex.test(ctrl);
+    }
+
+    function validateContact(target){
+        let regex = /^(\+|00)[1-9][0-9 \-\(\)\.]{7,32}$/;
+        let ctrl = document.getElementById(target).value;
+        return regex.test(ctrl);
+    }
+    
+    function validateGSTIN(){
+        let regex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+        let ctrl = document.getElementById('gstin').value;
+        return regex.test(ctrl);
+    }
+    
+    function validatePincode(){
+        let regex = /^[1-9][0-9]{5}$/;
+        let ctrl = document.getElementById('pincode').value;
+        return regex.test(ctrl);
+    }
+    
+    function validateCountry(){
+        return document.getElementById('country').value != 0;
+    }
+
+
+</script>
+<script>
+  function myFunction() {
+    if (
+      document.getElementById("password").value ==
+      document.getElementById("confirm-password").value
+    ) {
+      document.getElementById("message").style.color = "green";
+      document.getElementById("message").innerHTML = " * passowrd match";
+    } else {
+      document.getElementById("message").style.color = "red";
+      document.getElementById("message").innerHTML = "* password not matching";
+    }
+  }
+</script>
+
+<script>
+    window.onload = (event) => {
+        initMultiselect();
+    };
+
+    function initMultiselect() {
+        checkboxStatusChange();
+
+        document.addEventListener("click", function(evt) {
+            var flyoutElement = document.getElementById('myMultiselect'),
+            targetElement = evt.target; // clicked element
+
+            do {
+                if (targetElement == flyoutElement) {
+                    // This is a click inside. Do nothing, just return.
+                    //console.log('click inside');
+                    return;
+                }
+
+                // Go up the DOM
+                targetElement = targetElement.parentNode;
+            } while (targetElement);
+
+            // This is a click outside.
+            toggleCheckboxArea(true);
+            //console.log('click outside');
+        });
+    }
+
+    function checkboxStatusChange() {
+        var multiselect = document.getElementById("mySelectLabel");
+        var multiselectOption = multiselect.getElementsByTagName('option')[0];
+
+        var values = [];
+        var checkboxes = document.getElementById("mySelectOptions");
+        var checkedCheckboxes = checkboxes.querySelectorAll('input[type=checkbox]:checked');
+
+        for (const item of checkedCheckboxes) {
+            var checkboxValue = item.getAttribute('value');
+            values.push(checkboxValue);
+        }
+
+        var dropdownValue = "Select Services";
+        if (values.length > 0) {
+            dropdownValue = values.join(', ');
+        }
+
+        multiselectOption.innerText = dropdownValue;
+    }
+
+    function toggleCheckboxArea(onlyHide = false) {
+        var checkboxes = document.getElementById("mySelectOptions");
+        var displayValue = checkboxes.style.display;
+
+        if (displayValue != "block") {
+            if (onlyHide == false) {
+            checkboxes.style.display = "block";
+            }
+        } else {
+            checkboxes.style.display = "none";
+        }
+    }
+
+</script>
+
+<div class="modal" id="modaldemo8">
+    <div
+      class="modal-dialog modal-dialog-centered"
+      role="document"
+      style="height: 90%"
+    >
+      <div class="modal-content modal-content-demo" style="height: 100%">
+        <div class="modal-header">
+          <h6 class="modal-title">Terms & Conditions</h6>
+          <button
+            aria-label="Close"
+            class="close"
+            data-dismiss="modal"
+            type="button"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="text-align: justify; overflow-y: auto">
+          <p class="change_para">1. Introduction</p>
+  
+          <p>
+            Welcome to Dentread (&ldquo;Company&rdquo;, &ldquo;we&rdquo;,
+            &ldquo;our&rdquo;, &ldquo;us&rdquo;)!
+          </p>
+  
+          <p>
+            These Terms of Service (&ldquo;Terms&rdquo;, &ldquo;Terms of
+            Service&rdquo;) govern your use of our website located at
+            www.dentread.com (together or individually &ldquo;Service&rdquo;)
+            operated by Dentread.
+          </p>
+  
+          <p>
+            Our Privacy Policy also governs your use of our Service and explains
+            how we collect, safeguard and disclose information that results from
+            your use of our web pages.
+          </p>
+  
+          <p>
+            Your agreement with us includes these Terms and our Privacy Policy
+            (&ldquo;Agreements&rdquo;). You acknowledge that you have read and
+            understood Agreements, and agree to be bound of them.
+          </p>
+  
+          <p>
+            If you do not agree with (or cannot comply with) Agreements, then you
+            may not use the Service, but please let us know by emailing at
+            info@dentread.com so we can try to find a solution. These Terms apply
+            to all visitors, users and others who wish to access or use Service.
+          </p>
+  
+          <p class="change_para">2. Communications</p>
+  
+          <p>
+            By using our Service, you agree to subscribe to newsletters, marketing
+            or promotional materials and other information we may send. However,
+            you may opt out of receiving any, or all, of these communications from
+            us by following the unsubscribe link or by emailing at
+            info@dentread.com.
+          </p>
+  
+          <p class="change_para">3. Purchases</p>
+  
+          <p>
+            If you wish to purchase any product or service made available through
+            Service (&ldquo;Purchase&rdquo;), you may be asked to supply certain
+            information relevant to your Purchase including but not limited to,
+            your credit or debit card number, the expiration date of your card,
+            your billing address, and your shipping information.
+          </p>
+  
+          <p>
+            You represent and warrant that: (i) you have the legal right to use
+            any card(s) or other payment method(s) in connection with any
+            Purchase; and that (ii) the information you supply to us is true,
+            correct and complete.
+          </p>
+  
+          <p>
+            We may employ the use of third party services for the purpose of
+            facilitating payment and the completion of Purchases. By submitting
+            your information, you grant us the right to provide the information to
+            these third parties subject to our Privacy Policy.
+          </p>
+  
+          <p>
+            We reserve the right to refuse or cancel your order at any time for
+            reasons including but not limited to: product or service availability,
+            errors in the description or price of the product or service, error in
+            your order or other reasons.
+          </p>
+  
+          <p>
+            We reserve the right to refuse or cancel your order if fraud or an
+            unauthorized or illegal transaction is suspected.
+          </p>
+  
+          <p class="change_para">4. Contests, Sweepstakes and Promotions</p>
+  
+          <p>
+            Any contests, sweepstakes or other promotions (collectively,
+            &ldquo;Promotions&rdquo;) made available through Service may be
+            governed by rules that are separate from these Terms of Service. If
+            you participate in any Promotions, please review the applicable rules
+            as well as our Privacy Policy. If the rules for a Promotion conflict
+            with these Terms of Service, Promotion rules will apply.
+          </p>
+  
+          <p class="change_para">5. Subscriptions</p>
+  
+          <p>
+            Some parts of Service are billed on a subscription basis
+            (&quot;Subscription(s)&quot;). You will be billed in advance on a
+            recurring and periodic basis (&quot;Billing Cycle&quot;). Billing
+            cycles will be set depending on the type of subscription plan you
+            select when purchasing a Subscription.
+          </p>
+  
+          <p>
+            At the end of each Billing Cycle, your Subscription will automatically
+            renew under the exact same conditions unless you cancel it or Dentread
+            cancels it. You may cancel your Subscription renewal either through
+            your online account management page or by contacting info@dentread.com
+            customer support team.
+          </p>
+  
+          <p>
+            A valid payment method is required to process the payment for your
+            subscription. You shall provide Dentread with accurate and complete
+            billing information that may include but not limited to full name,
+            address, state, postal or zip code, telephone number, and a valid
+            payment method information. By submitting such payment information,
+            you automatically authorize Dentread to charge all Subscription fees
+            incurred through your account to any such payment instruments.
+          </p>
+  
+          <p>
+            Should automatic billing fail to occur for any reason, Dentread
+            reserves the right to terminate your access to the Service with
+            immediate effect.
+          </p>
+  
+          <p class="change_para">6. Free Trial</p>
+  
+          <p>
+            Dentread may, at its sole discretion, offer a Subscription with a free
+            trial for a limited period of time (&quot;Free Trial&quot;).
+          </p>
+  
+          <p>
+            You may be required to enter your billing information in order to sign
+            up for Free Trial.
+          </p>
+  
+          <p>
+            If you do enter your billing information when signing up for Free
+            Trial, you will not be charged by Dentread until Free Trial has
+            expired. On the last day of Free Trial period, unless you cancelled
+            your Subscription, you will be automatically charged the applicable
+            Subscription fees for the type of Subscription you have selected.
+          </p>
+  
+          <p>
+            At any time and without notice, Dentread reserves the right to (i)
+            modify Terms of Service of Free Trial offer, or (ii) cancel such Free
+            Trial offer.
+          </p>
+  
+          <p class="change_para">7. Fee Changes</p>
+  
+          <p>
+            Dentread, in its sole discretion and at any time, may modify
+            Subscription fees for the Subscriptions. Any Subscription fee change
+            will become effective at the end of the then-current Billing Cycle.
+          </p>
+  
+          <p>
+            Dentread will provide you with a reasonable prior notice of any change
+            in Subscription fees to give you an opportunity to terminate your
+            Subscription before such change becomes effective.
+          </p>
+  
+          <p>
+            Your continued use of Service after Subscription fee change comes into
+            effect constitutes your agreement to pay the modified Subscription fee
+            amount.
+          </p>
+  
+          <p class="change_para">8. Refunds</p>
+  
+          <p>
+            We issue refunds for Contracts within 1 days of the original purchase
+            of the Contract.
+          </p>
+  
+          <p class="change_para">9. Content</p>
+  
+          <p>
+            Our Service allows you to post, link, store, share and otherwise make
+            available certain information, text, graphics, videos, or other
+            material (&ldquo;Content&rdquo;). You are responsible for Content that
+            you post on or through Service, including its legality, reliability,
+            and appropriateness.
+          </p>
+  
+          <p>
+            By posting Content on or through Service, You represent and warrant
+            that: (i) Content is yours (you own it) and/or you have the right to
+            use it and the right to grant us the rights and license as provided in
+            these Terms, and (ii) that the posting of your Content on or through
+            Service does not violate the privacy rights, publicity rights,
+            copyrights, contract rights or any other rights of any person or
+            entity. We reserve the right to terminate the account of anyone found
+            to be infringing on a copyright.
+          </p>
+  
+          <p>
+            You retain any and all of your rights to any Content you submit, post
+            or display on or through Service and you are responsible for
+            protecting those rights. We take no responsibility and assume no
+            liability for Content you or any third party posts on or through
+            Service. However, by posting Content using Service you grant us the
+            right and license to use, modify, publicly perform, publicly display,
+            reproduce, and distribute such Content on and through Service. You
+            agree that this license includes the right for us to make your Content
+            available to other users of Service, who may also use your Content
+            subject to these Terms.
+          </p>
+  
+          <p>
+            Dentread has the right but not the obligation to monitor and edit all
+            Content provided by users.
+          </p>
+  
+          <p>
+            In addition, Content found on or through this Service are the property
+            of Dentread or used with permission. You may not distribute, modify,
+            transmit, reuse, download, repost, copy, or use said Content, whether
+            in whole or in part, for commercial purposes or for personal gain,
+            without express advance written permission from us.
+          </p>
+  
+          <p class="change_para">10. Prohibited Uses</p>
+  
+          <p>
+            You may use Service only for lawful purposes and in accordance with
+            Terms. You agree not to use Service:
+          </p>
+  
+          <p>
+            In any way that violates any applicable national or international law
+            or regulation.
+          </p>
+  
+          <p>
+            For the purpose of exploiting, harming, or attempting to exploit or
+            harm minors in any way by exposing them to inappropriate content or
+            otherwise.
+          </p>
+  
+          <p>
+            To transmit, or procure the sending of, any advertising or promotional
+            material, including any &ldquo;junk mail&rdquo;, &ldquo;chain
+            letter,&rdquo; &ldquo;spam,&rdquo; or any other similar solicitation.
+          </p>
+  
+          <p>
+            To impersonate or attempt to impersonate Company, a Company employee,
+            another user, or any other person or entity.
+          </p>
+  
+          <p>
+            In any way that infringes upon the rights of others, or in any way is
+            illegal, threatening, fraudulent, or harmful, or in connection with
+            any unlawful, illegal, fraudulent, or harmful purpose or activity.
+          </p>
+  
+          <p>
+            To engage in any other conduct that restricts or inhibits
+            anyone&rsquo;s use or enjoyment of Service, or which, as determined by
+            us, may harm or offend Company or users of Service or expose them to
+            liability.
+          </p>
+  
+          <p>Additionally, you agree not to:</p>
+  
+          <p>
+            Use Service in any manner that could disable, overburden, damage, or
+            impair Service or interfere with any other party&rsquo;s use of
+            Service, including their ability to engage in real time activities
+            through Service.
+          </p>
+  
+          <p>
+            Use any robot, spider, or other automatic device, process, or means to
+            access Service for any purpose, including monitoring or copying any of
+            the material on Service.
+          </p>
+  
+          <p>
+            Use any manual process to monitor or copy any of the material on
+            Service or for any other unauthorized purpose without our prior
+            written consent.
+          </p>
+  
+          <p>
+            Use any device, software, or routine that interferes with the proper
+            working of Service.
+          </p>
+  
+          <p>
+            Introduce any viruses, trojan horses, worms, logic bombs, or other
+            material which is malicious or technologically harmful.
+          </p>
+  
+          <p>
+            Attempt to gain unauthorized access to, interfere with, damage, or
+            disrupt any parts of Service, the server on which Service is stored,
+            or any server, computer, or database connected to Service.
+          </p>
+  
+          <p>
+            Attack Service via a denial-of-service attack or a distributed
+            denial-of-service attack.
+          </p>
+  
+          <p>Take any action that may damage or falsify Company rating.</p>
+  
+          <p>
+            Otherwise attempt to interfere with the proper working of Service.
+          </p>
+  
+          <p class="change_para">11. Analytics</p>
+  
+          <p>
+            We may use third-party Service Providers to monitor and analyze the
+            use of our Service.
+          </p>
+  
+          <p class="change_para">12. No Use By Minors</p>
+  
+          <p>
+            Service is intended only for access and use by individuals at least
+            eighteen (18) years old. By accessing or using Service, you warrant
+            and represent that you are at least eighteen (18) years of age and
+            with the full authority, right, and capacity to enter into this
+            agreement and abide by all of the terms and conditions of Terms. If
+            you are not at least eighteen (18) years old, you are prohibited from
+            both the access and usage of Service.
+          </p>
+  
+          <p class="change_para">13. Accounts</p>
+  
+          <p>
+            When you create an account with us, you guarantee that you are above
+            the age of 18, and that the information you provide us is accurate,
+            complete, and current at all times. Inaccurate, incomplete, or
+            obsolete information may result in the immediate termination of your
+            account on Service.
+          </p>
+  
+          <p>
+            You are responsible for maintaining the confidentiality of your
+            account and password, including but not limited to the restriction of
+            access to your computer and/or account. You agree to accept
+            responsibility for any and all activities or actions that occur under
+            your account and/or password, whether your password is with our
+            Service or a third-party service. You must notify us immediately upon
+            becoming aware of any breach of security or unauthorized use of your
+            account.
+          </p>
+  
+          <p>
+            You may not use as a username the name of another person or entity or
+            that is not lawfully available for use, a name or trademark that is
+            subject to any rights of another person or entity other than you,
+            without appropriate authorization. You may not use as a username any
+            name that is offensive, vulgar or obscene.
+          </p>
+  
+          <p>
+            We reserve the right to refuse service, terminate accounts, remove or
+            edit content, or cancel orders in our sole discretion.
+          </p>
+  
+          <p class="change_para">14. Intellectual Property</p>
+  
+          <p>
+            Service and its original content (excluding Content provided by
+            users), features and functionality are and will remain the exclusive
+            property of Dentread and its licensors. Service is protected by
+            copyright, trademark, and other laws of and foreign countries. Our
+            trademarks may not be used in connection with any product or service
+            without the prior written consent of Dentread.
+          </p>
+  
+          <p class="change_para">15. Copyright Policy</p>
+  
+          <p>
+            We respect the intellectual property rights of others. It is our
+            policy to respond to any claim that Content posted on Service
+            infringes on the copyright or other intellectual property rights
+            (&ldquo;Infringement&rdquo;) of any person or entity.
+          </p>
+  
+          <p>
+            If you are a copyright owner, or authorized on behalf of one, and you
+            believe that the copyrighted work has been copied in a way that
+            constitutes copyright infringement, please submit your claim via email
+            to info@dentread.com, with the subject line: &ldquo;Copyright
+            Infringement&rdquo; and include in your claim a detailed description
+            of the alleged Infringement as detailed below, under &ldquo;DMCA
+            Notice and Procedure for Copyright Infringement Claims&rdquo;
+          </p>
+  
+          <p>
+            You may be held accountable for damages (including costs and
+            attorneys&rsquo; fees) for misrepresentation or bad-faith claims on
+            the infringement of any Content found on and/or through Service on
+            your copyright.
+          </p>
+  
+          <p class="change_para">
+            16. DMCA Notice and Procedure for Copyright Infringement Claims
+          </p>
+  
+          <p>
+            You may submit a notification pursuant to the Digital Millennium
+            Copyright Act (DMCA) by providing our Copyright Agent with the
+            following information in writing (see 17 U.S.C 512(c)(3) for further
+            detail):
+          </p>
+  
+          <p>
+            an electronic or physical signature of the person authorized to act on
+            behalf of the owner of the copyright&rsquo;s interest;
+          </p>
+  
+          <p>
+            a description of the copyrighted work that you claim has been
+            infringed, including the URL (i.e., web page address) of the location
+            where the copyrighted work exists or a copy of the copyrighted work;
+          </p>
+  
+          <p>
+            identification of the URL or other specific location on Service where
+            the material that you claim is infringing is located;
+          </p>
+  
+          <p>your address, telephone number, and email address;</p>
+  
+          <p>
+            a statement by you that you have a good faith belief that the disputed
+            use is not authorized by the copyright owner, its agent, or the law;
+          </p>
+  
+          <p>
+            a statement by you, made under penalty of perjury, that the above
+            information in your notice is accurate and that you are the copyright
+            owner or authorized to act on the copyright owner&rsquo;s behalf.
+          </p>
+  
+          <p>
+            You can contact our Copyright Agent via email at info@dentread.com.
+          </p>
+  
+          <p class="change_para">17. Error Reporting and Feedback</p>
+  
+          <p>
+            You may provide us either directly at info@dentread.com or via third
+            party sites and tools with information and feedback concerning errors,
+            suggestions for improvements, ideas, problems, complaints, and other
+            matters related to our Service (&ldquo;Feedback&rdquo;). You
+            acknowledge and agree that: (i) you shall not retain, acquire or
+            assert any intellectual property right or other right, title or
+            interest in or to the Feedback; (ii) Company may have development
+            ideas similar to the Feedback; (iii) Feedback does not contain
+            confidential information or proprietary information from you or any
+            third party; and (iv) Company is not under any obligation of
+            confidentiality with respect to the Feedback. In the event the
+            transfer of the ownership to the Feedback is not possible due to
+            applicable mandatory laws, you grant Company and its affiliates an
+            exclusive, transferable, irrevocable, free-of-charge, sub-licensable,
+            unlimited and perpetual right to use (including copy, modify, create
+            derivative works, publish, distribute and commercialize) Feedback in
+            any manner and for any purpose.
+          </p>
+  
+          <p class="change_para">18. Links To Other Web Sites</p>
+  
+          <p>
+            Our Service may contain links to third party web sites or services
+            that are not owned or controlled by Dentread.
+          </p>
+  
+          <p>
+            Dentread has no control over, and assumes no responsibility for the
+            content, privacy policies, or practices of any third party web sites
+            or services. We do not warrant the offerings of any of these
+            entities/individuals or their websites.
+          </p>
+  
+          <p>
+            YOU ACKNOWLEDGE AND AGREE THAT COMPANY SHALL NOT BE RESPONSIBLE OR
+            LIABLE, DIRECTLY OR INDIRECTLY, FOR ANY DAMAGE OR LOSS CAUSED OR
+            ALLEGED TO BE CAUSED BY OR IN CONNECTION WITH USE OF OR RELIANCE ON
+            ANY SUCH CONTENT, GOODS OR SERVICES AVAILABLE ON OR THROUGH ANY SUCH
+            THIRD PARTY WEB SITES OR SERVICES.
+          </p>
+  
+          <p>
+            WE STRONGLY ADVISE YOU TO READ THE TERMS OF SERVICE AND PRIVACY
+            POLICIES OF ANY THIRD PARTY WEB SITES OR SERVICES THAT YOU VISIT.
+          </p>
+  
+          <p class="change_para">19. Disclaimer Of Warranty</p>
+  
+          <p>
+            THESE SERVICES ARE PROVIDED BY COMPANY ON AN &ldquo;AS IS&rdquo; AND
+            &ldquo;AS AVAILABLE&rdquo; BASIS. COMPANY MAKES NO REPRESENTATIONS OR
+            WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, AS TO THE OPERATION OF
+            THEIR SERVICES, OR THE INFORMATION, CONTENT OR MATERIALS INCLUDED
+            THEREIN. YOU EXPRESSLY AGREE THAT YOUR USE OF THESE SERVICES, THEIR
+            CONTENT, AND ANY SERVICES OR ITEMS OBTAINED FROM US IS AT YOUR SOLE
+            RISK.
+          </p>
+  
+          <p>
+            NEITHER COMPANY NOR ANY PERSON ASSOCIATED WITH COMPANY MAKES ANY
+            WARRANTY OR REPRESENTATION WITH RESPECT TO THE COMPLETENESS, SECURITY,
+            RELIABILITY, QUALITY, ACCURACY, OR AVAILABILITY OF THE SERVICES.
+            WITHOUT LIMITING THE FOREGOING, NEITHER COMPANY NOR ANYONE ASSOCIATED
+            WITH COMPANY REPRESENTS OR WARRANTS THAT THE SERVICES, THEIR CONTENT,
+            OR ANY SERVICES OR ITEMS OBTAINED THROUGH THE SERVICES WILL BE
+            ACCURATE, RELIABLE, ERROR-FREE, OR UNINTERRUPTED, THAT DEFECTS WILL BE
+            CORRECTED, THAT THE SERVICES OR THE SERVER THAT MAKES IT AVAILABLE ARE
+            FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS OR THAT THE SERVICES OR
+            ANY SERVICES OR ITEMS OBTAINED THROUGH THE SERVICES WILL OTHERWISE
+            MEET YOUR NEEDS OR EXPECTATIONS.
+          </p>
+  
+          <p>
+            COMPANY HEREBY DISCLAIMS ALL WARRANTIES OF ANY KIND, WHETHER EXPRESS
+            OR IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING BUT NOT LIMITED TO ANY
+            WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT, AND FITNESS FOR
+            PARTICULAR PURPOSE.
+          </p>
+  
+          <p>
+            THE FOREGOING DOES NOT AFFECT ANY WARRANTIES WHICH CANNOT BE EXCLUDED
+            OR LIMITED UNDER APPLICABLE LAW.
+          </p>
+  
+          <p class="change_para">20. Limitation Of Liability</p>
+  
+          <p>
+            EXCEPT AS PROHIBITED BY LAW, YOU WILL HOLD US AND OUR OFFICERS,
+            DIRECTORS, EMPLOYEES, AND AGENTS HARMLESS FOR ANY INDIRECT, PUNITIVE,
+            SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGE, HOWEVER IT ARISES
+            (INCLUDING ATTORNEYS&rsquo; FEES AND ALL RELATED COSTS AND EXPENSES OF
+            LITIGATION AND ARBITRATION, OR AT TRIAL OR ON APPEAL, IF ANY, WHETHER
+            OR NOT LITIGATION OR ARBITRATION IS INSTITUTED), WHETHER IN AN ACTION
+            OF CONTRACT, NEGLIGENCE, OR OTHER TORTIOUS ACTION, OR ARISING OUT OF
+            OR IN CONNECTION WITH THIS AGREEMENT, INCLUDING WITHOUT LIMITATION ANY
+            CLAIM FOR PERSONAL INJURY OR PROPERTY DAMAGE, ARISING FROM THIS
+            AGREEMENT AND ANY VIOLATION BY YOU OF ANY FEDERAL, STATE, OR LOCAL
+            LAWS, STATUTES, RULES, OR REGULATIONS, EVEN IF COMPANY HAS BEEN
+            PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. EXCEPT AS
+            PROHIBITED BY LAW, IF THERE IS LIABILITY FOUND ON THE PART OF COMPANY,
+            IT WILL BE LIMITED TO THE AMOUNT PAID FOR THE PRODUCTS AND/OR
+            SERVICES, AND UNDER NO CIRCUMSTANCES WILL THERE BE CONSEQUENTIAL OR
+            PUNITIVE DAMAGES. SOME STATES DO NOT ALLOW THE EXCLUSION OR LIMITATION
+            OF PUNITIVE, INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THE PRIOR
+            LIMITATION OR EXCLUSION MAY NOT APPLY TO YOU.
+          </p>
+  
+          <p class="change_para">21. Termination</p>
+  
+          <p>
+            We may terminate or suspend your account and bar access to Service
+            immediately, without prior notice or liability, under our sole
+            discretion, for any reason whatsoever and without limitation,
+            including but not limited to a breach of Terms.
+          </p>
+  
+          <p>
+            If you wish to terminate your account, you may simply discontinue
+            using Service.
+          </p>
+  
+          <p>
+            All provisions of Terms which by their nature should survive
+            termination shall survive termination, including, without limitation,
+            ownership provisions, warranty disclaimers, indemnity and limitations
+            of liability.
+          </p>
+  
+          <p class="change_para">22. Governing Law</p>
+  
+          <p>
+            These Terms shall be governed and construed in accordance with the
+            laws of India, which governing law applies to agreement without regard
+            to its conflict of law provisions.
+          </p>
+  
+          <p>
+            Our failure to enforce any right or provision of these Terms will not
+            be considered a waiver of those rights. If any provision of these
+            Terms is held to be invalid or unenforceable by a court, the remaining
+            provisions of these Terms will remain in effect. These Terms
+            constitute the entire agreement between us regarding our Service and
+            supersede and replace any prior agreements we might have had between
+            us regarding Service.
+          </p>
+  
+          <p class="change_para">23. Changes To Service</p>
+  
+          <p>
+            We reserve the right to withdraw or amend our Service, and any service
+            or material we provide via Service, in our sole discretion without
+            notice. We will not be liable if for any reason all or any part of
+            Service is unavailable at any time or for any period. From time to
+            time, we may restrict access to some parts of Service, or the entire
+            Service, to users, including registered users.
+          </p>
+  
+          <p class="change_para">24. Amendments To Terms</p>
+  
+          <p>
+            We may amend Terms at any time by posting the amended terms on this
+            site. It is your responsibility to review these Terms periodically.
+          </p>
+  
+          <p>
+            Your continued use of the Platform following the posting of revised
+            Terms means that you accept and agree to the changes. You are expected
+            to check this page frequently so you are aware of any changes, as they
+            are binding on you.
+          </p>
+  
+          <p>
+            By continuing to access or use our Service after any revisions become
+            effective, you agree to be bound by the revised terms. If you do not
+            agree to the new terms, you are no longer authorized to use Service.
+          </p>
+  
+          <p class="change_para">25. Waiver And Severability</p>
+  
+          <p>
+            No waiver by Company of any term or condition set forth in Terms shall
+            be deemed a further or continuing waiver of such term or condition or
+            a waiver of any other term or condition, and any failure of Company to
+            assert a right or provision under Terms shall not constitute a waiver
+            of such right or provision.
+          </p>
+  
+          <p>
+            If any provision of Terms is held by a court or other tribunal of
+            competent jurisdiction to be invalid, illegal or unenforceable for any
+            reason, such provision shall be eliminated or limited to the minimum
+            extent such that the remaining provisions of Terms will continue in
+            full force and effect.
+          </p>
+  
+          <p class="change_para">26. Acknowledgement</p>
+  
+          <p>
+            BY USING SERVICE OR OTHER SERVICES PROVIDED BY US, YOU ACKNOWLEDGE
+            THAT YOU HAVE READ THESE TERMS OF SERVICE AND AGREE TO BE BOUND BY
+            THEM.
+          </p>
+  
+          <p class="change_para">27. Contact Us</p>
+  
+          <p>
+            Please send your feedback, comments, requests for technical support by
+            email: info@dentread.com.
+          </p>
+        </div>
+        <div class="modal-footer d-none">
+          <button class="btn ripple btn-close" data-dismiss="modal" type="button">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+</div>
+<script>
+  function onFileChange(target){
+    var fileName= target.value.split('\\').pop();
+    console.log(fileName);
+    target.nextElementSibling.classList.add('selected');
+    target.nextElementSibling.innerHTML=fileName;
+
+  }
+  function onLogoChange(target){
+    var fileName= target.value.split('\\').pop();
+    console.log(fileName);
+    target.nextElementSibling.classList.add('selected');
+    target.nextElementSibling.innerHTML=fileName;
+
+  }
+</script> -->
+{% endblock %}

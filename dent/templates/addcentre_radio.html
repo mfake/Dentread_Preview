@@ -1,0 +1,148 @@
+
+{% extends 'radio_dashbase.html' %}
+{% load static %}
+
+
+{% block content %}
+{% if user.is_authenticated %}
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Add Referring Centre</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+
+
+    <!-- Main content -->
+
+
+
+   <form  method="post" action="/addcentre_radio">
+                           {% csrf_token %}
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+                    {% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+
+        <div class="row">
+          <div class="col-md-8">
+
+            <div class="card card-success" >
+              <div class="card-header  text-white" style="background-color:#1f3f7f;">
+                <h5 class="card-title">Registration Details</h5>
+              </div>
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+
+                  <div class="row">
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Organisation Name<span class="tx-danger"> *</span></label>
+                              <input type="text" class="form-control" id="orgname" name="orgname" placeholder="Organisation Name" required>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Centre contact<span class="tx-danger"> *</span></label>
+                              <input type="number" class="form-control" id="contact" name="contact" placeholder="contact Number" required>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Orgnisation Type<span class="tx-danger"> *</span></label>
+                                  <select id="orgtype" name="orgtype" type="text" class="form-control" required>
+                                      <option value="" selected disabled>Choose</option>
+                                      <option value="Imaging Centre">Imaging Centre</option>
+                                       <option value="Dental Clinic">Dental Clinic</option>
+                                  </select>
+
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Email<span class="tx-danger"> *</span></label>
+                              <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">Contact Person<span class="tx-danger"> *</span></label>
+                              <input type="text" class="form-control" id="ctperson_name" name="ctperson_name" placeholder="Contact Person Name" >
+                              </div>
+                            </div>
+                             <div class="col-6">
+                              <div class="form-group">
+                              <label for="exampleInputUsername1">GSTIN<span class="tx-info"><small>  (optional)</small> </span></label>
+                              <input type="number" class="form-control" id="gstin" name="gstin" placeholder="GSTIN" >
+                              </div>
+                            </div>
+
+
+
+                        </div>
+                        <div class="row">
+
+
+                             <div class="col-12">
+                                 <div class="form-group">
+                                 <label for="exampleInputEmail1">Address<span class="tx-danger"> *</span></label>
+                                 <input type="text" class="form-control" id="address" name="address" placeholder="Address" required>
+                                  </div>
+                             </div>
+
+
+
+                        </div>
+
+
+                      <div class="row mt-4">
+                          <div class="col-sm-6">
+
+                        <button type="reset" value="reset" class="btn  ripple btn-warning">Reset</button>
+                      </div>
+
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary">Add</button>
+                  </div>
+
+
+
+     </div>
+                    </form>
+
+          </div>
+      </div>
+ </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+{% endif %}
+{%endblock%}
+

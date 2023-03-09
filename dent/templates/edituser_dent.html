@@ -1,0 +1,208 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Edit Profile</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+
+    <!-- Main content -->
+
+
+
+
+
+            <!-- /.card -->
+
+
+    <!-- Main content -->
+    <form  method="post" action="/edit_user_dent/{{edit_user.id}}" enctype="multipart/form-data">
+        {% csrf_token %}
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+                    	<div class="row row-sm  mt-lg-4">
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+
+									</div>
+								</div>
+
+          <!-- /.col (left) -->
+          <div class="col-md-12">
+            <div class="card card-primary">
+              <div class="card-header  text-white" style="background-color:#2f6ebb;">
+                <h6 class="card-title">User Details</h6>
+              </div>
+              <div class="card-body">
+                  <div class="form-group">
+<label for="exampleInputPassword1">Profile Image</label>
+
+
+               							<div class="custom-file">
+
+                      <input type="file" class="custom-file-input" id="propic" name="propic" >
+                      <label class="custom-file-label" for="propic">Choose file</label>
+                    </div>
+                  </div>
+                <!-- Name -->
+
+                     <div class="form-group">
+                        <label for="exampleInputPassword1">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{edit_user.name}}" placeholder="Name" required>
+                      </div>
+
+
+
+
+
+               <!-- Email Contact Address -->
+                     <div class="row">
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Email</label>
+                          <input type="email" class="form-control" id="email" name="email" value="{{edit_user.email}}" placeholder="Email" readonly>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Contact</label>
+                          <input type="tel" class="form-control" id="contact" name="contact" value="{{edit_user.contact}}" placeholder="Contact" required>
+                      </div>
+                  </div>
+                </div>
+
+                  <div class="row">
+                  <div class="col-sm-12">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">User Name</label>
+                          <input type="text" class="form-control" id="username" name="username" value="{{edit_user.username}}" placeholder="username" readonly>
+                      </div>
+                  </div>
+
+                </div>
+
+
+
+<div class="row">
+
+
+
+
+</div>
+                  <div class="row">
+  <div class="col-sm-6">
+      <div class="form-group">
+    <label for="Department" class="form-label">Department</label>
+    <select type="text" id="department" name="department"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected"  value="{{edit_user.department}}">{{edit_user.department}} </option>
+                           <option value="Radiologist">Radiologist</option>
+                           <option value="Manager">Manager</option>
+                           <option value="Technician">Technician</option>
+                           <option value="Admin">Admin</option>
+
+
+                       </select>
+  </div>
+  </div>
+                      <div class="col-sm-6">
+      <div class="form-group">
+    <label for="status" class="form-label">Status</label>
+     <select type="text" id="status" name="status"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected"  value="{{edit_user.status}}">{{edit_user.status}}</option>
+                           <option value="Active">Active</option>
+                           <option value="Inactive">Inactive</option>
+</select>
+
+
+
+
+
+
+
+
+
+
+              </div>
+                      </div>
+                  </div>
+                                        <div class="row">
+  <div class="col-sm-6">
+      <div class="form-group">
+    <label for="Department" class="form-label">Education</label>
+    <input type="text" class="form-control" id="edu" name="edu" value="{{edit_user.edu}}" placeholder="Education" >
+  </div>
+  </div>
+                      <div class="col-sm-6">
+      <div class="form-group">
+    <label for="status" class="form-label">Specialitiy</label>
+     <input type="text" class="form-control" id="spec" name="spec" value="{{edit_user.spec}}" placeholder="Speciality" >
+              </div>
+                      </div>
+
+                       <div class="col-sm-12">
+                           <div class="form-group">
+                           <label for="exampleInputPassword1">Signature img(.jpg, .png, only)</label>
+<div class="custom-file">
+
+                      <input type="file" class="custom-file-input" id="sign" name="sign" >
+                      <label class="custom-file-label" for="propic">Choose file</label>
+                    </div>
+                       </div>
+                       </div>
+
+
+<div class="col-md-12">
+<div class="row">
+
+
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary">Update</button>
+                  </div>
+
+
+
+     </div>
+      </div>
+                  </div>
+              </div>
+            </div>
+            </form>
+   </div>
+      </div>
+ </div>
+</div>
+</div>
+</div>
+	<script src="{% static '/dentread/assets/plugins/jquery/jquery.min.js' %}"></script>
+
+<script src="{% static '/dentread/assets/js/form-elements.js' %}"></script>
+
+{% endif %}
+{%endblock%}

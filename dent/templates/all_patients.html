@@ -1,0 +1,168 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+
+#example2_filter{
+  display: flex;
+  justify-content: end;
+}
+.service-order--date{
+  display: none;
+}
+</style>
+
+  <div class="main-content side-content pt-0"><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+<div class="container-fluid">
+					<div class="inner-body">
+
+
+              <div class="page-header">
+							<div>
+								<h4 class="text-primary" >Manage Patients</h4>
+
+							</div>
+							
+						</div>
+
+
+		<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+                    <form action="/search_patient" method="post">
+					            {% csrf_token %}
+                        <div class="input-group">
+                            <input type="search" class="form-control form-control-sm" name="search" id="search" placeholder="Type Patient name, Centre or Registration date ">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-search"></i>
+                                Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+     <!-- /.container-fluid -->
+
+
+    <!-- Main content -->
+
+        <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+                <table id="example2" class="table table-bordered border-t0 key-buttons  w-100" >
+                  <thead>
+                  <tr >
+                    <th style="background-color:#2f6ebb;color:white;" onclick='onSortClick()'>Actions</th>
+                    <th style="background-color:#2f6ebb;color:white;" class='table-header'><span>Reg. Date</span> <i class="fa-solid fa-sort showMe"></i></th>
+                    <th hidden> ID</th>
+                    <th style="background-color:#2f6ebb;color:white;" class='table-header'>Patient ID <i class="fa-solid fa-sort showMe"></i></th>
+                    <th style="background-color:#2f6ebb;color:white;" class='table-header'>Name <i class="fa-solid fa-sort showMe"></i></th>
+                    <th style="background-color:#2f6ebb;color:white;" onclick='onSortClick()'>Gender</th>
+                    <th style="background-color:#2f6ebb;color:white;" onclick='onSortClick()'>Email</th>
+                    <th style="background-color:#2f6ebb;color:white;" onclick='onSortClick()'>Contact</th>
+                    {% if org.orgtype != "Dental Clinic" %}
+                      <th style="background-color:#2f6ebb;color:white;">Ref By</th>
+                    {% endif %}
+                  </tr>
+                  </thead>
+                  <tbody>
+                    {% for i in patient %}
+                      <tr>
+                        <td>
+                            <div class="dropdown dropleft">
+                                <button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-sm btn-outline-primary" data-toggle="dropdown" id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i></button>
+                                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                                  <a class="dropdown-item" href="/patientdetails/{{ i.id }}"><i class="fas fa-eye"></i> View</a>
+                                  <a class="dropdown-item" href="/edit_patient/{{ i.id }}"><i class="fas fa-pencil-alt"></i> Edit</a>
+                                {% comment %} <a class="dropdown-item" href="/delete_patient/{{ i.id }}" ><i class="fas fa-trash"></i> Delete</a> {% endcomment %}
+                                </div>
+                              </div>
+                        </td>
+                        <td class="service-order--date"> <span>{{i.rdate|date:'Ymd'}}</span> {{ i.date|date:'d-m-Y' }}</td> 
+                        <td>{{ i.rdate|date:'d-m-Y' }}</td>
+                        <td hidden>{{ i.id }}</td>
+                        <td>{{ i.pid }}</td>
+                        <td>{{ i.name }}</td>
+                        <td>{{ i.gender }}</td>
+                        <td>{{ i.email }}</td>
+                        <td>{{ i.contact }}</td>
+
+                          {% if org.orgtype != "Dental Clinic" %}
+                          <td>{{ i.refdoctor }}</td>
+                          {% endif %}
+
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+
+    <!-- /.content -->
+  </div>
+      </div>
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+
+        <style>
+          {% comment %} .table-header{
+            display: flex; 
+            justify-content: space-between;
+          } {% endcomment %}
+        </style>
+
+<!-- jQuery -->
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<script>
+window.alert = (function() {
+    var nativeAlert = window.alert;
+    return function(message) {
+        window.alert = nativeAlert;
+        message.indexOf("DataTables warning") === 0 ?
+            console.warn(message) :
+            nativeAlert(message);
+    }
+})();
+    </script>
+<script>
+ $(function () {
+    $("#example2").DataTable({
+
+      "order": [[ 1, "desc" ]],
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      // "responsive": true,
+
+    });
+
+  });
+</script>
+
+</body>
+{% endif %}
+{%endblock%}

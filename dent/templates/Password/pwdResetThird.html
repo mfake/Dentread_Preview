@@ -1,0 +1,299 @@
+{% extends 'dentreadbase.html' %} 
+{% load static %} 
+{% block content %}
+
+<style>
+    body{
+        background: white;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+        margin: 0;
+        padding: 0;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    
+    .content{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        padding: 4rem;
+        border-radius: 8px;
+    }
+   
+    .extra-content--side{
+        display: flex;
+        margin-top: 3rem;
+        
+    }
+    .main-heading{
+        font-size: 16px;
+        margin-bottom: 1rem;
+    }
+    .submit-button{
+        width: 150px;
+        height: 38px;
+        border-radius: 6px;
+        background: #1F3F7F;
+        color: white;
+        margin-top: 0.75rem;
+    }
+    ul{
+        list-style: none;
+    }
+    li{
+        margin-bottom: 0.35rem;
+    }
+    .requirements, .actual-content{
+        flex: 1;
+    }
+    li span{
+        margin-left: 0.5rem;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .helptext{
+        display: none;
+    }
+    .pwd-match{
+        color: green; 
+        float: right
+    }
+    .pwd-mismatch{
+        color: red; 
+        float: right;
+    }
+    
+</style>
+
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5  onclick="history.back()" style="cursor: pointer;">Password Reset</h5>
+    </div>
+
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-12 col-md-5 d-flex align-items-center">
+                <img src="/static/svg_icons/forgotPassword.svg" height="350px" alt="User Registration">
+            </div>
+            <div class="col-sm-12 col-md-7 extra-content--side">
+                <div class="requirements">
+                    <div class="main-heading">Password must include</div>
+                    <ul>
+                        <li class="first">
+                            <img src="/static/svg_icons/tick-grey.svg" alt="tick icon">
+                            <span>8-20 Characters</span>
+                        </li>
+                        <li class="second">
+                            <img src="/static/svg_icons/tick-grey.svg" alt="tick icon">
+                            <span>At least one capital letter</span>
+                        </li>
+                        <li class="third">
+                            <img src="/static/svg_icons/tick-grey.svg" alt="tick icon">
+                            <span>At least one number</span>
+                        </li>
+                        <li class="fourth">
+                            <img src="/static/svg_icons/tick-grey.svg" alt="tick icon">
+                            <span>At least one special character</span>
+                        </li>
+                        <li class="fifth">
+                            <img src="/static/svg_icons/tick-grey.svg" alt="tick icon">
+                            <span>No spaces</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="actual-content">
+                    <form method="post" onsubmit="return onFormSubmit()">
+                        {% csrf_token %} 
+                        <div class="form-row">
+                            <!-- <div class="formfield" id="firstnamefield">
+                                {{ form }}
+                            </div> -->
+                            <div class="form-group col-12 formfield" id="firstnamefield">
+                                {{ form }}
+                                <!-- <label for="password">New Password</label>
+                                <input type="password" onkeyup="onPasswordInput(this.value)" class="form-control" id="password" name="password" placeholder="Enter New Password" required> -->
+                            </div>
+                            
+                            <!-- <div class="form-group col-12">
+                                <label for="password-confirm">Confirm Password</label> 
+                                <span style="color: green; float: right" class="d-none pwd-match">* password matched</span>
+                                <span style="color: red; float: right;" class="d-none pwd-mismatch">* password mis-matched</span>
+                                <input type="text" class="form-control" id="password-confirm" onkeyup="onPasswordMatch(this.value)" name="password-confirm" placeholder="Re-enter Password" required>
+                                
+                            </div> -->
+                        </div>
+
+                        <button type="submit" class="btn submit-button">Submit</button>
+                    </form>
+                </div>
+
+            </div>
+            <div class="col-sm-12 text-center">
+                Copyright &#169;2022, Dentread. All Rights Reserved.
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+
+</div>
+
+<script>
+    window.addEventListener('load',function(){
+        
+        document.querySelector('#firstnamefield input').setAttribute('onkeyup', "onPasswordInput()");
+        document.querySelector('#firstnamefield input:last-child').setAttribute('onkeyup',"onPasswordMatch()");
+        
+        document.querySelector('#firstnamefield input').classList.add("form-control");
+        document.querySelector('#firstnamefield input:last-child').classList.add("form-control");
+    
+        document.querySelector('#firstnamefield input').setAttribute('placeholder', "Enter New Password");
+        document.querySelector('#firstnamefield input:last-child').setAttribute('placeholder', "Re-enter Password");
+    
+        document.querySelector('#firstnamefield input').style.width = "250px";
+        document.querySelector('#firstnamefield input:last-child').style.width = "250px";
+
+        let spanToBeAdded1 = document.createElement('span');
+        spanToBeAdded1.classList.add('pwd-match');
+        spanToBeAdded1.classList.add('d-none');
+        spanToBeAdded1.innerText = "* password matched";
+
+        let spanToBeAdded2 = document.createElement('span');
+        spanToBeAdded2.classList.add('pwd-mismatch');
+        spanToBeAdded2.classList.add('d-none');
+        spanToBeAdded2.innerText = "* password mis-matched";
+
+        document.querySelector('#firstnamefield').appendChild(spanToBeAdded1);
+        document.querySelector('#firstnamefield').appendChild(spanToBeAdded2);
+
+        document.querySelector('#firstnamefield').insertBefore(spanToBeAdded1, document.querySelector('#firstnamefield input:last-child'))
+        document.querySelector('#firstnamefield').insertBefore(spanToBeAdded2, document.querySelector('#firstnamefield input:last-child'))
+        // document.querySelector('#firstnamefield').
+    });
+
+
+    let greenTick = '/static/svg_icons/tick-green.svg';
+    let greyTick = '/static/svg_icons/tick-grey.svg';
+
+    // specialChars 
+    let specialChars = [ '[', '`', '!', '@',  '#', '$', '%',
+        '^', '&', '*', '(',  ')', '_', '+',
+        '-', '=', '[', ']',  '{', '}', ';',
+        "'", ':', '"', '\\', '|', ',', '.',
+        '<', '>', '/', '?',  '~', ']', '/'
+    ];
+
+    // conditions 
+    let conditionFirst = false;
+    let conditionSecond = false;
+    let conditionThird = false;
+    let conditionFourth = false;
+    let conditionFifth = false;
+
+    let passwordMatch = false;
+
+    function onPasswordInput(input = document.querySelector('#firstnamefield input').value){
+        console.log('inside onPasswordInput');
+        // for the first condition 
+        if(input.length>=8 && input.length<=20){
+            conditionFirst = true;
+            document.querySelector('.first img').src = greenTick;
+        }
+        else{
+            conditionFirst = false;
+            document.querySelector('.first img').src = greyTick;
+        }
+        
+        // for the second condition 
+        if(input?.match(/[A-Z]/)){
+            conditionSecond = true;
+            document.querySelector('.second img').src = greenTick;
+        }
+        else{
+            conditionSecond = false;
+            document.querySelector('.second img').src = greyTick;
+        }
+        
+        // for the third condition 
+        if(input?.match(/[0-9]/)){
+            conditionThird = true;
+            document.querySelector('.third img').src = greenTick;
+        }
+        else{
+            conditionThird = false;
+            document.querySelector('.third img').src = greyTick;
+        }
+        
+        // for the fourth condition 
+        if(specialChars.some((specialChar) => input.includes(specialChar))){
+            conditionFourth = true;
+            document.querySelector('.fourth img').src = greenTick;
+        }
+        else{
+            conditionFourth = false;
+            document.querySelector('.fourth img').src = greyTick;
+        }
+    
+        // for the fifth condition 
+        if(!input.includes(' ')){
+            conditionFifth = true;
+            document.querySelector('.fifth img').src = greenTick;
+        }
+        else{
+            conditionFifth = false;
+            document.querySelector('.fifth img').src = greyTick;
+        }
+    
+        if(document.querySelector('#firstnamefield input:last-of-type').value){
+            onPasswordMatch();
+        }
+        
+    }
+    
+    function onPasswordMatch(){
+        console.log('inside onPasswordMatch');
+        if(document.querySelector('#firstnamefield input:last-of-type').value == document.querySelector('#firstnamefield input').value){
+            passwordMatch = true;
+            document.querySelector('.pwd-match').classList.remove('d-none');
+            document.querySelector('.pwd-mismatch').classList.add('d-none');
+        }
+        else{
+            passwordMatch = false;
+            document.querySelector('.pwd-mismatch').classList.remove('d-none');
+            document.querySelector('.pwd-match').classList.add('d-none');
+
+        }
+    }
+
+    function onFormSubmit(){
+        if(conditionFifth && conditionFirst && conditionFourth && conditionSecond && conditionThird && passwordMatch)return true;
+        else return false;
+    }
+
+</script>
+
+{%endblock%}
+

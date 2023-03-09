@@ -1,0 +1,59 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+        <div class="container">
+            <div class="inner-body">
+
+                <div class="row row-sm">
+                    <div class="col-sm-6 ">
+                        <ol class="breadcrumb float-sm-left">
+                            <li class="breadcrumb-item"><a href="#"><h5>Payment Done</h5></a></li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row row-sm">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card custom-card">
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                    <div class="authincation h-100">
+                                        <div class="container h-100">
+                                            <div class="row justify-content-center h-100 align-items-center">
+                                                <div class="col-md-5">
+                                                    <div class="form-input-content text-center error-page">
+                                                        <h4><i class="fa fa-check-circle text-success fa-4x"></i> </h4>
+
+                                                        <h4>Payment Processed...</h4>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a href="/patientdetails/{{patient.id}}" id="okk" class="btn btn-primary">Service Details</a>
+                </div>
+            </div>
+        </div>
+</div>
+<style>
+    #okk {
+        margin-left: 63rem;
+        position: absoloute;
+    }
+</style>
+
+{% endif %}
+{% endblock %}

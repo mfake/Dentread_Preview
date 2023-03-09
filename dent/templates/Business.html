@@ -1,0 +1,186 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Business Summary</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+
+    <!-- Main content -->
+ <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+
+        <!-- Small boxes (Stat box) -->
+
+        <div class="row">
+         <div class="col-lg-12">
+                <h5 class="text-center bg-primary text-white">Summary</h5>
+
+
+ 
+
+
+
+
+              </div>
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="card custom-card bg-secondary text-white">
+											<div class="card-body ">
+
+              <div class="inner">
+               <h3>{{scan}}</sup></h3>
+
+                <p>Total Scans</p>
+              </div>
+
+
+
+          </div>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+           <div class="card custom-card bg-success text-white">
+											<div class="card-body ">
+              <div class="inner">
+			  <div class="row">
+				<div class="col-6">
+					<h3>{{total}}</sup></h3>
+
+					<p>Sales Amount</p>
+				</div>
+
+				</div>
+              </div>
+
+
+            </div>
+          </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="card custom-card bg-info text-white">
+											<div class="card-body ">
+              <div class="inner">
+                <h3>{{pt}}</h3>
+
+                <p>Patient Registrations</p>
+              </div>
+
+            </div>
+          </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+        <div class="card custom-card bg-primary text-white">
+											<div class="card-body ">
+              <div class="inner">
+                <h3>{{rdoc}}</h3>
+
+                <p>Referral Doctors</p>
+              </div>
+
+            </div>
+          </div>
+          </div>
+          <!-- ./col -->
+        </div>
+  <style>      hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+</style>
+        <hr></hr>
+        <!-- /.row -->
+
+        <div class="row">
+          <div class="col-lg-12">
+                <h5 class="text-center bg-primary text-white">Current Month Sales</h5>
+
+
+              </div>
+          <!-- Left col -->
+          <section class="col-lg-12 connectedSortable">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="card card-success">
+              <div class="card-header" >
+                <h3 class="card-title">{{org.orgname}}</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+
+
+                <canvas id="myChart" width="400" ></canvas>
+
+                  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                  const labels = {{delmonth|safe}};
+
+
+const data = {
+  labels: labels,
+  datasets: [
+  {
+    label: 'Sales',
+    backgroundColor: '#264d60',
+    borderColor: 'rgb(255, 99, 132)',
+    data: {{delamount}},
+  }
+  ]
+};
+const config = {
+  type: 'bar',
+  data: data,
+  options: {}
+};
+  var myChart = new Chart(
+    document.getElementById('myChart'),
+    config
+  );
+                </script>
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+
+
+      </div>
+  </div>
+          </div>
+      </div>
+</div>
+
+
+{% endif %}
+{%endblock%}

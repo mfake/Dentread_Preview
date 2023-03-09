@@ -1,0 +1,123 @@
+{% extends "Base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Add Expenses</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Add Expenses</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+
+    <form  method="post" action="/addexpenses">
+        {% csrf_token %}
+    <section class="content">
+      <div class="container-fluid">
+
+
+        <div class="row">
+          <div class="col-md-6">
+
+            <div class="card card-success">
+              <div class="card-header" style="background-color:#264d60">
+                <h3 class="card-title">Expense Details</h3>
+              </div>
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Expense Type</label>
+                        <select  id="expensetype" name="expensetype"  class="form-control select2bs4"  required>
+                         <option selected="selected" disabled value="">Choose </option>
+                             <option   value="Rent">Rent</option>
+                             <option  value="Professional Fees">Professional Fees</option>
+                            <option  value="Salary">Salary</option>
+                            <option  value="Electricity">Electricity</option>
+                            <option  value="Maintenance of Building">Maintenance of Building</option>
+                            <option  value="Maintenance of Equipment">Maintenance of Equipment</option>
+                            <option  value="Depreciation">Depreciation</option>
+                            <option  value="Printing & Stationary">Printing & Stationary</option>
+                             <option  value="Dry view Film">Dry view Film</option>
+                            <option  value="Others">Others</option>
+                        </select>
+                      </div>
+<div class="form-group">
+                        <label for="exampleInputPassword1">Centre</label>
+                        <select type="text" id="locate" name="locate"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected" disabled>Choose </option>
+                            {% for i in org %}
+                           <option value="{{i.orgname}}">{{i.orgname}}</option>
+                    {% endfor %}
+
+                       </select>
+                      </div>
+
+                <!-- phone mask -->
+                <div class="form-group">
+                        <label for="exampleInputPassword1">Month</label>
+                        <input type="date" class="form-control" id="month" name="month" placeholder="Main Category" required>
+                      </div>
+                <!-- /.form group -->
+
+                <!-- phone mask -->
+          <div class="form-group">
+                        <label for="exampleInputPassword1">Remark/Detail</label>
+                        <input type="text" class="form-control" id="remark" name="remark" placeholder="Remark/Detail" required>
+                      </div>
+                <!-- /.form group -->
+
+                <!-- IP mask -->
+             <div class="form-group">
+                        <label for="exampleInputPassword1">Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" placeholder="Amount" required>
+                      </div>
+                <!-- /.form group -->
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+
+
+
+<div class="col-md-12">
+<div class="row">
+
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block bg-gradient-success btn-lg">Add</button>
+                  </div>
+                      <div class="col-sm-6">
+
+                        <button type="reset" value="reset" class="btn btn-block bg-gradient-warning btn-lg">Reset</button>
+                      </div>
+
+
+     </div>
+      </div>
+              </form>
+   </div>
+{% endif %}
+{%endblock%}</title>
+</head>
+<body>
+
+</body>
+</html>

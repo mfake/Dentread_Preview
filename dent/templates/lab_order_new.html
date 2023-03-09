@@ -1,0 +1,2768 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+
+
+<script src="{% static '/tinymce/tinymce.min.js' %}"></script>
+
+<link href="https://code.jquery.com/ui/jquery-ui-git.css" rel="stylesheet" type="text/css" />
+<script src="https://code.jquery.com/jquery-git.js"></script>
+<script src="https://code.jquery.com/ui/jquery-ui-git.js"></script>
+
+<style>
+    body{
+        background: white;
+        padding-left: 80px;
+    }
+    .modal--header{
+        padding: 1rem 0 1rem 2rem;
+    }
+    .modal--body{
+        padding-top: 1rem;
+    }
+    .form-edit--pencil{
+        float: right;
+        height: 15px;
+        margin-right: 5px;
+        margin-top: 5px;
+    }
+    .edit-confirm--button{
+        width: 132px; 
+        height: 36px !important; 
+        float: right; 
+        border-radius: 8px; 
+        background-color: #1f3f7f;
+    }
+    .enclosing-row{
+        /* background: aliceblue; */
+        box-shadow: 1px 4px 14px rgba(129, 119, 119, 0.1);
+        border-radius: 5px;
+        padding: 1rem;
+        align-items: center;
+        border: 1px solid #ededed;
+    }
+    .form-row{
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+    .name-heading, .heading{
+        font-size: 18px;
+        font-weight: 500;
+        margin-left: 1rem;
+    }
+    .gender-icon--enclosing{
+
+        background: white;
+        border-radius: 50%;
+        text-align: center;
+        color: white;
+
+    }
+    input + label::before, input + label::after{
+        display: none !important;
+    }
+    .drop-button{
+        text-align: start;
+        padding-left: 1rem;
+        background: white;
+        color: black;
+    }
+    .drop-button::after{
+        position: absolute;
+        right: 1rem;
+        top: 40%;
+    }
+    input, textarea, select, button{
+        font-size: 0.875rem !important;
+        /* letter-spacing: 1px; */
+        border: 1px solid #e8e8f7;
+        color: #a8afc7;;
+        box-shadow: 1px 4px 10px rgba(129, 119, 119, 0.1);
+    }
+    .main-footer{
+        box-shadow: 1px -3px 14px 0px #8177771A;
+    }
+    .form-group{
+        margin-bottom: 1.3rem;
+    }
+    @media (min-width: 576px){    
+        #chatBoxModal > .modal-dialog {
+            max-width: 500px;
+            margin: 6rem 8rem 6rem auto;
+        }
+    }
+    #case-chat{
+        min-height: 100px;
+        max-height: 200px;
+        overflow: auto;
+    }
+    .input-group-append>button{
+        border-color: #e8e8f7;
+    }
+    .input-group-append>button:hover{
+        background: #2f6ebb;
+        color: white;
+    }
+    .floating-date-left{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      left: 5px;
+    }
+    .floating-date-right{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      right: 5px;
+    }
+    .admin-side--comment{
+      font-size: 14px;
+      position: relative;
+      margin: 17px 0;
+      color: black;
+      padding: 3px 10px;
+      width: 60%;
+      border-radius: 4px;
+      margin-left: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+      background: lavender;
+    }
+    .clinic-side--comment{
+      margin-right: 10px;
+      font-size: 14px;
+      position: relative;
+      margin: 17px 0;
+      color: black;
+      padding: 3px 3.2rem 3px 10px;
+      width: 60%;
+      margin-left: auto;
+      border-radius: 4px;
+      margin-right: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+    }
+    .dateEle{
+        text-align: center;
+        background: lavender;
+        font-size: 13px;
+        width: 100px;
+        margin: 2rem auto;
+        border-radius: 10px;
+    }
+    .order-selection--button:hover, .add-order--button{
+        background-color: #1f3f7f;
+        color: white;
+    }
+    .card-header{
+        padding: 0.50rem 1.25rem !important;
+        border-bottom: none !important;
+        background: #1F3F7F;
+        color: white;
+    }
+    .card{
+        margin-bottom: 0.5rem;
+    }
+    .order-modal--content{
+        height: 650px !important;
+    }
+
+    html {
+        --scrollbarBG: #CFD8DC;
+        --thumbBG: #90A4AE;
+    }
+    div.card-body::-webkit-scrollbar {
+        width: 11px;
+    }
+    div.card-body:not(#dataUploadModal .card-body) {
+        max-height: 130px;
+        padding: 0.75rem 1rem;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+    }
+    .card-body::-webkit-scrollbar-thumb {
+        background-color: var(--thumbBG) ;
+        border-radius: 6px;
+        border: 3px solid white;
+    }
+    div.accordion-parent::-webkit-scrollbar, div.cards-row::-webkit-scrollbar{
+        width: 11px;
+    }
+    div.accordion-parent, div.cards-row{
+        height: 500px;
+        scrollbar-width: thin;
+        scrollbar-color: #e6e7e7;
+    }
+    div.accordion-parent::-webkit-scrollbar-thumb, div.cards-row::-webkit-scrollbar-thumb{
+        background-color: #e6e7e7;
+        border-radius: 6px;
+        border: 3px solid white;
+    }
+    .head-line{
+        display: flex;
+        font-size: 1.09rem;
+        font-weight: 500;
+        margin-bottom: 0.75rem;
+    }
+    .cards-row{
+        height: 75vh;
+        overflow-y: auto;
+    }
+    .order-card, .accordion-parent .card {
+        box-shadow: 1px 4px 14px 0px #8177771A;
+    }
+    .order-card{
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #ededed;
+    }
+    .order-card h6{
+        margin-bottom: 0.75rem;
+    }
+    .cards-row .order-card:hover{
+        /* color: white; */
+        /* background: #1F3F7F; */
+        cursor: pointer;
+    }
+    .cards-row .order-card:hover *{
+        color: inherit !important;
+    }
+    .order-card-dark{
+        background: #1F3F7F;
+        color: white;
+    }
+    .order-card-dark *{
+        color: inherit !important;
+    }
+    .tooth-number--span, .tooth-number--span-edit{
+        color: #a8afc7;
+    }
+    .tooth-number--span:hover, .tooth-number--span-selected, .tooth-number--span-edit:hover, .tooth-number--span-edit-selected{
+        color: #1f3f7f;
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .order-heading{
+        margin-left: auto;
+        margin-right: 1rem;
+        font-size: initial;
+        margin-bottom: 1rem;
+    }
+
+    .property-box{
+        margin: 0.5rem 0;
+    }
+    .property-box>span:first-child{
+        margin-right: 1rem;
+        font-size: 14px;
+        font-weight: 400;
+    }
+    .property-box>span:last-child{
+        font-size: 15px;
+    }
+    .payment-button{
+        float: right;
+        margin-right: 0.5rem;
+        margin-top: 1rem;
+        background: #1f3f7f;
+    }
+    .search-box{
+        float: right;
+        margin-right: 1rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+    }
+    #dropleftMenuButton:hover{
+        background: #1f3f7f;
+    }
+    .upload-button{
+        border-color: #1F3F7F;
+    }
+    .select-order--button{
+        background: #1F3F7F;
+    }
+    .order-confirm--button{
+        position: absolute;
+        bottom: 45px;
+        right: 30px;
+        background: #1F3F7F;
+        padding: 0.5rem 2rem;
+        color: white;
+        border-radius: 12px;
+        font-size: 16px !important;
+    }
+    .icon-image{
+        width: 50px !important;
+    }
+    .dropzone-box form{
+        border: 1px dashed;
+        height: 75px !important; 
+        min-height: 75px !important; 
+        width: 100px !important; 
+        margin-bottom: 0.5rem;
+    }
+    .dropzone .dz-preview .dz-image {
+        width: 100px !important;
+        height: 75px !important;
+    }
+    .dropzone .dz-preview{
+        margin: 0 !important;
+        min-height: 0 !important;
+    }
+    .dropzone .dz-preview.dz-file-preview .dz-image{
+        border-radius: 0 !important;
+    }
+    .dz-details{
+        padding: 0.75rem !important;
+        /* top: 0.5rem !important; */
+        font-size: 12px !important;
+    }
+    .dropzone .dz-preview .dz-details .dz-size{
+        margin-bottom: 1em !important;
+        font-size: 12px !important;
+    }
+    .dz-progress{
+        height: 10px !important;
+        left: 65% !important;
+        top: 50% !important;
+        width: 50px !important;
+    }
+    .dropzone .dz-preview .dz-success-mark svg, .dropzone .dz-preview .dz-error-mark svg{
+        width: 35px !important;
+        height: 35px !important;
+        margin: 0.5rem 0.75rem !important;
+    }
+    .fileName{
+        text-align: center;
+        margin-right: 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .delete-icon.position-absolute{
+        top: 25px;
+        right: 0;
+        z-index: 9999;
+    }
+    .fileName-parent{
+        display: flex; 
+        align-items: center; 
+        margin-top: 1rem;
+    }
+    .footnotes-card{
+        /* width: 250px; */
+        flex: 0 0 300px;
+        /* min-width: 250px; */
+        text-align: left;
+        margin: 1rem 1rem 1rem 0;
+    }
+    html {
+        --scrollbarBG: #CFD8DC;
+        --thumbBG: #cfdada;
+    }
+    .card-group--enclosing::-webkit-scrollbar {
+        height: 6px;
+    }
+    .card-group--enclosing {
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+    }
+    .card-group--enclosing::-webkit-scrollbar-thumb {
+        background-color: var(--thumbBG) ;
+        border-radius: 6px;
+    }
+    .note-content .note-pointer{
+        font-weight: 500;
+    }
+    .order-modal--content .modal-body{
+        padding: 1rem 1.5rem;
+
+    }
+    .accordion-parent .card{
+        margin-bottom: 1rem;
+    }
+    .notes-enclosing{
+        padding: 1rem 1rem 0.5rem 2rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 1px 2px 17px #e3e9ef;
+        border-radius: 8px;
+        margin-left: 1rem;
+        background-color: aliceblue;
+    }
+    .notes-enclosing ul{
+        margin-top: 0.5rem;
+        list-style: auto;
+        font-weight: 400;
+    }
+    .notes-enclosing ul li{
+        margin-top: 0.25rem;
+    }
+    .notes-enclosing ul li:first-child{
+        margin-top: 0.5rem;
+    }
+    .notes-enclosing ul span.note-text{
+        margin-left: 0.25rem;
+    }
+    .order-heading i{
+        color: #1f3f7f;
+    }
+    .tooth-indexing--edit span, .tooth-indexing span{
+        cursor: pointer;
+    }
+    .dropdown-item:hover{
+        color: white;
+    }
+    .fileName-viewer{
+        margin-right: 4px;
+        padding: 9px 5px 4px 5px;
+        background: aliceblue;
+        border-radius: 5px;
+    }
+    
+    .delete-icon{
+        background: white;
+        padding: 0 5px;
+        border-radius: 5px;
+    }
+    .delete-icon img{
+        height: 2rem;
+    }
+    .position-absolute.delete-icon img{
+        height: 1rem;
+    }
+    #shipmentReqdSmall{
+        position: absolute;
+        right: 125px;
+        bottom: -9px;
+        color: grey;
+    }
+    
+</style>
+
+<div class="container mb-3">
+    
+    <div class="row m-2 enclosing-row">
+
+        <div class="col-sm-4 col-md-3 p-0 d-flex text-center align-items-center">
+            <div class="gender-icon--enclosing">
+                {% if patient.gender == 'Female' %}
+                <img class="icon-image" src="/static/svg_icons/Female.svg" alt="">
+                {% endif %}
+                {% if patient.gender != 'Female' %}
+                <img class="icon-image" src="/static/svg_icons/Male.svg" alt="">
+                {% endif %}
+            </div>
+            <div class="d-flex flex-column">
+                <span class="name-heading">{{patient.name}}</span>
+                <span class="text-left ml-3">
+                    ID: <span class="">{{patient.pid}}</span>
+                </span>
+                
+            </div>
+        </div>
+
+        <div class="col-sm-8 col-md-9 p-0 d-flex align-items-center justify-content-between">
+
+            <div class="ml-auto form-inline">
+                <label for="inputState">Referred To: </label>
+                <select id="inputState" class="form-control ml-3">
+                    
+                    {% for i in all_lab %}
+                        <option value="{{i.id}}">{{i.orgname}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button class="btn btn-sm ml-3 mr-3" data-toggle="modal" data-target="#chatBoxModal" style="border: 1px solid #ededed; padding: 7px;">
+                <!-- <i class="fa-solid fa-comments"></i> -->
+                <img src="/static/svg_icons/Group 98.svg" width="22px" />
+            </button>
+
+        </div>
+
+        <div class="col-sm-12 row mt-3 p-3 align-items-center ml-0" style="background-color: aliceblue;">
+            <div class="col-sm-6">
+                <h6 class="mb-3">Data Type: </h6>
+                <div class="form-check ml-2">
+                    <input class="form-check-input" type="radio" onclick="onDataTypeChange(this)" checked name="preferredData" id="digital" value="digitalData">
+                    <label class="form-check-label ml-1" for="digital">Digital Data</label>
+                </div>
+                <div class="form-check ml-2 mt-2 position-relative">
+                    <input class="form-check-input" type="radio" onclick="onDataTypeChange(this)" name="preferredData" id="non-digital" value="nonDigitalData">
+                    <label class="form-check-label ml-1" for="non-digital">Non-Digital Data</label>
+                    <input type="checkbox" class="ml-5 d-none" name="shipmentReqd" id="shipmentReqd">
+                    <label for="shipmentReqd" id="shipmentReqdLabel" class="d-none">Schedule Pickup Request</label>
+                    <small class="d-none" id="shipmentReqdSmall">POWERED BY DENTREAD</small>
+                </div>
+            </div>
+            
+            
+            <div class="col-sm-6">
+                <h6>Upload Scan Images:</h6>
+
+                <div class="dropzone-area row mt-3">
+
+                    <div class="dropzone-box col-3 position-relative">
+                        <span class="ml-3">Upper Jaw</span>
+                        <form action="/uploadLabData/{{service_order.id}}/Upper-Jaw" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center" id="firstform">
+                            {% csrf_token %}
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName">
+                                {% if imageUpperJaw %}
+                                    {% for i in imageUpperJaw %}
+                                        {{i.fileName}}
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            <span class="fileName-viewer">
+                                {% if imageUpperJaw %}
+                                    {% for i in imageUpperJaw %}
+                                        <a href="/viewLabStlImage/{{service_order.id}}/Upper-Jaw" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            {% if imageUpperJaw %}
+                                {% for i in imageUpperJaw %}    
+                                <a class="delete-icon" href="/deleteIos/{{service_order.id}}/Upper-Jaw">
+                                    <img src="/static/svg_icons/delete.svg" alt="">
+                                </a>
+                                {% endfor %}
+                            {% endif %}
+                        </h6>
+                        <a class="d-none position-absolute delete-icon" href="/deleteIos/{{service_order.id}}/Upper-Jaw">
+                            <img src="/static/svg_icons/delete.svg" alt="">
+                        </a>
+                    </div>
+                    <div class="dropzone-box col-3">
+                        <span class="ml-3">Lower Jaw</span>
+                        <form action="/uploadLabData/{{service_order.id}}/Lower-Jaw" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center" id="secondform">
+                            {% csrf_token %}
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName">
+                                {% if imageLowerJaw %}
+                                    {% for i in imageLowerJaw %}
+                                        {{i.fileName}}
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            <span class="fileName-viewer">
+                                {% if imageLowerJaw %}
+                                    {% for i in imageLowerJaw %}
+                                        <a href="/viewLabStlImage/{{service_order.id}}/Lower-Jaw" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            {% if imageLowerJaw %}
+                                {% for i in imageLowerJaw %}
+                                    <a class="delete-icon" href="/deleteIos/{{service_order.id}}/Lower-Jaw">
+                                        <img src="/static/svg_icons/delete.svg" alt="">
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
+                            
+                        </h6>
+                        <a class="d-none position-absolute delete-icon" href="/deleteIos/{{service_order.id}}/Lower-Jaw">
+                            <img src="/static/svg_icons/delete.svg" alt="">
+                        </a>
+                        
+                    </div>
+                    <div class="dropzone-box col-3">
+                        <span class="ml-3">Left Bite</span>
+                        <form action="/uploadLabData/{{service_order.id}}/Left-Bite" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center"  id="thirdform">
+                            {% csrf_token %}  
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName">
+                                {% if imageLeftBite %}
+                                    {% for i in imageLeftBite %}
+                                        {{i.fileName}}
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            <span class="fileName-viewer">
+                                {% if imageLeftBite %}
+                                    {% for i in imageLeftBite %}
+                                        <a href="/viewLabStlImage/{{service_order.id}}/Left-Bite" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            {% if imageLeftBite %}
+                                {% for i in imageLeftBite %}
+                                    <a class="delete-icon" href="/deleteIos/{{service_order.id}}/Left-Bite">
+                                        <img src="/static/svg_icons/delete.svg" alt="">
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
+                        </h6>
+                        
+                        <a class="d-none position-absolute delete-icon" href="/deleteIos/{{service_order.id}}/Left-Bite">
+                            <img src="/static/svg_icons/delete.svg" alt="">
+                        </a>
+                    </div>
+                    <div class="dropzone-box col-3">
+                        <span class="ml-3">Right Bite</span>
+                        <form action="/uploadLabData/{{service_order.id}}/Right-Bite" method="post" class="mt-3 dropzone d-flex align-items-center justify-content-center" id="fourthform">
+                            {% csrf_token %}
+                        </form>
+                        <h6 class="fileName-parent">
+                            <span class="fileName">
+                                {% if imageRightBite %}
+                                    {% for i in imageRightBite %}
+                                        {{i.fileName}}
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            <span class="fileName-viewer">
+                                {% if imageRightBite %}
+                                    {% for i in imageRightBite %}
+                                        <a href="/viewLabStlImage/{{service_order.id}}/Right-Bite" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                            {% if imageRightBite %}
+                                {% for i in imageRightBite %}
+                                    <a class="delete-icon" href="/deleteIos/{{service_order.id}}/Right-Bite">
+                                        <img src="/static/svg_icons/delete.svg" alt="">
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
+                        </h6>
+                        
+                        <a class="d-none position-absolute delete-icon" href="/deleteIos/{{service_order.id}}/Right-Bite">
+                            <img src="/static/svg_icons/delete.svg" alt="">
+                        </a>
+                    </div>
+                    
+                </div>
+                <script>
+                    
+                    Dropzone.options.firstform = {
+                        acceptedFiles: ".stl, .ply, .zip",
+                        maxFiles:1,
+                        dictDefaultMessage: '+', 
+                        thumbnailHeight: 30, 
+                        zoom: 0.4, 
+                        success(file) {
+                            if (file.previewElement) {
+                                this.element.parentElement.querySelector('.fileName').innerText = file.name;
+                                let s = this.element.parentElement.querySelector('span').innerText
+                                let site = s == 'Upper Jaw'?'Upper-Jaw' : s == 'Lower Jaw'?'Lower-Jaw' : s == 'Left Bite'?'Left-Bite' : 'Right-Bite';
+                                this.element.parentElement.querySelector('.fileName-viewer').innerHTML = 
+                                        `<a href="/viewLabStlImage/{{service_order.id}}/${site}" target="_blank">
+                                            <i class="fa fa-eye"></i>
+                                        </a>`;
+                                this.element.parentElement.querySelector('a.position-absolute.delete-icon').classList.remove('d-none');
+                                return file.previewElement.classList.add("dz-success");
+                            }
+                        },
+                    }
+                    Dropzone.options.secondform = {...Dropzone.options.firstform};
+                    Dropzone.options.thirdform = {...Dropzone.options.firstform}
+                    Dropzone.options.fourthform = {...Dropzone.options.firstform}
+                </script>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="row m-2 enclosing-row mt-5 pb-4 align-items-start ">
+
+        <div class="col-12 d-flex mb-3">
+            <span class="heading" style="font-size: 20px;">Order Details</span>
+        </div>
+
+        <div class="col-12 col-xl-6 d-flex justify-content-center position-relative" style="max-width: 531px !important; margin-top: 5rem; flex-direction: column;">
+            <div class="tooth-indexing" onclick="onToothImageClick(event)">
+                <span class="position-absolute tooth-number--span" style="top: 150px; left: 21%;">18</span>
+                <span class="position-absolute tooth-number--span" style="top: 114px; left: 21%;">17</span>
+                <span class="position-absolute tooth-number--span" style="top: 79px; left: 22%;">16</span>
+                <span class="position-absolute tooth-number--span" style="top: 48px; left: 24%;">15</span>
+                <span class="position-absolute tooth-number--span" style="top: 19px; left: 27%;">14</span>
+                <span class="position-absolute tooth-number--span" style="top: -7px; left: 33%;">13</span>
+                <span class="position-absolute tooth-number--span" style="top: -25px; left: 39%;">12</span>
+                <span class="position-absolute tooth-number--span" style="top: -33px; left: 45%;">11</span>
+                
+                <span class="position-absolute tooth-number--span" style="top: -33px; right: 234px;">21</span>
+                <span class="position-absolute tooth-number--span" style="top: -26px; right: 36%;">22</span>
+                <span class="position-absolute tooth-number--span" style="top: -8px; right: 30%;">23</span>
+                <span class="position-absolute tooth-number--span" style="top: 20px; right: 26%;">24</span>
+                <span class="position-absolute tooth-number--span" style="top: 50px; right: 23%;">25</span>
+                <span class="position-absolute tooth-number--span" style="top: 81px; right: 21%;">26</span>
+                <span class="position-absolute tooth-number--span" style="top: 114px; right: 20%;">27</span>
+                <span class="position-absolute tooth-number--span" style="top: 149px; right: 20%;">28</span>
+
+                <span class="position-absolute tooth-number--span" style="bottom: 142px; right: 20%;">38</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 109px; right: 20%;">37</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 78px; right: 21%;">36</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 46px; right: 23%;">35</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 15px; right: 26%;">34</span>
+                <span class="position-absolute tooth-number--span" style="bottom: -13px; right: 31%;">33</span>
+                <span class="position-absolute tooth-number--span" style="bottom: -31px; right: 37%;">32</span>
+                <span class="position-absolute tooth-number--span" style="bottom: -36px; right: 45%;">31</span>
+
+                <span class="position-absolute tooth-number--span" style="bottom: -36px; left: 45%;">41</span>
+                <span class="position-absolute tooth-number--span" style="bottom: -29px; left: 38%;">42</span>
+                <span class="position-absolute tooth-number--span" style="bottom: -9px; left: 32%;">43</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 17px; left: 27%;">44</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 46px; left: 24%;">45</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 78px; left: 22%;">46</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 109px; left: 21%;">47</span>
+                <span class="position-absolute tooth-number--span" style="bottom: 141px; left: 21%;">48</span>
+
+
+                
+            </div>
+            
+            <img src="/static/tooth-images.png" usemap="#image-map" height="400" style="height: 400px !important; width: 219.45px !important; margin: 0 auto;">
+            
+            <map name="image-map" onclick="onToothImageClick(event)">
+                
+                <area target="" alt="18" title="18" href="#/" coords="19.13477537437604,166.22296173044927,27.28785357737105,169.7171381031614,35.77371048252912,167.72046589018302,40.26622296173045,155.74043261231282,37.2712146422629,147.92013311148088,30.116472545757073,143.09484193011647,14.47587354409318,141.93011647254576,8.818635607321132,147.5873544093178,7.820299500831947,157.2379367720466,10.648918469217971,164.7254575707155" shape="poly">
+                <area target="" alt="17" title="17" href="#/" coords="19.800332778702163,115.1414309484193,13.311148086522463,120.13311148086522,11.647254575707155,130.11647254575706,14.64226289517471,136.77204658901832,17.13810316139767,139.76705490848587,34.27620632279534,142.0965058236273,41.26455906821963,133.27787021630616,41.76372712146423,125.45757071547422,32.61231281198003,116.80532445923461"shape="poly">
+                <area target="" alt="16" title="16" href="#/" coords="20.632279534109816,112.81198003327788,34.44259567387687,116.13976705490849,41.43094841930117,114.80865224625624,46.755407653910154,106.4891846921797,44.42595673876872,95.84026622296173,34.94176372712147,92.17970049916805,23.62728785357737,91.51414309484193,18.63560732113145,95.84026622296173,17.13810316139767,105.82362728785358" shape="poly">
+                <area target="" alt="15" title="15" href="#/" coords="28.95174708818636,67.88685524126456,23.793677204658902,71.3810316139767,22.628951747088188,80.03327787021631,26.455906821963396,86.52246256239602,33.44425956738769,90.34941763727122,44.09317803660566,90.18302828618968,51.247920133111485,86.52246256239602,51.74708818635607,76.2063227953411,39.76705490848586,68.71880199667221" shape="poly">
+                <area target="" alt="14" title="14" href="#/" coords="36.7720465890183,49.58402662229617,31.44758735440932,58.23627287853578,36.938435940099836,66.05657237936772,46.089850249584025,70.71547420965058,55.07487520798669,70.04991680532446,58.56905158069884,64.89184692179701,57.90349417637272,58.73544093178037,48.25291181364393,50.41597337770383,41.76372712146423,48.25291181364393" shape="poly">
+                <area target="" alt="13" title="13" href="#/" coords="49.750415973377706,47.42096505823628,61.730449251247926,56.07321131447588,68.38602329450916,55.407653910149754,72.54575707154743,49.750415973377706,72.04658901830283,41.43094841930117,63.56073211314476,31.94675540765391,58.402662229617306,29.45091514143095,51.08153078202995,30.782029950083196,47.75374376039934,36.10648918469218,47.587354409317804,41.930116472545755" shape="poly">
+                <area target="" alt="12" title="12" href="#/" coords="65.3910149750416,31.281198003327788,74.37603993344426,43.09484193011647,79.70049916805324,43.26123128119801,89.01830282861897,37.60399334442596,86.02329450915141,17.637271214642265,81.69717138103162,12.479201331114808,70.88186356073211,14.80865224625624,62.89517470881864,20.798668885191347,62.89517470881864,25.790349417637273" shape="poly">
+                <area target="" alt="11" title="11" href="#/" coords="86.52246256239602,8.48585690515807,86.68885191347754,17.13810316139767,92.51247920133112,34.44259567387687,97.67054908485858,35.44093178036606,108.98502495840266,32.77870216306157,112.97836938435941,11.480865224625624,109.65058236272878,4.825291181364393,98.16971713810317,2.8286189683860234" shape="poly">
+                
+                <area target="" alt="21" title="21" href="#/" coords="113.64392678868553,10.648918469217971,116.97171381031615,31.78036605657238,125.12479201331115,33.94342762063228,133.27787021630616,33.61064891846922,138.9351081530782,17.13810316139767,139.93344425956738,8.48585690515807,130.94841930116473,2.4958402662229617,117.8036605657238,3.4941763727121464" shape="poly">
+                <area target="" alt="22" title="22" href="#/" coords="140.93178036605659,15.307820299500833,137.43760399334442,30.449251247920134,137.43760399334442,36.10648918469218,146.08985024958403,41.930116472545755,150.91514143094844,41.76372712146423,163.7271214642263,27.12146422628952,162.89517470881864,18.96838602329451,155.2412645590682,12.978369384359402,147.5873544093178,11.314475873544094" shape="poly">
+                <area target="" alt="23" title="23" href="#/" coords="167.55407653910152,29.45091514143095,155.74043261231282,37.93677204658902,154.0765391014975,48.41930116472546,157.7371048252912,54.90848585690516,164.55906821963396,56.40599001663894,178.03660565723794,46.92179700499168,180.19966722129783,37.10482529118136,175.04159733777038,30.282861896838604" shape="poly">
+                <area target="" alt="24" title="24" href="#/" coords="180.19966722129783,49.750415973377706,167.72046589018302,58.402662229617306,168.38602329450916,65.72379367720467,173.04492512479203,70.71547420965058,182.52911813643928,70.71547420965058,195.0083194675541,61.064891846921796,195.50748752079866,52.91181364392679,188.35274542429286,48.91846921797005" shape="poly">
+                <area target="" alt="25" title="25" href="#/" coords="188.85191347753744,68.21963394342762,175.20798668885192,75.37437603993345,174.5424292845258,83.52745424292846,176.37271214642263,88.18635607321131,188.85191347753744,91.01497504159734,197.3377703826955,88.35274542429285,203.99334442595674,82.19633943427621,203.1613976705491,71.8801996672213,196.83860232945094,68.38602329450916" shape="poly">
+                <area target="" alt="26" title="26" href="#/" coords="183.36106489184692,93.84359400998336,179.03494176372712,102.32945091514144,182.6955074875208,113.477537437604,189.35108153078204,117.47088186356073,207.32113144758736,113.31114808652246,209.1514143094842,102.32945091514144,206.82196339434276,93.51081530782031,197.67054908485858,89.51747088186356" shape="poly">
+                <area target="" alt="27" title="27" href="#/" coords="193.34442595673877,117.3044925124792,207.32113144758736,116.47254575707156,212.64559068219634,121.13144758735442,213.31114808652248,131.61397670549084,210.31613976705492,140.26622296173045,193.34442595673877,142.26289517470883,188.5191347753744,139.4342762063228,183.86023294509152,129.1181364392679,187.35440931780366,121.29783693843595" shape="poly">
+                <area target="" alt="28" title="28" href="#/" coords="195.84026622296173,143.42762063227954,210.8153078202995,142.0965058236273,217.30449251247921,148.25291181364392,217.63727121464228,156.90515806988353,214.14309484193012,166.22296173044927,205.99001663893512,166.72212978369384,197.50415973377704,170.54908485856905,189.1846921797005,167.55407653910152,185.19134775374377,156.23960066555742,187.68718801996673,147.42096505823628" shape="poly">
+                
+                <area target="" alt="38" title="38" href="#/" coords="199.16805324459236,234.27620632279536,206.65557404326123,238.43594009983363,215.6405990016639,238.43594009983363,218.801996672213,248.91846921797006,217.8036605657238,259.4009983361065,211.64725457570717,265.8901830282862,197.00499168053244,265.05823627287856,191.846921797005,261.73044925124793,186.18968386023295,254.5757071547421,187.02163061564062,244.7587354409318,190.51580698835275,236.60565723793678" shape="poly">
+                <area target="" alt="37" title="37" href="#/" coords="193.5108153078203,265.3910149750416,210.48252911813645,267.8868552412646,215.1414309484193,277.53743760399334,213.477537437604,287.0216306156406,205.82362728785358,292.51247920133113,191.51414309484193,289.85024958402664,184.8585690515807,281.0316139767055,187.02163061564062,270.5490848585691" shape="poly">
+                <area target="" alt="36" title="36" href="#/" coords="185.02495840266224,292.51247920133113,180.03327787021632,303.99334442595676,184.8585690515807,313.477537437604,195.84026622296173,316.6389351081531,203.99334442595674,317.47088186356075,209.1514143094842,311.8136439267887,209.1514143094842,299.16805324459233,204.8252911813644,294.1763727121464,194.17637271214642,291.18136439267886" shape="poly">
+                <area target="" alt="35" title="35" href="#/" coords="175.70715474209652,322.6289517470882,175.87354409317805,330.61564059900167,182.1963394342762,336.2728785357737,191.846921797005,339.7670549084859,197.8369384359401,339.9334442595674,203.6605657237937,335.27454242928457,203.99334442595674,323.6272878535774,194.34276206322795,317.8036605657238,182.6955074875208,317.6372712146423" shape="poly">
+                <area target="" alt="34" title="34" href="#/" coords="169.7171381031614,340.2662229617305,168.0532445923461,348.4193011647255,174.20965058236274,354.74209650582367,186.35607321131448,359.4009983361065,194.0099833610649,355.5740432612313,196.83860232945094,349.7504159733777,194.0099833610649,342.92845257903497,185.52412645590684,337.93677204658906,179.20133111480865,336.6056572379368,174.20965058236274,336.93843594009985" shape="poly">
+                <area target="" alt="33" title="33" href="#/" coords="154.0765391014975,359.06821963394344,155.57404326123128,370.88186356073214,168.5524126455907,381.0316139767055,178.70216306156408,377.7038269550749,181.36439267886857,370.88186356073214,178.53577371048254,361.5640599001664,163.89351081530782,352.5790349417637,158.73544093178037,355.0748752079867" shape="poly">
+                <area target="" alt="32" title="32" href="#/" coords="136.2728785357737,370.7154742096506,149.25124792013312,365.7237936772047,159.73377703826955,379.3677204658902,161.5640599001664,387.18801996672215,153.57737104825293,393.67720465890187,145.09151414309486,395.5074875207987,138.9351081530782,391.0149750415973" shape="poly">
+                <area target="" alt="31" title="31" href="#/" coords="116.97171381031615,374.20965058236277,129.28452579034942,372.0465890183028,132.77870216306158,376.0399334442596,134.77537437603993,382.5291181364393,136.77204658901832,393.84359400998335,128.78535773710482,399.00166389351085,117.63727121464227,397.8369384359401,114.47587354409318,390.84858569051585" shape="poly">
+                
+                <area target="" alt="41" title="41" href="#/" coords="96.33943427620633,371.8801996672213,90.51580698835275,387.8535773710483,90.8485856905158,393.67720465890187,96.83860232945092,398.3361064891847,103.66056572379368,399.00166389351085,111.98003327787022,395.0083194675541,112.81198003327788,388.51913477537437,110.48252911813644,373.8768718801997,104.3261231281198,371.8801996672213" shape="poly">
+                <area target="" alt="42" title="42" href="#/" coords="78.03660565723794,365.7237936772047,68.38602329450916,379.7004991680533,66.55574043261231,386.0232945091514,74.70881863560733,392.67886855241267,83.52745424292846,395.0083194675541,89.6838602329451,388.6855241264559,91.3477537437604,370.7154742096506,85.35773710482529,366.22296173044924" shape="poly">
+                <area target="" alt="43" title="43" href="#/" coords="64.39267886855241,351.91347753743764,50.2495840266223,361.23128119800333,48.75207986688852,369.05158069883527,50.2495840266223,375.540765391015,57.90349417637272,379.3677204658902,65.89018302828619,376.2063227953411,72.54575707154743,370.38269550748754,74.37603993344426,358.9018302828619,70.21630615640599,353.5773710482529," shape="poly">
+                <area target="" alt="44" title="44" href="#/" coords="44.59234608985025,337.43760399334445,35.44093178036606,342.92845257903497,32.27953410981697,349.58402662229616,33.94342762063228,354.24292845257906,40.59900166389351,359.234608985025,49.750415973377706,357.73710482529117,60.06655574043261,349.2512479201331,58.73544093178037,340.2662229617305,53.24459234608985,336.7720465890183" shape="poly">
+                <area target="" alt="45" title="45" href="#/" coords="35.108153078202996,317.6372712146423,49.91680532445923,319.30116472545757,52.57903494176373,325.62396006655575,52.412645590682196,331.61397670549087,46.089850249584025,336.2728785357737,35.60732113144759,340.2662229617305,30.116472545757073,339.9334442595674,24.459234608985025,336.43926788685525,23.12811980033278,327.6206322795341,26.788685524126457,322.2961730449251" shape="poly">
+                <area target="" alt="46" title="46" href="#/" coords="21.464226289517473,295.1747088186356,37.2712146422629,291.3477537437604,44.09317803660566,294.1763727121464,47.75374376039934,302.6622296173045,44.925124792013314,312.47920133111484,34.6089850249584,316.97171381031615,24.792013311148086,317.97004991680535,19.467554076539102,312.14642262895177,17.470881863560734,302.828618968386" shape="poly">
+                <area target="" alt="47" title="47" href="#/" coords="17.3044925124792,267.8868552412646,33.77703826955075,266.22296173044924,40.26622296173045,270.7154742096506,42.09650582362729,276.7054908485857,41.597337770382694,283.1946755407654,35.94009983361065,290.0166389351082,22.96173044925125,292.17970049916806,15.141430948419302,288.35274542429283,12.811980033277871,281.19800332778703,13.311148086522463,274.7088186356073" shape="poly">
+                <area target="" alt="48" title="48" href="#/" coords="11.647254575707155,238.2695507487521,17.803660565723796,238.2695507487521,27.45424292845258,234.27620632279536,36.272878535773714,235.77371048252914,39.76705490848586,244.09317803660568,40.93178036605657,252.24625623960068,36.10648918469218,261.73044925124793,27.78702163061564,265.8901830282862,15.474209650582363,265.55740432612316,9.650582362728786,259.06821963394344,7.653910149750416,249.5840266222962" shape="poly">
+                
+            </map>
+
+            <div class="form-row col-sm-6 position-absolute" style="right: 5rem; bottom: -6.5rem">
+                <!-- <span>Notation: </span>  -->
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" onclick="onNotationChange(this)" checked name="notation" id="fdi" value="FDI">
+                    <label class="form-check-label ml-1" for="fdi">FDI</label>
+                </div>
+
+                <div class="form-check form-check-inline ml-4">
+                    <input class="form-check-input" type="radio" onclick="onNotationChange(this)"  name="notation" id="universal" value="Universal">
+                    <label class="form-check-label ml-1" for="universal">Universal</label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="offset-lg-1 col-12 col-xl-5 mb-5">
+            <form method="post" action="/refer_dentlab/{{service_order.id}}/{{mycat.id}}" class="form" onsubmit="return onFormSubmit()"  multi>
+                {% csrf_token %}
+
+                <div class="form-group d-none">
+                    <label for="organisationid">Select Organisation</label>
+                    <input type="text" name="organisationid"  class="form-control bg-white" id="organisationid">
+                </div>
+                
+                <div class="form-group d-none">
+                    <label for="notation">Select Organisation</label>
+                    <input type="text" name="notation-select" class="form-control bg-white" id="notation-select">
+                </div>
+
+                <div class="form-group d-none">
+                    <label for="orderSelection">Order Selection</label>
+                    <input type="text" name="orderSelection"  class="form-control bg-white" id="orderSelection">
+                </div>
+
+                <div class="form-group form-row">
+                    <button type="button" style="background: #1F3F7F; color: white;" onclick="onSelectOrderButtonClick(this)" data-target="#selectOrder" class="form-control w-50 ml-auto btn order-selection--button">
+                        <i class="fa-solid fa-plus mr-1"></i> Select Product 
+                    </button>
+                    <!-- <input class="col form-control" required name="date" type="date" id="datepicker1" /> -->
+                </div>
+
+                <div class="form-group">
+                    <label for="selectedProduct">Selected Product <span class="tx-danger">*</span></label>
+                    <input type="text" name="selectedProduct" required class="form-control bg-white" id="selectedProduct" placeholder="Selected Product" readonly>
+                </div>
+
+                <div class="form-group form-row mb-0">
+                    <div class="form-group col pl-0 mr-0 pr-0">
+                    <!-- <div class="form-group col pl-0" style="margin-right: 0.5rem; padding-right: 5px;"> -->
+                        <label for="toothSelection">Tooth Site(s)</label>
+                        <input type="text" name="checks[]" required class="form-control bg-white" id="toothSelection" placeholder="Tooth Sites" readonly>
+                    </div>
+
+                    <div class="form-group col pr-0 fabrication-enclosing d-none">
+                        <label for="fabrication">Fabrication</label>
+                        <select id="fabrication" name="fabrication" class="form-control" style=" width: inherit;">
+                            <option selected disabled value="select">Select</option>
+                            <option value = "Joint">Joint</option>
+                            <option value = "Individual">Individual</option>
+                        </select>
+                    </div>
+                </div>
+               
+                <div class="form-group form-row mb-0">
+                    <div class="form-group col pl-0 mr-2 pr-1">
+                        <label for="shadeSelection">Shade Type</label>
+                        <select id="shadeSelection" name="shade" onchange="onShadeSelection(this, document.getElementById('shadeTypeSelection'))" class="form-control" style=" width: inherit;">
+                            <option selected disabled value ='select'>Select Shade Type</option>
+                            <option value="Vita Pan Classic">Vita Pan Classic</option>
+                            <option value="Vita 3D Master">Vita 3D Master</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col pr-0">
+                        <label for="shadeTypeSelection">Shade Code</label>
+                        <select id="shadeTypeSelection" name="shadeType" class="form-control" style=" width: inherit;">
+                            <option selected disabled value="select">Select Shade</option>
+                            
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="datepicker1">Expected Delivery Date <span class="tx-danger">*</span></label>
+                    <input type="date" name="date" min = '{% now "Y-m-d" %}'  required class="form-control bg-white"  id="datepicker1" placeholder="DD/MM/YYYY">
+                </div>
+
+                <div class="form-group">
+                    <label for="clinicalNotes">Clinical Notes</label>
+                    <textarea class="form-control" name="remark" id="clinicalNotes" style="resize: none;" rows="3"></textarea>
+                </div>
+
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" name="designCheck" id="designApproval">
+                    <label class="form-check-label" for="designApproval">Send this design for approval</label>
+                </div>
+ 
+                <div class="form-group">
+                    <button type="submit" style="font-size: 0.95rem;" class="form-control btn float-right w-50 add-order--button"><i class="fa-solid fa-plus mr-1"></i> Add Order</button>
+                </div>
+
+            </form>
+        </div>
+            
+
+    </div>
+
+    {% if prosthetic %}
+        <h5 class="heading mt-3" style="font-size: 1.2rem;">Orders</h5>
+    {% endif %}
+    
+
+    {% for item in prosthetic %}
+
+        <div class="row m-2 enclosing-row lineOrderLevel-heading align-items-start mb-4">
+            <h5 class="heading order-heading">
+                Total: <span style="margin-left: 0.125rem;">{% autoescape off %}
+                    {{icon}}
+                {% endautoescape %}</span> <span style="font-size: larger; color: #1f3f7f;">{{item.price}}/-</span>
+            </h5>
+            <div class="col-12 d-flex align-items-center">
+
+                <img src="/static/svg_icons/pointer_icon.svg" alt="">
+                
+                <div class="heading">{{item.item}} / {{item.material}} {% if item.sub_material %} / {{item.sub_material}}{% endif %} </div>
+                
+                <button aria-expanded="false" aria-haspopup="true"
+                    class="btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                    id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                </button>
+                
+                <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                    <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal" data-target="#editOrderModal" onclick="onEditOrderModal('{{item.item}} - {{item.type}}', `{{item.tooth}}`, `{{item.expectedDate}}`, '{{item.remark}}', '{{item.shadeType}}', '{{item.shade}}', '{{item.fabrication}}', '{{item.designCheck}}', '{{item.id}}')">
+                        <img src="/static/svg_icons/pencil_icon.svg" alt=""> Edit
+                    </a>
+                    <a class="dropdown-item" style="cursor: pointer;" href="/delete_pros/{{item.id}}">
+                        <img src="/static/svg_icons/delete.svg" alt=""> Delete
+                    </a>
+                </div>
+                
+
+            </div>
+
+            <div class="col-12 row m-3 mr-7 order-particulars" style="font-weight: 500;">
+                {% if item.method != '' and item.method != 'NULL' and item.method != NULL %}
+                    <div class="col-sm-6 col-md-4 property-box">
+                        <span>Method: </span>
+                        <span>{{item.method}}</span>
+                    </div>
+                {% endif %}
+
+
+                
+                <div class="col-sm-12 property-box">
+                    <span>Product: </span>
+                    <span>{{item.type}}</span>
+                </div>
+
+            
+                {% if item.application %}
+                    <div class="col-sm-6 col-md-4 property-box">
+                        <span>Application: </span>
+                        <span>{{item.application}}</span>
+                    </div>
+                {% endif %}
+                
+                {% if item.price %}
+                    <div class="col-sm-6 col-md-4 property-box">
+                        <span>Price Per Unit: </span>
+                        <span> {% autoescape off %}
+                            {{icon}}
+                        {% endautoescape %} {{ item.pricePerUnit }} /-</span>
+                    </div>
+                {% endif %}
+
+                {% if item.warranty %}
+                    <div class="col-sm-6 col-md-4 property-box">
+                        <span>Warranty: </span>
+                        <span>{{item.warranty}} years</span>
+                    </div>
+                {% endif %}
+
+                {% if item.expectedDate %}
+                    <div class="col-sm-6 col-md-4 property-box">
+                        <span>Expected Delivery Date: </span>
+                        <span>{{item.expectedDate }}</span>
+                    </div>
+                {% endif %}
+                
+                {% if item.tooth %}
+                    <div class="col-sm-6 col-md-4 property-box">
+                        <span>Tooth Site(s): </span>
+                        <span >
+                            <span class="tooth-marks">{{item.tooth}}</span>
+                        </span>
+                        
+                    </div>
+                {% endif %}
+                
+                {% if item.shade %}
+                    <div class="col-sm-6 col-md-4 property-box">
+                        <span>Item Shade: </span>
+                        <span>{{item.shade}} - {{item.shadeType}}</span>
+                    </div>
+                {% endif %}
+
+                {% if item.fabrication %}
+                    <div class="col-sm-6 col-md-4 property-box">
+                        <span>Fabrication: </span>
+                        <span>{{item.fabrication}}</span>
+                    </div>
+                {% endif %}
+
+                <div class="col-sm-6 col-md-4 property-box d-flex align-items-center">
+                    <span>Units: </span>
+                    <div class="increment-decrement--button">
+                        <button style="width: 1.5rem;" onclick="onUnitButtonClickLineItem('decrement', '{{item.id}}', this)">-</button>
+                        <input type="number" class="increment-decrement--units" readonly value='{{item.unit}}' style="width: 50px; text-align: end;">
+                        <button style="width: 1.5rem;" onclick="onUnitButtonClickLineItem('increment', '{{item.id}}', this)">+</button>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4 property-box">
+        
+                </div>
+                
+                {% if item.remark %}
+                    <div class="col-sm-12">
+                        <hr>
+                        <span style="margin-right: 1rem;">Clinical Notes: </span>
+                        <span>{{item.remark}}</span>
+                        <hr>
+                    </div>
+                {% endif %}
+
+                {% if notes %}
+                    <div class="col-sm-11 notes-enclosing">
+                        <span>Note: </span>
+                        <ul>
+                            {% for i in notes %}
+                                {% if i.itemId == item.itemId and i.materialId == item.materialId  %}
+                                <li>
+                                    <span class="note-text">
+                                        {{ i.note }}
+                                    </span> 
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <div class="col-sm-12">
+                    <div class="container-fluid">
+                        <div class="row flex-nowrap card-group--enclosing" style="overflow-x: auto;">
+                            {% for i in footNotes %}
+                                {% if i.itemId == item.itemId and i.materialId == item.materialId  %}
+                                    {% if item.sub_materialId == NULL or item.sub_materialId == i.sub_materialId %}
+                                        {% if i.type == NULL or item.type == i.type %}
+                                            
+
+                                            {% if item.item == 'Implant Specific Section' and item.material == 'Paulo Malo Bridge' %}
+                                                {% if item.application.split.0 == i.addOnService.split.3|slice:"1:" %}
+                                                    
+                                                    <div class="card enclosing-row footnotes-card align-items-baseline" >
+                                                        <div class="info-about--layering d-none">
+                                                            <span class="add-on--service">{{i.addOnService}}</span>
+                                                            <span class="extra-item--id">{{i.id}}</span>
+                                                            <span class="line-item--id---number">{{item.id}}</span>
+                                                            <span class="item-id">{{i.itemId}}</span>
+                                                        </div>
+                                                        <div class="form-group form-check">
+                                                            <input type="checkbox" class="form-check-input" name="addOnService" id="{{i.id}}" onchange="onServiceAdd('{{item.id}}', '{{i.id}}', this, '{{item.item}}', '{{item.material}}')">
+                                                            <label class="form-check-label">{{i.addOnService}}</label>
+                                                        </div>
+                                                        <div class="property-box d-flex align-items-center">
+                                                            <span>Units: </span>
+                                                            <div class="increment-decrement--button">
+                                                                <button style="width: 1.5rem;" onclick="onUnitButtonClick('decrement', '{{item.id}}', '{{i.id}}', this)">-</button>
+                                                                <input type="number" class="increment-decrement--units" readonly value='{{i.unit}}' style="width: 50px; text-align: end;">
+                                                                <button style="width: 1.5rem;" onclick="onUnitButtonClick('increment', '{{item.id}}', '{{i.id}}', this)">+</button>
+                                                            </div>
+                                                        </div>
+                                                        {% if i.descriptions %}
+                                                            <div class="property-box">
+                                                                <span>Description: </span>
+                                                                <span>{{i.descriptions}}</span>  
+                                                            </div>
+                                                        {% endif %}
+
+                                                        <div class="property-box">
+                                                            <span>Unit Price: </span>
+                                                            
+                                                            <span>{{i.price}}/-</span>  
+
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+
+                                            {% else %}                         
+                                                <div class="card enclosing-row footnotes-card align-items-baseline" >
+                                                    <div class="info-about--layering d-none">
+                                                        <span class="add-on--service">{{i.addOnService}}</span>
+                                                        <span class="extra-item--id">{{i.id}}</span>
+                                                        <span class="line-item--id---number">{{item.id}}</span>
+                                                        <span class="item-id">{{i.itemId}}</span>
+                                                    </div>
+                                                    <div class="form-group form-check">
+                                                        <input type="checkbox" class="form-check-input" name="addOnService" id="{{i.id}}" onchange="onServiceAdd('{{item.id}}', '{{i.id}}', this, '{{item.item}}', '{{item.material}}')">
+                                                        <label class="form-check-label">{{i.addOnService}}</label>
+                                                    </div>
+                                                    <div class="property-box d-flex align-items-center">
+                                                        <span>Units: </span>
+                                                        <div class="increment-decrement--button">
+                                                            <button style="width: 1.5rem;" onclick="onUnitButtonClick('decrement', '{{item.id}}', '{{i.id}}', this)">-</button>
+                                                            <input type="number" class="increment-decrement--units" readonly value='{{i.unit}}' style="width: 50px; text-align: end;">
+                                                            <button style="width: 1.5rem;" onclick="onUnitButtonClick('increment', '{{item.id}}', '{{i.id}}', this)">+</button>
+                                                        </div>
+                                                    </div>
+                                                    {% if i.descriptions %}
+                                                        <div class="property-box">
+                                                            <span>Description: </span>
+                                                            <span>{{i.descriptions}}</span>  
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="property-box">
+                                                        <span>Unit Price: </span>
+                                                        {% if i.addOnService == 'Additional Pontic' and item.item == 'Crown and Bridges' and item.material == 'Maryland Bridge' and item.type == 'Casted' %}
+                                                            <span>0/-</span>  
+                                                        {% elif i.addOnService == 'Additional Wing' and item.item == 'Crown and Bridges' and item.material == 'Maryland Bridge' and item.type == 'Casted' %}
+                                                            <span>0/-</span>  
+                                                        {% else %}
+                                                            <span>{{i.price}}/-</span>  
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                           
+                                            {% endif %}
+
+                                            
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+            
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+    {% if prosthetic %}
+        <!-- <a href="#" style="width: 175px; border-radius: 6px;" class="btn btn-primary payment-button" onclick="onReviewClick(event);">Proceed to payment</a>         -->
+        <a href="/checkForReview/{{service_order.id}}/{{mycat.id}}" style="width: 175px; border-radius: 6px;" class="btn btn-primary payment-button">Proceed to payment</a>        
+    {% endif %}
+    
+
+</div>
+
+<div class="modal fade" id="editOrderModal" tabindex="-1" role="dialog" aria-labelledby="editOrderModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+           <div class="modal--header">
+                <h5>
+                    Are you sure you want to edit this order?
+                    <button type="button" class="close mr-4" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="font-size: 1.5rem;" >&times;</span>
+                    </button>
+                </h5>
+               
+           </div>
+            <div class="modal-body row modal--body">
+                <div class="col-sm-6 d-flex justify-content-center position-relative"  style="max-width: 531px !important; margin-top: -3rem; flex-direction: column;">
+
+                    <div class="tooth-indexing--edit" onclick="onToothImageClickEdit(event)">
+                        <span class="position-absolute tooth-number--span-edit" style="top: 230px; left: 21%;">18</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 194px; left: 21%;">17</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 159px; left: 22%;">16</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 124px; left: 24%;">15</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 99px; left: 27%;">14</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 73px; left: 33%;">13</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 55px; left: 39%;">12</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 47px; left: 45%;">11</span>
+                        
+                        <span class="position-absolute tooth-number--span-edit" style="top: 47px; right: 234px;">21</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 54px; right: 36%;">22</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 72px; right: 30%;">23</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 100px; right: 26%;">24</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 130px; right: 23%;">25</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 161px; right: 21%;">26</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 194px; right: 20%;">27</span>
+                        <span class="position-absolute tooth-number--span-edit" style="top: 229px; right: 20%;">28</span>
+        
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 222px; right: 20%;">38</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 189px; right: 20%;">37</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 158px; right: 21%;">36</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 126px; right: 23%;">35</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 95px; right: 26%;">34</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 67px; right: 31%;">33</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 49px; right: 37%;">32</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 44px; right: 45%;">31</span>
+        
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 44px; left: 45%;">41</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 51px; left: 38%;">42</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 71px; left: 32%;">43</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 97px; left: 27%;">44</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 126px; left: 24%;">45</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 158px; left: 22%;">46</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 189px; left: 21%;">47</span>
+                        <span class="position-absolute tooth-number--span-edit" style="bottom: 221px; left: 21%;">48</span>
+        
+                    </div>
+                    
+                    <img src="/static/tooth-images.png" usemap="#image-map--edit" height="400" style="height: 400px !important; width: 219.45px !important; margin: 0 auto;">
+                    
+                    <map name="image-map--edit" onclick="onToothImageClickEdit(event)">
+                        
+                        <area target="" alt="18" title="18" href="#/" coords="19.13477537437604,166.22296173044927,27.28785357737105,169.7171381031614,35.77371048252912,167.72046589018302,40.26622296173045,155.74043261231282,37.2712146422629,147.92013311148088,30.116472545757073,143.09484193011647,14.47587354409318,141.93011647254576,8.818635607321132,147.5873544093178,7.820299500831947,157.2379367720466,10.648918469217971,164.7254575707155" shape="poly">
+                        <area target="" alt="17" title="17" href="#/" coords="19.800332778702163,115.1414309484193,13.311148086522463,120.13311148086522,11.647254575707155,130.11647254575706,14.64226289517471,136.77204658901832,17.13810316139767,139.76705490848587,34.27620632279534,142.0965058236273,41.26455906821963,133.27787021630616,41.76372712146423,125.45757071547422,32.61231281198003,116.80532445923461"shape="poly">
+                        <area target="" alt="16" title="16" href="#/" coords="20.632279534109816,112.81198003327788,34.44259567387687,116.13976705490849,41.43094841930117,114.80865224625624,46.755407653910154,106.4891846921797,44.42595673876872,95.84026622296173,34.94176372712147,92.17970049916805,23.62728785357737,91.51414309484193,18.63560732113145,95.84026622296173,17.13810316139767,105.82362728785358" shape="poly">
+                        <area target="" alt="15" title="15" href="#/" coords="28.95174708818636,67.88685524126456,23.793677204658902,71.3810316139767,22.628951747088188,80.03327787021631,26.455906821963396,86.52246256239602,33.44425956738769,90.34941763727122,44.09317803660566,90.18302828618968,51.247920133111485,86.52246256239602,51.74708818635607,76.2063227953411,39.76705490848586,68.71880199667221" shape="poly">
+                        <area target="" alt="14" title="14" href="#/" coords="36.7720465890183,49.58402662229617,31.44758735440932,58.23627287853578,36.938435940099836,66.05657237936772,46.089850249584025,70.71547420965058,55.07487520798669,70.04991680532446,58.56905158069884,64.89184692179701,57.90349417637272,58.73544093178037,48.25291181364393,50.41597337770383,41.76372712146423,48.25291181364393" shape="poly">
+                        <area target="" alt="13" title="13" href="#/" coords="49.750415973377706,47.42096505823628,61.730449251247926,56.07321131447588,68.38602329450916,55.407653910149754,72.54575707154743,49.750415973377706,72.04658901830283,41.43094841930117,63.56073211314476,31.94675540765391,58.402662229617306,29.45091514143095,51.08153078202995,30.782029950083196,47.75374376039934,36.10648918469218,47.587354409317804,41.930116472545755" shape="poly">
+                        <area target="" alt="12" title="12" href="#/" coords="65.3910149750416,31.281198003327788,74.37603993344426,43.09484193011647,79.70049916805324,43.26123128119801,89.01830282861897,37.60399334442596,86.02329450915141,17.637271214642265,81.69717138103162,12.479201331114808,70.88186356073211,14.80865224625624,62.89517470881864,20.798668885191347,62.89517470881864,25.790349417637273" shape="poly">
+                        <area target="" alt="11" title="11" href="#/" coords="86.52246256239602,8.48585690515807,86.68885191347754,17.13810316139767,92.51247920133112,34.44259567387687,97.67054908485858,35.44093178036606,108.98502495840266,32.77870216306157,112.97836938435941,11.480865224625624,109.65058236272878,4.825291181364393,98.16971713810317,2.8286189683860234" shape="poly">
+                        
+                        <area target="" alt="21" title="21" href="#/" coords="113.64392678868553,10.648918469217971,116.97171381031615,31.78036605657238,125.12479201331115,33.94342762063228,133.27787021630616,33.61064891846922,138.9351081530782,17.13810316139767,139.93344425956738,8.48585690515807,130.94841930116473,2.4958402662229617,117.8036605657238,3.4941763727121464" shape="poly">
+                        <area target="" alt="22" title="22" href="#/" coords="140.93178036605659,15.307820299500833,137.43760399334442,30.449251247920134,137.43760399334442,36.10648918469218,146.08985024958403,41.930116472545755,150.91514143094844,41.76372712146423,163.7271214642263,27.12146422628952,162.89517470881864,18.96838602329451,155.2412645590682,12.978369384359402,147.5873544093178,11.314475873544094" shape="poly">
+                        <area target="" alt="23" title="23" href="#/" coords="167.55407653910152,29.45091514143095,155.74043261231282,37.93677204658902,154.0765391014975,48.41930116472546,157.7371048252912,54.90848585690516,164.55906821963396,56.40599001663894,178.03660565723794,46.92179700499168,180.19966722129783,37.10482529118136,175.04159733777038,30.282861896838604" shape="poly">
+                        <area target="" alt="24" title="24" href="#/" coords="180.19966722129783,49.750415973377706,167.72046589018302,58.402662229617306,168.38602329450916,65.72379367720467,173.04492512479203,70.71547420965058,182.52911813643928,70.71547420965058,195.0083194675541,61.064891846921796,195.50748752079866,52.91181364392679,188.35274542429286,48.91846921797005" shape="poly">
+                        <area target="" alt="25" title="25" href="#/" coords="188.85191347753744,68.21963394342762,175.20798668885192,75.37437603993345,174.5424292845258,83.52745424292846,176.37271214642263,88.18635607321131,188.85191347753744,91.01497504159734,197.3377703826955,88.35274542429285,203.99334442595674,82.19633943427621,203.1613976705491,71.8801996672213,196.83860232945094,68.38602329450916" shape="poly">
+                        <area target="" alt="26" title="26" href="#/" coords="183.36106489184692,93.84359400998336,179.03494176372712,102.32945091514144,182.6955074875208,113.477537437604,189.35108153078204,117.47088186356073,207.32113144758736,113.31114808652246,209.1514143094842,102.32945091514144,206.82196339434276,93.51081530782031,197.67054908485858,89.51747088186356" shape="poly">
+                        <area target="" alt="27" title="27" href="#/" coords="193.34442595673877,117.3044925124792,207.32113144758736,116.47254575707156,212.64559068219634,121.13144758735442,213.31114808652248,131.61397670549084,210.31613976705492,140.26622296173045,193.34442595673877,142.26289517470883,188.5191347753744,139.4342762063228,183.86023294509152,129.1181364392679,187.35440931780366,121.29783693843595" shape="poly">
+                        <area target="" alt="28" title="28" href="#/" coords="195.84026622296173,143.42762063227954,210.8153078202995,142.0965058236273,217.30449251247921,148.25291181364392,217.63727121464228,156.90515806988353,214.14309484193012,166.22296173044927,205.99001663893512,166.72212978369384,197.50415973377704,170.54908485856905,189.1846921797005,167.55407653910152,185.19134775374377,156.23960066555742,187.68718801996673,147.42096505823628" shape="poly">
+                        
+                        <area target="" alt="38" title="38" href="#/" coords="199.16805324459236,234.27620632279536,206.65557404326123,238.43594009983363,215.6405990016639,238.43594009983363,218.801996672213,248.91846921797006,217.8036605657238,259.4009983361065,211.64725457570717,265.8901830282862,197.00499168053244,265.05823627287856,191.846921797005,261.73044925124793,186.18968386023295,254.5757071547421,187.02163061564062,244.7587354409318,190.51580698835275,236.60565723793678" shape="poly">
+                        <area target="" alt="37" title="37" href="#/" coords="193.5108153078203,265.3910149750416,210.48252911813645,267.8868552412646,215.1414309484193,277.53743760399334,213.477537437604,287.0216306156406,205.82362728785358,292.51247920133113,191.51414309484193,289.85024958402664,184.8585690515807,281.0316139767055,187.02163061564062,270.5490848585691" shape="poly">
+                        <area target="" alt="36" title="36" href="#/" coords="185.02495840266224,292.51247920133113,180.03327787021632,303.99334442595676,184.8585690515807,313.477537437604,195.84026622296173,316.6389351081531,203.99334442595674,317.47088186356075,209.1514143094842,311.8136439267887,209.1514143094842,299.16805324459233,204.8252911813644,294.1763727121464,194.17637271214642,291.18136439267886" shape="poly">
+                        <area target="" alt="35" title="35" href="#/" coords="175.70715474209652,322.6289517470882,175.87354409317805,330.61564059900167,182.1963394342762,336.2728785357737,191.846921797005,339.7670549084859,197.8369384359401,339.9334442595674,203.6605657237937,335.27454242928457,203.99334442595674,323.6272878535774,194.34276206322795,317.8036605657238,182.6955074875208,317.6372712146423" shape="poly">
+                        <area target="" alt="34" title="34" href="#/" coords="169.7171381031614,340.2662229617305,168.0532445923461,348.4193011647255,174.20965058236274,354.74209650582367,186.35607321131448,359.4009983361065,194.0099833610649,355.5740432612313,196.83860232945094,349.7504159733777,194.0099833610649,342.92845257903497,185.52412645590684,337.93677204658906,179.20133111480865,336.6056572379368,174.20965058236274,336.93843594009985" shape="poly">
+                        <area target="" alt="33" title="33" href="#/" coords="154.0765391014975,359.06821963394344,155.57404326123128,370.88186356073214,168.5524126455907,381.0316139767055,178.70216306156408,377.7038269550749,181.36439267886857,370.88186356073214,178.53577371048254,361.5640599001664,163.89351081530782,352.5790349417637,158.73544093178037,355.0748752079867" shape="poly">
+                        <area target="" alt="32" title="32" href="#/" coords="136.2728785357737,370.7154742096506,149.25124792013312,365.7237936772047,159.73377703826955,379.3677204658902,161.5640599001664,387.18801996672215,153.57737104825293,393.67720465890187,145.09151414309486,395.5074875207987,138.9351081530782,391.0149750415973" shape="poly">
+                        <area target="" alt="31" title="31" href="#/" coords="116.97171381031615,374.20965058236277,129.28452579034942,372.0465890183028,132.77870216306158,376.0399334442596,134.77537437603993,382.5291181364393,136.77204658901832,393.84359400998335,128.78535773710482,399.00166389351085,117.63727121464227,397.8369384359401,114.47587354409318,390.84858569051585" shape="poly">
+                        
+                        <area target="" alt="41" title="41" href="#/" coords="96.33943427620633,371.8801996672213,90.51580698835275,387.8535773710483,90.8485856905158,393.67720465890187,96.83860232945092,398.3361064891847,103.66056572379368,399.00166389351085,111.98003327787022,395.0083194675541,112.81198003327788,388.51913477537437,110.48252911813644,373.8768718801997,104.3261231281198,371.8801996672213" shape="poly">
+                        <area target="" alt="42" title="42" href="#/" coords="78.03660565723794,365.7237936772047,68.38602329450916,379.7004991680533,66.55574043261231,386.0232945091514,74.70881863560733,392.67886855241267,83.52745424292846,395.0083194675541,89.6838602329451,388.6855241264559,91.3477537437604,370.7154742096506,85.35773710482529,366.22296173044924" shape="poly">
+                        <area target="" alt="43" title="43" href="#/" coords="64.39267886855241,351.91347753743764,50.2495840266223,361.23128119800333,48.75207986688852,369.05158069883527,50.2495840266223,375.540765391015,57.90349417637272,379.3677204658902,65.89018302828619,376.2063227953411,72.54575707154743,370.38269550748754,74.37603993344426,358.9018302828619,70.21630615640599,353.5773710482529," shape="poly">
+                        <area target="" alt="44" title="44" href="#/" coords="44.59234608985025,337.43760399334445,35.44093178036606,342.92845257903497,32.27953410981697,349.58402662229616,33.94342762063228,354.24292845257906,40.59900166389351,359.234608985025,49.750415973377706,357.73710482529117,60.06655574043261,349.2512479201331,58.73544093178037,340.2662229617305,53.24459234608985,336.7720465890183" shape="poly">
+                        <area target="" alt="45" title="45" href="#/" coords="35.108153078202996,317.6372712146423,49.91680532445923,319.30116472545757,52.57903494176373,325.62396006655575,52.412645590682196,331.61397670549087,46.089850249584025,336.2728785357737,35.60732113144759,340.2662229617305,30.116472545757073,339.9334442595674,24.459234608985025,336.43926788685525,23.12811980033278,327.6206322795341,26.788685524126457,322.2961730449251" shape="poly">
+                        <area target="" alt="46" title="46" href="#/" coords="21.464226289517473,295.1747088186356,37.2712146422629,291.3477537437604,44.09317803660566,294.1763727121464,47.75374376039934,302.6622296173045,44.925124792013314,312.47920133111484,34.6089850249584,316.97171381031615,24.792013311148086,317.97004991680535,19.467554076539102,312.14642262895177,17.470881863560734,302.828618968386" shape="poly">
+                        <area target="" alt="47" title="47" href="#/" coords="17.3044925124792,267.8868552412646,33.77703826955075,266.22296173044924,40.26622296173045,270.7154742096506,42.09650582362729,276.7054908485857,41.597337770382694,283.1946755407654,35.94009983361065,290.0166389351082,22.96173044925125,292.17970049916806,15.141430948419302,288.35274542429283,12.811980033277871,281.19800332778703,13.311148086522463,274.7088186356073" shape="poly">
+                        <area target="" alt="48" title="48" href="#/" coords="11.647254575707155,238.2695507487521,17.803660565723796,238.2695507487521,27.45424292845258,234.27620632279536,36.272878535773714,235.77371048252914,39.76705490848586,244.09317803660568,40.93178036605657,252.24625623960068,36.10648918469218,261.73044925124793,27.78702163061564,265.8901830282862,15.474209650582363,265.55740432612316,9.650582362728786,259.06821963394344,7.653910149750416,249.5840266222962" shape="poly">
+                        
+                    </map>
+
+                </div>
+                <div class="actual-editable--content col-sm-6">
+                    <form class="form container" method="post" onsubmit="return onEditOrderSubmit();">
+                        {% csrf_token %}
+                        <div class="row">
+
+                            <div class="form-group col-12">
+                                <label for="selectedProduct-edit">Select product </label>
+                                <input type="text" class="form-control" disabled name="selectedProduct-edit" id="selectedProduct-edit" aria-describedby="selectedProduct" placeholder="Selected Product">
+                            </div>
+                            <div class="form-group form-row mb-0 col-12">
+
+                                <div class="form-group col pl-0 mr-0 pr-0">
+
+                                    <label for="selectedRegion-edit">Select Region</label>
+
+                                    <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+
+                                    <input type="text" class="form-control" name="selectedRegion-edit" id="selectedRegion-edit" placeholder="Selected Region" >
+
+                                </div>
+                                <div class="form-group col pr-0 fabrication-enclosing-edit d-none">
+
+                                    <label for="selectFabrication-edit">Select Fabrication</label>
+
+                                    <select name="selectFabrication-edit" id="selectFabrication-edit" class="form-control">
+
+                                        <option selected disabled>Select</option>
+
+                                        <option value="Joint">Joint</option>
+
+                                        <option value="Individual">Individual</option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+                            
+                            <div class="form-group col-12 form-row mb-0">
+                                <div class="form-group col pl-0 mr-2 pr-1">
+                                    <label for="selectedShadeType-edit">Shade</label>
+                                    
+                                    <select name="selectedShadeType-edit" id="selectedShadeType-edit" class="form-control" onchange="onShadeSelection(this, document.getElementById('shadeCode-edit'))">
+                                        <option selected disabled>Select Shade Type</option>
+                                        <option value="Vita Pan Classic">Vita Pan Classic</option>
+                                        <option value="Vita 3D Master">Vita 3D Master</option>
+                                    </select>
+                                </div>
+            
+                                <div class="form-group col pr-0">
+                                    <label for="shadeCode-edit">Shade Code</label>
+                                    <select name="shadeCode-edit" id="shadeCode-edit" class="form-control">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-12">
+                                <label for="expectedDate-edit">Expected Delivery Date</label>
+                                <input type="date" min = '{% now "Y-m-d" %}' class="form-control" name="expectedDate-edit"  id="expectedDate-edit">
+                            </div>
+
+                            <div class="form-group col-12">
+                                <label for="clinicalNotes-edit">Clinical Notes</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <textarea class="form-control" name="clinicalNotes-edit" id="clinicalNotes-edit" style="resize: none;" rows="2"></textarea>
+                            </div>
+                            
+                            <div class="form-group form-check col-12" style="padding-left: 2.2rem;">
+                                <input type="checkbox" class="form-check-input" name="designCheck-edit" id="designCheck-edit">
+                                <label class="form-check-label" for="designCheck-edit">Send this design for approval</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary edit-confirm--button" >Confirm</button>
+                    </form>
+                </div>
+
+            </div>
+           
+        </div>
+    </div>
+  </div>
+
+<!-- Chat box modal -->
+<div class="modal fade" id="chatBoxModal" tabindex="-1" role="dialog" aria-labelledby="chatBoxModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+        
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatBoxTitle">Case Chat</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div id="case-chat"></div>
+                <form class="form-inline" style="margin-top: 1rem" method="post" action="/labOrderComment/{{service_order.id}}/{{mycat.id}}">
+                    {% csrf_token %}
+
+                    <div class="input-group w-100">
+                        <input type="text" class="form-control" name="comment" placeholder="Type your comment here..." aria-label="Type your comment here..." aria-describedby="comment-send">
+                        <div class="input-group-append">
+                          <button  type="submit" class="btn" style="border-color: #e8e8f7;" id="comment-send"><i class="fa fa-sharp fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            
+      
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="selectOrder" tabindex="-1" role="dialog" aria-labelledby="selectOrder" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content order-modal--content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectOrderTitle">Select Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body position-relative">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-4 accordion-parent">
+                            <div id="accordion">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Select Item <i class="float-right fa-solid fa-angle-down"></i>
+                                    </div>
+                              
+                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" >
+                                        <div class="card-body item-select" onclick="onLabItemSelection(event)">
+                                            {% for i in labItem %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="labItem" id="{{i.item}}" value="{{i.id}}">
+                                                    <label class="form-check-label" for="{{i.item}}">{{i.item}}</label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                        Select Material <i class="float-right fa-solid fa-angle-down"></i>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" >
+                                        <div class="card-body material-select" onclick="onLabMaterialSelection(event)">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                        Select Sub-Material <i class="float-right fa-solid fa-angle-down"></i>
+                                    </div>
+                                    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" >
+                                        <div class="card-body sub-material-select" onclick="onLabSubMaterialSelection(event)">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+                        
+                        <div class="col-sm-12 col-lg-8 row cards-row justify-content-around">
+                            <div class="col-sm-12 row form-group" style="max-height: 31px;">
+                                <div class="card-result col-sm-4 d-flex align-items-center">Results: <span class="ml-2"></span></div>
+                                <div class="col-sm-8 input-group justify-content-end">
+                                    <div class="input-group-prepend mr-1">
+                                      <img src="/static/svg_icons/ei_search_icon.svg" alt="">
+                                    </div>
+                                    <!-- <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"> -->
+                                    <input type="text" placeholder="Search here..." class="search-box" id="cardSearch" onkeydown="onCardSearch(this.value)">
+                                </div>
+                            </div>
+                
+                        </div>
+                    </div>
+                </div>
+                <button class="order-confirm--button" onclick="onOrderConfirmClick()">Confirm</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dataUploadModal" tabindex="-1" role="dialog" aria-labelledby="dataUploadModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 60vw; " role="document">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Upload Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="row justify-content-center"> 
+                    <div class="col-sm-12 col-lg-10">
+                        <div class="card card-info">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title">Upload Data (STL/PLY)</h5>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="container mt-3 row justify-content-around">   
+
+                                    <form action="/" method="post" class="dropzone dz col-sm-12 col-md-5 d-flex justify-content-center align-items-center"
+                                        id="form1">
+                                        <span class="dz-message">Drop Upper-Jaw images here</span>
+                                        {% csrf_token %}
+                                        <div class="fallback">
+                                            <input name="file" id="file1" type="file"/>
+                                        </div>
+                                    </form>
+                                    <form action="/" method="post" class="dropzone dz col-sm-12 col-md-5 d-flex justify-content-center align-items-center"
+                                        id="form2">
+                                        <span class="dz-message">Drop Lower-Jaw images here</span>
+                                        {% csrf_token %}
+                                        <div class="fallback">
+                                            <input name="file" id="file2" type="file"/>
+                                        </div>
+                                    </form>
+                                    <form action="/" method="post" class="dropzone dz col-sm-12 col-md-5 d-flex justify-content-center align-items-center mt-4"
+                                        id="form3">
+                                        <span class="dz-message">Drop Left-Bite images here</span>
+                                        {% csrf_token %}
+                                        <div class="fallback">
+                                            <input name="file" id="file3" type="file"/>
+                                        </div>
+                                    </form>
+                                    <form action="/" method="post" class="dropzone dz col-sm-12 col-md-5 d-flex justify-content-center align-items-center mt-4"
+                                        id="form4">
+                                        <span class="dz-message">Drop Right-Bite images here</span>
+                                        {% csrf_token %}
+                                        <div class="fallback">
+                                            <input name="file" id="file4" type="file"/>
+                                        </div>
+                                    </form>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive p-0 mt-3 ml-5">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Uploaded Data:
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody id='fileNameBody'>
+                        </tbody>                            
+                    
+                    </table>
+                    
+                        
+                </div>
+            </div>
+
+            <script>
+
+                Dropzone.options.form1 = {
+                    acceptedFiles: ".stl, .ply, .zip",
+                    maxFiles:1,
+                    init: function() {
+                        
+                        this.on("processing", function(file) {
+                            this.options.url = getUrl('Upper-Jaw');
+                            document.getElementById('form1').querySelector('.dz-message').classList.remove('d-inline');
+                        });
+                        this.on("success", function(file){
+                            if (file.previewElement) {
+                                getFiles();
+                                return file.previewElement.classList.add("dz-success");
+                            }
+                        });
+                        this.on('resetFiles', function() {
+                            if(this.files.length != 0){
+                                for(i=0; i<this.files.length; i++){
+                                    this.files[i].previewElement.remove();
+                                }
+                                this.files.length = 0;
+                            }
+                        });
+                        this.hiddenFileInput.removeAttribute('multiple');
+                    }
+                };
+
+                Dropzone.options.form2 = {
+                    acceptedFiles: ".stl, .ply, .zip",
+                    maxFiles:1,
+                    init: function(){
+                        this.on("processing", function(file) {
+                            this.options.url = getUrl('Lower-Jaw');
+                            document.getElementById('form2').querySelector('.dz-message').classList.remove('d-inline');
+                        });
+                        this.on("success", function(file){
+                            if (file.previewElement) {
+                                
+                                getFiles();
+                                return file.previewElement.classList.add("dz-success");
+                            }
+                        });
+                        this.on('resetFiles', function(){
+                            console.log('reset files ran');
+                            if(this.files.length != 0){
+                                for(i=0; i<this.files.length; i++){
+                                    this.files[i].previewElement.remove();
+                                }
+                                this.files.length = 0;
+                            }
+                        });
+                        this.hiddenFileInput.removeAttribute('multiple');
+                    }
+                };
+                
+                Dropzone.options.form3 = {
+                    acceptedFiles: ".stl, .ply, .zip",
+                    maxFiles:1,
+                    init: function() {
+                        this.on("processing", function(file) {
+                            this.options.url = getUrl('Left-Bite');
+                            document.getElementById('form3').querySelector('.dz-message').classList.remove('d-inline');
+                        });
+                        this.on("success", function(file){
+                            if (file.previewElement) {
+                                
+                                getFiles();
+                                return file.previewElement.classList.add("dz-success");
+                            }
+                        });
+                        this.on('resetFiles', function() {
+                            if(this.files.length != 0){
+                                for(i=0; i<this.files.length; i++){
+                                    this.files[i].previewElement.remove();
+                                }
+                                this.files.length = 0;
+                            }
+                        });
+                        this.hiddenFileInput.removeAttribute('multiple');
+                    }
+                };
+                
+                Dropzone.options.form4 = {
+                    acceptedFiles: ".stl, .ply, .zip",
+                    maxFiles:1,
+                    init: function() {
+                            this.on("processing", function(file) {
+                                this.options.url = getUrl('Right-Bite');
+                                document.getElementById('form4').querySelector('.dz-message').classList.remove('d-inline');
+                            });
+                            this.on("success", function(file){
+                                if (file.previewElement) {
+                                    
+                                    getFiles();
+                                    return file.previewElement.classList.add("dz-success");
+                                }
+                            });
+                            this.on('resetFiles', function() {
+                                if(this.files.length != 0){
+                                    for(i=0; i<this.files.length; i++){
+                                        this.files[i].previewElement.remove();
+                                    }
+                                    this.files.length = 0;
+                                }
+                            });
+                            this.hiddenFileInput.removeAttribute('multiple');
+                        }
+                    };
+            
+            </script>
+            <!-- modal footer  -->
+
+            <div class="d-flex justify-content-end">
+                <button type="button" id="closeButton" style="background: #a3a3a326; border-color: #a3a3a326; color: black; font-weight: 500; margin: 10px 0; margin-right: 1rem; border-radius: 3px; border-width: thin;" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<input id="service_orderid" name="service_orderid" value="{{service_order.id}}" hidden>
+<input id="topcat_id" name="topcat_id" value="{{mycat.id}}" hidden>
+
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script src="{% static '/ajax/jquery.js' %}"></script>
+
+<script>
+
+    for(let x of document.querySelectorAll('.notes-enclosing ul')){
+        if(x.innerText == ''){
+            x.parentElement.style.display = 'none';
+        }
+    }
+
+    
+
+    let extraLayers= []
+    
+    let lineItemIds = []
+    '{% for i in extraItems %}'
+        if(!lineItemIds.includes('{{i.lineItemIdNumber}}')){
+            lineItemIds.push('{{i.lineItemIdNumber}}')
+        }
+    '{% endfor %}'
+
+    // 8 times 
+    for(let i of document.getElementsByClassName('info-about--layering')){
+        // conso
+        let lineItemIdNumber = i.querySelector('.line-item--id---number').innerText;
+        let addOnService = i.querySelector('.add-on--service').innerText;
+        // 4 times 
+        '{% for j in extraItems %}'
+            if(lineItemIdNumber == '{{j.lineItemIdNumber}}' && addOnService == '{{j.addOnService}}'){
+                i.parentElement.querySelector("input[type = 'checkbox']").checked = 'checked';
+                i.parentElement.querySelector(".increment-decrement--units").value = '{{j.addOnunit}}';
+            }
+        '{% endfor %}'
+    }
+
+    function onServiceAdd(lineOrderId, extraItemId, target, targetItem, targetMaterial){
+        let exteriorTarget = target;
+        while(!target.classList.contains('footnotes-card')){
+            target=target.parentElement;
+        }
+        let actualValue = target.querySelector('.property-box input').value;
+
+        if(targetItem == 'Implant Specific Section' && targetMaterial == 'Cement Retained Crown and Bridges'){
+            if(exteriorTarget.checked){
+                console.log('outside if statement -> if statement')
+                
+                let otherValue = target.nextElementSibling ? 
+                target.nextElementSibling.querySelector('.property-box input').value
+                : target.previousElementSibling.querySelector('.property-box input').value
+                let otherTarget = target.nextElementSibling ? target.nextElementSibling : target.previousElementSibling;
+                
+                let otherExtraItemId = otherTarget.querySelector('.extra-item--id').innerText;
+                
+                console.log('values are: ', otherValue, otherTarget, otherExtraItemId);
+                
+                onExtraItemSelection(lineOrderId, extraItemId, actualValue, 'add', target);
+                console.log('first call executed successfully')
+                
+                if(otherTarget.querySelector('input[type="checkbox"]').checked){
+                    console.log('outside if statement -> if statement -> if statement')
+
+                    
+                    onExtraItemSelection(lineOrderId, otherExtraItemId, otherValue, 'del', otherTarget);
+                    otherTarget.querySelector('input[type="checkbox"]').checked = false;
+                }
+            }
+            else{
+                console.log('outside if statement -> else statement')
+                onExtraItemSelection(lineOrderId, extraItemId, actualValue, 'del', target);
+            }
+            
+        }
+        else{
+            if(exteriorTarget.checked){
+                console.log('outside else statement -> if statement')
+                onExtraItemSelection(lineOrderId, extraItemId, actualValue, 'add', target);
+            }
+            else{
+                console.log('outside else statement -> else statement')
+                onExtraItemSelection(lineOrderId, extraItemId, actualValue, 'del', target);
+    
+            }
+        }
+    }
+     
+    function onUnitButtonClick(str, lineOrderId, extraItemId, target){
+        // console.log(str);
+        // let val = parseInt(document.getElementsByClassName('increment-decrement--units')[0].value)
+        let val = parseInt(target.parentElement.querySelector('input').value);
+        if(str == 'increment'){
+            val+=1;
+            
+        }
+        else{
+            val -=1;
+        }
+        if(val>=1){
+            target.parentElement.querySelector('input').value = val;
+            while(!target.classList.contains('footnotes-card')){
+                target=target.parentElement;
+            }
+            actualTarget = target.querySelector('input[type="checkbox"]');
+            if(actualTarget.checked){
+                // console.log('is checked');
+                onExtraItemSelection(lineOrderId, extraItemId, val, 'add', target);
+            }
+        }
+
+    }
+
+    function onNotationChange(target){
+        toothList = [];
+        onToothImageClick();
+        let index = 0;
+        if(target.value == 'Universal'){
+            for( let x of document.querySelector('.tooth-indexing').children){
+                x.innerText= ++index;
+            }
+            index = 0;
+            for(let x of document.getElementsByName('image-map')[0].children){
+                x.setAttribute('title', ++index);
+                x.setAttribute('alt', index);
+            }
+        }
+
+        else if(target.value == 'FDI'){
+            index = 18;
+            for( let x of document.querySelector('.tooth-indexing').children){
+                if( index>=11 && index<=18 ){
+                    x.innerText= index--;
+                    if(index == 10)index= 21
+                }
+                else if(index>=21 && index<=28){
+                    x.innerText= index++;
+                    if(index == 29)index= 38
+                }
+                else if(index>=31 && index<=38){
+                    x.innerText= index--;
+                    if(index == 30)index= 41
+                }
+                else if(index>=41 && index<=48){
+                    x.innerText= index++;
+                }
+            }
+            index = 18;
+            for(let x of document.getElementsByName('image-map')[0].children){
+                if( index>=11 && index<=18 ){
+                    x.setAttribute('title', index--);
+                    x.setAttribute('alt', index);
+                    if(index == 10)index= 21
+                }
+                else if(index>=21 && index<=28){
+                    x.setAttribute('title', index++);
+                    x.setAttribute('alt', index);
+                    if(index == 29)index= 38
+                }
+                else if(index>=31 && index<=38){
+                    x.setAttribute('title', index--);
+                    x.setAttribute('alt', index);
+                    if(index == 30)index= 41
+                }
+                else if(index>=41 && index<=48){
+                    x.setAttribute('title', index++);
+                    x.setAttribute('alt', index);
+                }
+            }
+        }
+    }
+
+    function getNotation(){
+        
+        let index = 0;
+        if( `{{service_order.tooth_notation}}` == 'Universal'){
+            for( let x of document.querySelector('.tooth-indexing--edit').children){
+                x.innerText= ++index;
+            }
+            index = 0;
+            for(let x of document.getElementsByName('image-map--edit')[0].children){
+                x.setAttribute('title', ++index);
+                x.setAttribute('alt', index);
+            }
+        }
+
+        else if( `{{service_order.tooth_notation}}` == 'FDI'){
+            index = 18;
+            for( let x of document.querySelector('.tooth-indexing--edit').children){
+                if( index>=11 && index<=18 ){
+                    x.innerText= index--;
+                    if(index == 10)index= 21
+                }
+                else if(index>=21 && index<=28){
+                    x.innerText= index++;
+                    if(index == 29)index= 38
+                }
+                else if(index>=31 && index<=38){
+                    x.innerText= index--;
+                    if(index == 30)index= 41
+                }
+                else if(index>=41 && index<=48){
+                    x.innerText= index++;
+                }
+            }
+            index = 18;
+            for(let x of document.getElementsByName('image-map--edit')[0].children){
+                if( index>=11 && index<=18 ){
+                    x.setAttribute('title', index--);
+                    x.setAttribute('alt', index);
+                    if(index == 10)index= 21
+                }
+                else if(index>=21 && index<=28){
+                    x.setAttribute('title', index++);
+                    x.setAttribute('alt', index);
+                    if(index == 29)index= 38
+                }
+                else if(index>=31 && index<=38){
+                    x.setAttribute('title', index--);
+                    x.setAttribute('alt', index);
+                    if(index == 30)index= 41
+                }
+                else if(index>=41 && index<=48){
+                    x.setAttribute('title', index++);
+                    x.setAttribute('alt', index);
+                }
+            }
+        }
+    }
+
+    prevDataType = '{{service_order.preferredData}}';
+
+    if(prevDataType == 'nonDigitalData'){
+        document.querySelector('.dropzone-area').parentElement.classList.add('d-none');
+        document.querySelector('#shipmentReqd').classList.remove('d-none');
+        document.querySelector('#shipmentReqdLabel').classList.remove('d-none');
+        document.querySelector('#shipmentReqdSmall').classList.remove('d-none');
+        if('{{service_order.requestForShipment}}' == 'Yes'){
+            document.querySelector('#shipmentReqd').checked = true;
+        }
+    }
+
+    // ajax call function 
+    function onDataTypeChange(target){
+        if(target.value != prevDataType){
+            let pk =$('#service_orderid').val();
+            let csr = $("input[name=csrfmiddlewaretoken]").val();    
+            mydata={'pk': pk, 'csrfmiddlewaretoken': csr};
+            $.ajax(
+            {
+                url: `/updatePreferredData/{{service_order.id}}/${target.value}`,
+                method:'POST',
+                data: mydata,
+                success: function (data) {
+                    prevDataType = data['PrefferedData'];
+                    if(data['PreferredData'] == 'nonDigitalData'){
+                        document.querySelector('.dropzone-area').parentElement.classList.add('d-none');
+                        emptyDropzone();
+                        document.querySelector('#shipmentReqd').classList.remove('d-none');
+                        document.querySelector('#shipmentReqdLabel').classList.remove('d-none');
+                        document.querySelector('#shipmentReqdSmall').classList.remove('d-none');
+                    }
+                    else{
+                        document.querySelector('.dropzone-area').parentElement.classList.remove('d-none');
+                        document.querySelector('#shipmentReqd').classList.add('d-none');
+                        document.querySelector('#shipmentReqdLabel').classList.add('d-none');
+                        document.querySelector('#shipmentReqdSmall').classList.add('d-none');
+                    }
+                    
+                }
+            });
+        }
+    }
+    document.querySelector('#shipmentReqd').addEventListener('change', function(){
+        console.log(this.checked);
+        let pk =$('#service_orderid').val();
+        let csr = $("input[name=csrfmiddlewaretoken]").val();    
+        mydata={'pk': pk, 'csrfmiddlewaretoken': csr};
+        $.ajax(
+        {
+            url: `/updatePickupReq/{{service_order.id}}/${this.checked}`,
+            method:'POST',
+            data: mydata,
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    })
+
+    function emptyDropzone(){
+        let fm1 = Dropzone.forElement("form#firstform");
+        let fm2 = Dropzone.forElement("form#secondform");
+        let fm3 = Dropzone.forElement("form#thirdform");
+        let fm4 = Dropzone.forElement("form#fourthform");
+        // console.log(fm1);
+        fm1.removeAllFiles();
+        fm2.removeAllFiles();
+        fm3.removeAllFiles();
+        fm4.removeAllFiles();
+
+        for(let i of document.querySelectorAll('.fileName')){
+            i.innerText = '';
+        }
+        for(let i of document.querySelectorAll('.position-absolute.delete-icon')){
+            i.classList.add('d-none');
+        }
+    }
+
+    // let editLineOrderId = ''
+    function onEditOrderSubmit(){
+        let regionValue =  document.getElementById('selectedRegion-edit').value === '';
+        if(regionValue){
+            return false;
+        }
+        else{
+            document.getElementById('selectedRegion-edit').value = `['` + document.getElementById('selectedRegion-edit').value + `']`;
+        }
+    }
+
+    let toothListEdit = [];
+    function onEditOrderModal(product, region, date, remark, shade, shadeType, fabrication, designCheck, lineOrderId){
+        // editLineOrderId = lineOrderId;
+        document.querySelector('.actual-editable--content form').action = `/editLineOrderItem/{{service_order.id}}/{{mycat.id}}/${lineOrderId}`;
+        document.getElementById('selectedProduct-edit').value = product;
+        document.getElementById('expectedDate-edit').value = date;
+        if(remark != 'None'){
+            document.getElementById('clinicalNotes-edit').value = remark;
+        }
+        else{
+            document.getElementById('clinicalNotes-edit').value = '';
+        }
+        document.getElementById('selectedRegion-edit').value = region.slice(2, -2).split(',');
+        toothListEdit = region.slice(2, -2).split(',');
+        if(shadeType){
+            document.getElementById('selectedShadeType-edit').value = shadeType;
+        }
+        onShadeSelection(document.getElementById('selectedShadeType-edit'), document.getElementById('shadeCode-edit'))
+        if(shadeType){
+            document.getElementById('shadeCode-edit').value = shade;
+        }
+        if(fabrication != 'None'){
+            document.getElementById('selectFabrication-edit').parentElement.classList.remove('d-none');
+            document.getElementById('selectFabrication-edit').value = fabrication;
+        }
+        else{
+            document.getElementById('selectFabrication-edit').value = 'None';
+            document.getElementById('selectFabrication-edit').parentElement.classList.add('d-none');
+        }
+        if(designCheck == 'on'){
+            document.getElementById('designCheck-edit').checked= 'checked';
+        }
+        else{
+            document.getElementById('designCheck-edit').checked= '';
+        } 
+    
+        getNotation();
+        onToothImageClickEdit();
+    }
+
+    "{% if messages %}"
+        "{% for message in messages %}"   
+        console.log('the message is', "{{message}}");
+            setTimeout(()=>{
+                alert('{{ message }}')
+            }, 1000);
+        "{% endfor %}"
+    "{% endif %}"
+    
+    // for shadeType selection
+    function onShadeSelection(target, finalTarget){
+        targetValue = target.value;
+        let shadeTypeHTML = '';
+        // let shadeTypeTarget= document.getElementById('shadeTypeSelection');
+        '{% for i in shade %}'
+            if('{{i.shade}}' == targetValue){
+                s= '{{i.shadeType}}'
+                shadeTypeHTML += `<option value=${s}>${s}</option>`
+            }
+        '{% endfor %}'
+        finalTarget.innerHTML = shadeTypeHTML;
+    }
+
+    var lineOrderId='' ; 
+    var secondMainDataType='';
+    function imageUploadBtnClick(id){
+        lineOrderId = id;
+        var fm1 = Dropzone.forElement("form#form1");
+        var fm2 = Dropzone.forElement("form#form2");
+        var fm3 = Dropzone.forElement("form#form3");
+        var fm4 = Dropzone.forElement("form#form4");
+        // console.log(fm2);
+        //"resetFiles" Event Call
+        fm1.emit("resetFiles");
+        fm2.emit("resetFiles");
+        fm3.emit("resetFiles");
+        fm4.emit("resetFiles");
+
+        // console.log(fm1);
+        //"resetFiles" Event Call
+        // document.getElementById('form2').action=`/uploadLabData/{{service_order.id}}/${lineOrderId}`;   
+        for(let i of document.querySelectorAll('.dz-message')){
+            if(!i.nextElementSibling.nextElementSibling){
+                i.classList.add('d-inline');
+            }
+        }   
+        getFiles();
+    }
+
+    function getUrl(target){
+        return `/uploadLabData/{{service_order.id}}/${lineOrderId}/${target}`;
+    }
+    
+    // ajax call function 
+    function getFiles(){
+        
+        let pk =$('#service_orderid').val();
+        let id1 = lineOrderId;
+        let csr = $("input[name=csrfmiddlewaretoken]").val();    
+        mydata={'pk': pk,'id1': id1, 'csrfmiddlewaretoken': csr};
+        let f= document.getElementById('fileNameBody');
+
+        while (f.hasChildNodes()) {
+            f.removeChild(f.firstChild);
+        }
+
+        $.ajax(
+        {
+            url: `/viewLabImage/${pk}/${id1}`,
+            method:'GET',
+            data: mydata,
+            success: function (data) {
+                if(data.length>0){
+                    var main_id= data[0]['id'];
+                    $( data ).each(function(i) {
+                        var fileName1 = data[i]['fileName'];
+                        var table_row= document.createElement('tr');
+                        var table_heading= document.createElement('td');
+                        var table_heading2= document.createElement('td');
+                        table_heading2.innerHTML=`<span class="badge badge-success">${data[i]['site']}</span>`
+                        
+                        table_heading.innerText= fileName1;
+                        table_row.appendChild(table_heading);
+                        table_row.appendChild(table_heading2);
+                        f.appendChild(table_row);
+                    });
+                    
+                }
+            }
+        });
+    
+    }
+        
+    // chat section starts here
+    
+    let parent=  document.getElementById('case-chat')
+    let prevDate = ''
+    '{% for i in comment %}'
+        var ele= document.createElement('div');
+        
+        var date= document.createElement('span');
+        date.innerText=`{{i.date}}`.slice(15);
+        
+        if('{{i.date}}'.slice(0, 13) != prevDate ){
+            prevDate = '{{i.date}}'.slice(0, -11);
+            var dateEle= document.createElement('div');
+            dateEle.innerText = prevDate;
+            dateEle.classList.add('dateEle');
+            parent.appendChild(dateEle);
+        }
+        
+        var text= document.createElement('span');
+        text.innerText= `{{i.comment}}`
+        
+    
+        if(`{{i.orgid}}`=='{{org}}'){
+            
+            date.classList.add('floating-date-right');
+            ele.appendChild(date);
+            ele.appendChild(text);
+            ele.classList.add('clinic-side--comment');
+        }    
+        else{
+            date.classList.add('floating-date-left');
+            ele.appendChild(text);
+            ele.appendChild(date);
+            ele.classList.add('admin-side--comment')
+            
+        }    
+        parent.appendChild(ele);           
+        
+    '{% endfor %}'
+    
+    // chat section ends here
+
+    let toothList = [];
+    let labOrderItems = [];
+    let materialList = [];
+    let subMaterialList = [];
+
+    let itemSelection = '';
+    let materialSelection = '';
+    let selectedOrder = '';
+    let selectedOrderName = '';
+    let prevTarget = '';
+    let confirmClicked = false;
+    let itemSelectionName = ''
+    $('.order-confirm--button').on('click', function(){
+        $('#selectOrder').modal('hide');
+    });
+
+    function onOrderConfirmClick(){
+        confirmClicked = true;
+        document.getElementById('selectedProduct').value = selectedOrderName;
+        if(itemSelection == 5 || itemSelection == 6 ){
+            document.getElementById('shadeSelection').disabled = true;
+            document.getElementById('shadeTypeSelection').disabled = true;
+        }
+        else{
+            document.getElementById('shadeSelection').disabled = false;
+            document.getElementById('shadeTypeSelection').disabled = false;
+        }
+        console.log('the item and material numbers are ', itemSelection, materialSelection);
+        if(itemSelection == 2 && materialSelection == 13){
+            document.getElementById('shadeSelection').disabled = true;
+            document.getElementById('shadeTypeSelection').disabled = true;
+            document.querySelector('.fabrication-enclosing').classList.add('d-none');
+        }
+        else{
+            document.querySelector('.fabrication-enclosing').classList.add('d-none');
+        }
+    }
+
+    // automatic lab selection 
+    for(let x of document.getElementById('inputState').options){
+        if('{{service_order.referTo}}' != 'None'){
+            if(x.value=='{{service_order.referTo}}'){
+                x.selected = 'selected';
+            }
+            else{
+                x.disabled = true;
+            }
+        }
+    }
+
+    for(let x of document.getElementsByName('preferredData')){
+        if('{{service_order.preferredData}}' != 'None'){
+            if(x.value=='{{service_order.preferredData}}'){
+                x.checked = 'checked';
+            }
+            // else{
+            //     x.disabled = true;
+            // }
+        }
+    }
+
+    // tooth images click function 
+    function onToothImageClick(event){
+
+        if(event){
+
+            if(event.target.tagName == 'SPAN'){
+                if(!toothList.includes(event.target.innerText)){
+                    toothList.push(event.target.innerText);
+                }
+                else{
+                    toothList.splice(toothList.indexOf(event.target.innerText), 1);
+                }
+            }
+            else if (event.target.tagName == 'AREA'){
+                if(!toothList.includes(event.target.title)){
+                    toothList.push(event.target.title);
+                }
+                else{
+                    toothList.splice(toothList.indexOf(event.target.title), 1);
+                }
+            }
+        }
+        
+
+        document.getElementById('toothSelection').value = toothList;
+
+        for(let j of document.querySelectorAll('.tooth-number--span')){
+            
+            if(toothList.includes(j.innerText)){
+                j.classList.add('tooth-number--span-selected')
+            }
+            else{
+                if(j.classList.contains('tooth-number--span-selected')){
+                    j.classList.remove('tooth-number--span-selected')
+                }
+            }
+        }
+        let isConsi = false;
+        let nota = 'FDI';
+        for(let x of document.getElementsByName('notation')){
+            if(x.checked){
+                nota = x.value
+            }
+        }
+        if(!(itemSelection == 2 && materialSelection == 13)){
+
+            if(nota == 'FDI'){
+                isConsi = isConsecutive(toothList)
+            }
+            else if (nota == 'Universal'){
+                isConsi = isConsecutiveUni(toothList)
+            }
+            if(isConsi){
+                document.getElementsByClassName('fabrication-enclosing')[0].classList.remove('d-none');
+                document.getElementsByClassName('fabrication-enclosing')[0].previousElementSibling.classList.remove('mr-0');
+                document.getElementsByClassName('fabrication-enclosing')[0].previousElementSibling.classList.remove('pr-0');
+                document.getElementsByClassName('fabrication-enclosing')[0].previousElementSibling.classList.add('mr-2');
+                document.getElementsByClassName('fabrication-enclosing')[0].previousElementSibling.classList.add('pr-1');
+            }
+            else{
+                document.getElementsByClassName('fabrication-enclosing')[0].classList.add('d-none');
+                document.getElementsByClassName('fabrication-enclosing')[0].previousElementSibling.classList.remove('mr-2');
+                document.getElementsByClassName('fabrication-enclosing')[0].previousElementSibling.classList.remove('pr-1');
+                document.getElementsByClassName('fabrication-enclosing')[0].previousElementSibling.classList.add('mr-0');
+                document.getElementsByClassName('fabrication-enclosing')[0].previousElementSibling.classList.add('pr-0');
+            }
+            
+        }
+   
+    }
+
+    // tooth images click function 
+    function onToothImageClickEdit(event){
+
+        if(event){
+
+            if(event.target.tagName == 'SPAN'){
+                if(!toothListEdit.includes(event.target.innerText)){
+                    toothListEdit.push(event.target.innerText);
+                }
+                else{
+                    toothListEdit.splice(toothListEdit.indexOf(event.target.innerText), 1);
+                }
+            }
+            else if (event.target.tagName == 'AREA'){
+                if(!toothListEdit.includes(event.target.title)){
+                    toothListEdit.push(event.target.title);
+                }
+                else{
+                    toothListEdit.splice(toothListEdit.indexOf(event.target.title), 1);
+                }
+            }
+        }
+        
+        // if(event){
+        //     if(!toothListEdit.includes(event.target.title)){
+        //         toothListEdit.push(event.target.title);
+        //     }
+        //     else{
+        //         toothListEdit.splice(toothListEdit.indexOf(event.target.title), 1);
+        //     }
+        // }
+
+        document.getElementById('selectedRegion-edit').value = toothListEdit;
+
+        for(let j of document.querySelectorAll('.tooth-number--span-edit')){
+            
+            if(toothListEdit.includes(j.innerText)){
+                j.classList.add('tooth-number--span-edit-selected')
+            }
+            else{
+                if(j.classList.contains('tooth-number--span-edit-selected')){
+                    j.classList.remove('tooth-number--span-edit-selected')
+                }
+            }
+        }
+        let isConsi = false;
+        if('{{service_order.tooth_notation}}' == 'FDI'){
+            isConsi = isConsecutive(toothListEdit)
+        }
+        else if ('{{service_order.tooth_notation}}' == 'Universal'){
+            isConsi = isConsecutiveUni(toothListEdit)
+        }
+        if(isConsi){
+            document.getElementsByClassName('fabrication-enclosing-edit')[0].classList.remove('d-none');
+            document.getElementsByClassName('fabrication-enclosing-edit')[0].previousElementSibling.classList.remove('mr-0');
+            document.getElementsByClassName('fabrication-enclosing-edit')[0].previousElementSibling.classList.remove('pr-0');
+            document.getElementsByClassName('fabrication-enclosing-edit')[0].previousElementSibling.classList.add('mr-2');
+            document.getElementsByClassName('fabrication-enclosing-edit')[0].previousElementSibling.classList.add('pr-1');
+        }
+        else{
+            document.getElementsByClassName('fabrication-enclosing-edit')[0].classList.add('d-none');
+            document.getElementsByClassName('fabrication-enclosing-edit')[0].previousElementSibling.classList.remove('mr-2');
+            document.getElementsByClassName('fabrication-enclosing-edit')[0].previousElementSibling.classList.remove('pr-1');
+            document.getElementsByClassName('fabrication-enclosing-edit')[0].previousElementSibling.classList.add('mr-0');
+            document.getElementsByClassName('fabrication-enclosing-edit')[0].previousElementSibling.classList.add('pr-0');
+        }
+    }
+
+    function isConsecutive(list){
+        newList = [...list];
+        newList.map((el, index)=>{
+            el = parseInt(el);
+            if(el>=11 && el<=18){
+                newList[index] = 31 - el;
+            }
+            else if(el >=41 && el<= 48){
+                newList[index] = 89 - el;
+            }
+            else if(el >= 31  && el <= 38){
+                newList[index] = el + 18;
+            }
+        });
+
+        let min = Math.min(...newList);
+        let max = Math.max(...newList);
+        let totalLen = max - min + 1;
+        return totalLen === newList.length && totalLen>1 ? true: false;
+    }
+
+    // select order button click
+    let prevLabVal = ''; 
+    function onSelectOrderButtonClick(target){
+        let labValue = document.getElementById('inputState').value;
+        if(labValue != 'Select'){
+            if(prevLabVal != labValue){
+                let csr = $("input[name=csrfmiddlewaretoken]").val();    
+                mydata={'csrfmiddlewaretoken': csr, 'id': labValue};
+                $.ajax(
+                    {
+                    url: `/allLabOrderItems/${labValue}`,
+                    method:'GET',
+                    data: mydata,
+                    success: function (data) {
+                        // document.getElementById('selectOrder').modal('show');
+                        $("#selectOrder").modal("show");
+                        labOrderItems = data;
+                        listMaterialList();
+                        // listSubMaterialList();
+                        listAllCards();
+                        document.querySelector('.item-select input').checked = 'checked';
+                        onLabItemSelection();
+                        document.querySelector('.material-select input').checked = 'checked';
+                        onLabMaterialSelection();
+                    }
+                });
+                prevLabVal = labValue;
+            }
+            else{
+                $("#selectOrder").modal("show");
+            }
+        }
+        else{
+            alert('Please select a lab first');
+        }
+    }
+    
+    // function listing all the materials 
+    function listMaterialList(){
+        let target = document.getElementsByClassName('material-select')[0];
+        let subTarget = document.getElementsByClassName('sub-material-select')[0];
+        let inner = '';
+        let subInner = '';
+        for(let i of labOrderItems){
+            if(!materialList.includes(i.materialId)){
+                materialList.push(i.materialId);
+
+                inner += `<div class="form-check">
+                    <input class="form-check-input" type="radio" name="labMaterial" id=${i.material} value=${i.materialId}>
+                    <label class="form-check-label" for=${i.material}>${i.material}</label>
+                </div>`;
+            }
+            if(!subMaterialList.includes(i.sub_materialId)){
+                subMaterialList.push(i.sub_materialId);
+
+                subInner += `<div class="form-check">
+                    <input class="form-check-input" type="radio" name="subMaterial" id=${i.sub_material} value=${i.sub_materialId}>
+                    <label class="form-check-label" for=${i.sub_material}>${i.sub_material}</label>
+                </div>`;
+            }
+        }
+        if( inner != ''){
+            target.innerHTML  =  inner;
+        }
+        if( subInner != ''){
+            subTarget.innerHTML  =  subInner;
+        }
+    }
+
+    // lists all cards 
+    function listAllCards(){
+        let inner = '';
+        let target = document.getElementsByClassName('cards-row')[0];
+        for(let i of labOrderItems){
+            inner += `
+            <div class="col-sm-5 order-card" onclick="onOrderCardClick(this)">
+                <span class="d-none item-number">${i.itemId}</span> 
+                <span class="d-none material-number">${i.materialId}</span> 
+                <span class="d-none sub-material-number">${i.sub_materialId}</span> 
+                <span class="d-none id-number">${i.id}</span> 
+                <span class="d-none shade">${i.shade}</span> 
+                <div class="head-line">
+                    ${i.type.length>15 ? i.type.slice(0, 15) + '...' : i.type}
+                    <h5 style="margin-left: auto">
+
+                        <span style="font-size: small;">${i.price? 'Rs.': ''}</span> 
+                        <span style="color: #1F3F7F;">${i.price? i.price+'/-': 'Contact Lab'}</span>  
+                    </h5>
+                </div>
+                <h6 style='color: #1F3F7F;'>Features</h6>
+                <div>
+                    <h6 class= 'order-card--name'><i class="fa-solid fa-check"></i>  ${i.type} </h6>
+                    ${i.method ? `<h6><i class="fa-solid fa-check"></i>  ${i.method}</h6>` : ''}
+                    ${i.warranty ? `<h6><i class="fa-solid fa-check"></i> Warranty <span class="badge badge-primary ml-2">  ${i.warranty} years</span> </h6>` : ''}
+                    ${i.details ? `<h6><i class="fa-solid fa-check"></i>  ${i.details}</h6>` : ''}
+                    ${i.application ? `<h6><i class="fa-solid fa-check"></i>  ${i.application}</h6>` : ''}
+                </div>
+            </div>
+            `;  
+        }
+        target.innerHTML += inner;
+    }
+
+    // function exceute on labItemSelection 
+    function onLabItemSelection(event){
+        let itemVal = '' ;
+        if(event){
+            itemVal = event.target.value;
+        }else{
+            itemVal = document.querySelector('.item-select input').value;
+        }
+
+        if(itemVal){
+            itemSelection = itemVal;
+            // for cards 
+            for(let i of document.getElementsByClassName('order-card')){
+                if(i.getElementsByClassName('item-number')[0].innerText == itemVal){
+                    i.style.display = 'block';
+                }
+                else{
+                    i.style.display = 'none';
+                }
+            }
+
+            // for materialList 
+
+            let target = document.getElementsByClassName('material-select')[0];
+            let materialList = [];
+            let inner = '';
+            for(let i of labOrderItems){
+                if(!materialList.includes(i.materialId) && i.itemId == itemVal){
+                    // if(i.materialId){
+                        materialList.push(i.materialId);
+                    // }
+                    inner += `<div class="form-check">
+                        <input class="form-check-input" type="radio" name="labMaterial" id=${i.material} value=${i.materialId}>
+                        <label class="form-check-label" for=${i.material}>${i.material}</label>
+                    </div>`;
+                }
+            }
+            
+            if( (materialList.length>1) || (materialList.length == 1 && materialList[0] != null) ){
+                target.innerHTML  =  inner;
+                onLabMaterialSelection();
+            }else{
+                target.innerHTML =  `<span><i>Nothing to display</i></span>`
+                document.getElementsByClassName('sub-material-select')[0].innerHTML =  `<span><i>Nothing to display</i></span>`
+                // onLabMaterialSelection();
+            }
+
+        }
+        
+        cardResult();
+    }
+
+    // function exceute on labMaterialSelection 
+    function onLabMaterialSelection(event){
+        // let materialVal = event.target.value;
+        let materialVal = '' ;
+        if(event){
+            materialVal = event.target.value;
+        }else{
+            document.querySelector('.material-select input').checked = 'checked';
+            materialVal = document.querySelector('.material-select input').value;
+        }
+
+        if(materialVal){
+            if( itemSelection == ''){
+                for(let i of document.getElementsByClassName('order-card')){
+                    if(i.getElementsByClassName('material-number')[0].innerText == materialVal ){
+                        i.style.display = 'block';
+                    }
+                    else{
+                        i.style.display = 'none';
+                    }
+                }
+            }
+            else{
+                for(let i of document.getElementsByClassName('order-card')){   
+                    if(i.getElementsByClassName('material-number')[0].innerText == materialVal && i.getElementsByClassName('item-number')[0].innerText == itemSelection ){
+                        i.style.display = 'block';
+                    }
+                    else{
+                        i.style.display = 'none';
+                    }
+                }
+            }
+            
+            // for materialList 
+
+            let target = document.getElementsByClassName('sub-material-select')[0];
+            let subMaterialList = [];
+            let inner = '';
+
+
+            for(let i of labOrderItems){
+                if(!subMaterialList.includes(i.sub_materialId)   && i.itemId == itemSelection && i.materialId == materialVal){
+                    console.log('inside if function', subMaterialList);
+                   
+                    subMaterialList.push(i.sub_materialId);
+                        
+                    inner += `<div class="form-check">
+                        <input class="form-check-input" type="radio" name="sublabMaterial" id=${i.sub_material} value=${i.sub_materialId}>
+                        <label class="form-check-label" for=${i.sub_material}>${i.sub_material}</label>
+                    </div>`;
+                }
+            }
+            // console.log(subMaterialList);
+            
+            if( (subMaterialList.length>1 || subMaterialList.length == 1 ) && subMaterialList[0] != null ){
+                target.innerHTML  =  inner;
+                onLabSubMaterialSelection();
+            }else{
+                target.innerHTML =  `<span><i>Nothing to display</i></span>`
+            }
+        }
+    
+        cardResult();
+    }
+
+    // function exceute on labSubMaterialSelection 
+    function onLabSubMaterialSelection(event){
+        // let subMaterialVal = event.target.value;
+        let subMaterialVal = '' ;
+        if(event){
+            subMaterialVal = event.target.value;
+        }else{
+            document.querySelector('.sub-material-select input').checked = 'checked';
+            subMaterialVal = document.querySelector('.sub-material-select input').value;
+        }
+
+        let materialVal;
+        for(let x of document.getElementsByName('labMaterial')){
+            if(x.checked){
+                materialVal = x.value;
+            }
+        }
+
+        if(subMaterialVal){
+            if( itemSelection == ''){
+                for(let i of document.getElementsByClassName('order-card')){
+                    if(i.getElementsByClassName('sub-material-number')[0].innerText == subMaterialVal ){
+                        i.style.display = 'block';
+                    }
+                    else{
+                        i.style.display = 'none';
+                    }
+                }
+            }
+            else{
+                for(let i of document.getElementsByClassName('order-card')){   
+                    if( i.getElementsByClassName('sub-material-number')[0].innerText == subMaterialVal && i.getElementsByClassName('material-number')[0].innerText == materialVal && i.getElementsByClassName('item-number')[0].innerText == itemSelection ){
+                        i.style.display = 'block';
+                    }
+                    else{
+                        i.style.display = 'none';
+                    }
+                }
+            }
+            // for cards 
+        }
+    
+        cardResult();
+    }
+
+    function onOrderCardClick(target){
+        if(target.classList.contains('order-card')){
+            target.classList.toggle('order-card-dark');
+            if(target.classList.contains('order-card-dark')){
+                selectedOrder = target.getElementsByClassName('id-number')[0].innerText;
+                selectedOrderName = target.querySelector('h6.order-card--name').lastChild.nodeValue;
+                materialSelection = target.querySelector('.material-number').innerText;
+                if(prevTarget != '' && prevTarget != target){
+                    prevTarget.classList.remove('order-card-dark');
+                }
+                prevTarget = target;
+            }     
+            else{
+                confirmClicked = false;
+            }
+        }
+    }
+
+    function onFormSubmit(event){
+
+        let labValue = document.getElementById('inputState').value;
+        document.getElementById('orderSelection').value = selectedOrder;
+        document.getElementById('organisationid').value = labValue;
+        for(let x of document.getElementsByName('notation')){
+            if(x.checked){
+                document.getElementById('notation-select').value = x.value;
+                break;
+            }
+        }
+        let shade = document.getElementById('shadeSelection').value != '' && document.getElementById('shadeSelection').value != 'select'
+        let shadeType = document.getElementById('shadeTypeSelection').value != '' && document.getElementById('shadeTypeSelection').value != 'select'
+
+        let shadeReqd = false;
+        if(itemSelection != 5 && itemSelection != 6){
+            shadeReqd = true;
+        }
+        if(itemSelection == 2 && materialSelection == 13){
+            shadeReqd = false;
+        }
+        console.log('shade required is: ', shadeReqd);
+        let fabricationReqd = document.getElementsByClassName('fabrication-enclosing')[0].classList.contains('d-none') === false;
+        let fabricationVal = document.getElementById('fabrication').value != 'select'
+
+        if(labValue && labValue != '' && selectedOrder && selectedOrder != '' && selectedOrderName && selectedOrderName != '' && toothList && toothList.length ){
+            if((fabricationReqd && fabricationVal) || (!fabricationReqd) && ((shadeReqd && shade && shadeType) || (!shadeReqd)) ){
+                return true;
+            }
+        }
+        alert('Please fill all the details')
+        return false;
+    }
+
+    function onUnitButtonClickLineItem(str, id, target){
+        // let val = parseInt(document.getElementsByClassName('increment-decrement--units')[0].value)
+        let val = parseInt(target.parentElement.querySelector('input').value);
+        if(str == 'increment'){
+            val+=1;
+            
+        }
+        else{
+            val -=1;
+        }
+        if(val>=1){
+            target.parentElement.querySelector('input').value = val;
+            while(!target.classList.contains('enclosing-row')){
+                target = target.parentElement
+            }
+            updateUnit(id, val, target.querySelector('.order-heading span:last-child'));
+
+        }
+    }
+
+    function updateUnit(id, unit, target){
+
+        let csr = $("input[name=csrfmiddlewaretoken]").val();    
+
+        mydata={'pk': id,'unit': unit, 'csrfmiddlewaretoken': csr};
+
+        $.ajax(
+        {
+            url: `/updateUnit/${id}/${unit}/{{service_order.id}}`,
+            method:'GET',
+            data: mydata,
+            success: function (data) {
+                target.innerText = data['updatedPrice'];
+            }
+        });
+    }
+    
+    function onCardSearch(str){
+        
+        for(let i of document.getElementsByClassName('order-card')){
+            if(i.getElementsByClassName('order-card--name')[0].innerText.toLowerCase().includes(str.toLowerCase())){
+                i.style.display = 'block';
+            }
+            else{
+                i.style.display = 'none';
+            }
+        }
+
+        cardResult();
+    }
+</script>
+
+<script>
+    function cardResult(){
+        let res = 0;
+        for(let x of document.querySelectorAll('.order-card')){
+            if(x.style.display == 'block')res+=1;
+        }
+        document.querySelector('.card-result span').innerText = res;
+
+    }
+    function onExtraItemSelection(lineOrderId, extraItemId, units, requestFor, target){
+        let pk =   `{{service_order.id}}`
+        let csr = $("input[name=csrfmiddlewaretoken]").val();    
+        mydata={'pk': pk,'id1': lineOrderId, 'id3': extraItemId, 'units': units, 'csrfmiddlewaretoken': csr};
+
+        $.ajax(
+        {
+            url: `/addExtraItems/${pk}/${lineOrderId}/${extraItemId}/${units}/${requestFor}`,
+            method:'GET',
+            data: mydata,
+            success: function (data) {
+                while(!target.classList.contains('lineOrderLevel-heading')){
+                    target= target.parentElement;
+                }
+                target.querySelector('h5.order-heading span:last-child').innerText = data['lineItemTotalPrice'];
+            }
+        });
+    }
+    function isConsecutiveUni(list){
+        newList = [...list];
+        let min = Math.min(...newList);
+        let max = Math.max(...newList);
+        let totalLen = max - min + 1;
+        return totalLen === newList.length && totalLen>1 && ( newList.every((el)=> el>=17) || newList.every((el)=> el<=16)) ? true: false;
+    }
+    {% if prosthetic %}
+    for(let x of document.getElementsByName('notation')){
+        if(x.value != '{{service_order.tooth_notation}}'){
+            x.setAttribute('disabled', true);
+        }
+        else{
+            x.setAttribute('checked', true);
+            onNotationChange(x);
+        }
+    }
+    {% endif %}
+</script>
+{%endblock%}

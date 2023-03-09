@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+
+		<meta charset="utf-8">
+		<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+<link href="{% static '/dentread/assets/plugins/bootstrap/css/mystyle.css' %}" rel="stylesheet"/>
+        <!-- Favicon -->
+		<link rel="icon" href="{% static '/dentread/assets/img/brand/favicon.ico' %}" type="image/x-icon"/>
+
+		<!-- Title -->
+		<title>Dentread- {{page}}</title>
+
+		<!-- Bootstrap css-->
+		<link href="{% static '/dentread/assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"/>
+
+		<!-- Icons css-->
+		<link href="{% static '/dentread/assets/plugins/web-fonts/icons.css' %}" rel="stylesheet"/>
+		<link href="{% static '/dentread/assets/plugins/web-fonts/font-awesome/font-awesome.min.css' %}" rel="stylesheet">
+		<link href="{% static '/dentread/assets/plugins/web-fonts/plugin.css' %}" rel="stylesheet"/>
+
+		<!-- Style css-->
+		<link href="{% static '/dentread/assets/css/style/style.css' %}" rel="stylesheet">
+		<link href="{% static '/dentread/assets/css/skins.css' %}" rel="stylesheet">
+		<link href="{% static '/dentread/assets/css/dark-style.css' %}" rel="stylesheet">
+		<link href="{% static '/dentread/assets/css/colors/default.css' %}" rel="stylesheet">
+
+		<!-- Color css-->
+		<link id="theme" rel="stylesheet" type="text/css" media="all" href="{% static '/dentread/assets/css/colors/color.css' %}">
+
+		<!-- Select2 css -->
+		<link href="{% static '/dentread/assets/plugins/select2/css/select2.min.css' %}" rel="stylesheet">
+
+				<!-- Mutipleselect css-->
+		<link rel="stylesheet" href="{% static '/dentread/assets/plugins/multipleselect/multiple-select.css' %}">
+
+		<!-- Sidemenu css-->
+		<link href="{% static '/dentread/assets/css/sidemenu/sidemenu.css' %}" rel="stylesheet">
+
+	<link href="{% static '/dentread/assets/plugins/datatable/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
+		<link href="{% static '/dentread/assets/plugins/datatable/responsivebootstrap4.min.css' %}" rel="stylesheet" />
+		<link href="{% static '/dentread/assets/plugins/datatable/fileexport/buttons.bootstrap4.min.css' %}" rel="stylesheet" />
+
+		<!-- Switcher css-->
+		<link href="{% static '/dentread/assets/switcher/css/switcher.css' %}" rel="stylesheet">
+		<link href="{% static '/dentread/assets/switcher/demo.css' %}" rel="stylesheet">
+	</head>
+
+	<body class="horizontalmenu">
+
+		<!-- Switcher -->
+
+		<!-- End Switcher -->
+
+		<!-- Loader -->
+		<div id="global-loader">
+			<img src="{% static '/dentread/assets/img/loader.svg' %}" class="loader-img" alt="Loader">
+		</div>
+		<!-- End Loader -->
+
+		<!-- Page -->
+		<div class="page">
+
+        <!-- Main Header-->
+			<div class="main-header side-header">
+				<div class="container">
+					<div class="main-header-left">
+						<a class="main-header-menu-icon d-lg-none" href="#" id="mainNavShow"><span></span></a>
+						<a class="main-logo" href="#">
+							<img src="{% static '/dentread/assets/img/brand/logo1.png' %}" class="header-brand-img desktop-logo ht-50" alt="logo">
+							<img src="{% static '/dentread/assets/img/brand/logo1.png' %}" class="header-brand-img desktop-logo theme-logo" alt="logo">
+						</a>
+					</div>
+					<div class="main-header-center">
+						<div class="responsive-logo">
+							<a href="#"><img src="{% static '/dentread/assets/img/brand/logo1.png' %}" class="mobile-logo ht-50" alt="logo"></a>
+							<a href="#"><img src="{% static '/dentread/assets/img/brand/logo1.png' %}" class="mobile-logo-dark" alt="logo"></a>
+						</div>
+
+					</div>
+					<div class="main-header-right">
+
+
+
+
+						<div class="dropdown main-profile-menu">
+							<a class="d-flex" href="#">
+								{% if usr.propic %}
+								<span class="main-img-user" ><img alt="avatar" src="{{usr.propic.url}}"></span>
+								{% endif %}
+								{% if not usr.propic %}
+								<span class="main-img-user" ><img alt="avatar" src="{% static '/profilepic/propic.jpg' %}"></span>
+								{% endif %}
+							</a>
+							<div class="dropdown-menu">
+								<div class="header-navheading">
+									<h6 class="main-notification-title">{{usr.name}}</h6>
+									<p class="main-notification-text">{{usr.department}}</p>
+								</div>
+								<a class="dropdown-item border-top" href="/myprofile">
+									<i class="fe fe-user"></i> My Profile
+								</a>
+
+								<a class="dropdown-item" href="/logouthandle">
+									<i class="fe fe-power"></i> Sign Out
+								</a>
+							</div>
+						</div>
+
+						<button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4"
+							aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
+							<i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>
+						</button><!-- Navresponsive closed -->
+					</div>
+				</div>
+			</div>
+			<!-- End Main Header-->        <!-- Mobile-header -->
+			<div class="mobile-main-header">
+				<div class="mb-1 navbar navbar-expand-lg  nav nav-item  navbar-nav-right responsive-navbar navbar-dark  ">
+					<div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+						<div class="d-flex order-lg-2 ml-auto">
+
+
+
+
+						<div class="dropdown main-profile-menu">
+							<a class="d-flex" href="#">
+								<span class="main-img-user" ><img alt="avatar" src="{% static '/dentread/assets/img/users/1.jpg' %}"></span>
+							</a>
+							<div class="dropdown-menu">
+								<div class="header-navheading">
+									<h6 class="main-notification-title">{{usr.name}}</h6>
+									<p class="main-notification-text">{{usr.department}}</p>
+								</div>
+								<a class="dropdown-item border-top" href="/myprofile">
+									<i class="fe fe-user"></i> My Profile
+								</a>
+
+								<a class="dropdown-item" href="/logouthandle">
+									<i class="fe fe-power"></i> Sign Out
+								</a>
+							</div>
+						</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Mobile-header closed -->        <!-- Horizonatal menu-->
+			<div class="main-navbar hor-menu sticky" style="background-color:#2f6ebb;color:white;">
+				<div class="container">
+					<ul class="nav">
+						{% if usr.department == 'Admin' %}
+						<li class="nav-item">
+							<a class="nav-sub-item text-white myfont" href="/dashboard_domain" ><i class="si si-grid"></i></a>
+
+						</li>
+						<li class="nav-item" >
+							<a class="nav-link with-sub text-white myfont" href="" ><i class="si si-globe"></i><h5 class="mt-2">Dentread Services</h5></a>
+							<ul class="nav-sub">
+					
+								{% for i in topcat %}
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="{{i.admin_url}}/{{i.id}}">{{i.topcat}}</a>
+								</li>
+								{% endfor %}
+
+							</ul>
+						</li>
+
+
+						<li class="nav-item">
+							<a class="nav-link with-sub text-white myfont" href="#" ><i class="fa fa-hospital-o"></i><h5 class="mt-2">Organisations</h5></a>
+							<ul class="nav-sub">
+
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="/all_imaging">All Organisations</a>
+								</li>
+
+							</ul>
+						</li>
+
+
+						<li class="nav-item">
+							<a class="nav-link with-sub text-white myfont" href="#" ><i class="si si-speedometer"></i><h5 class="mt-2">Business Reports</h5></a>
+							<ul class="nav-sub">
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="/cstbusiness_dent">All Invoices</a>
+								</li>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="" style="pointer-events: none;color:grey">Business</a>
+								</li>
+
+							</ul>
+						</li>
+
+
+						<li class="nav-item">
+							<a class="nav-link with-sub text-white myfont" href="#" ><i class="si si-settings"></i><h5 class="mt-2">System Setup</h5></a>
+							<ul class="nav-sub">
+
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="/allusers_dent">Manage Users</a>
+								</li>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="/showstudies_dent">Manage Studies</a>
+								</li>
+								<li class="nav-sub-item">
+									<a class="nav-sub-link" href="/orgprofile_dent">Manage Organization Profile</a>
+								</li>
+
+							</ul>
+						</li>
+						{% endif %}
+
+
+
+
+					</ul>
+				</div>
+			</div>
+			<!--End  Horizonatal menu-->
+        	<!-- Main Content-->
+{% block content %}
+
+
+     {% endblock %}
+            <!-- End Main Content-->
+
+		<!-- Main Footer-->
+			<div class="main-footer text-center">
+				<div class="container">
+					<div class="row row-sm">
+						<div class="col-md-12">
+							<span>Copyright © 2022 <a href="#">Dentread</a>.</a> All rights reserved.</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--End Footer-->		        <!-- Sidebar -->
+			<div class="sidebar sidebar-right sidebar-animate">
+				<div class="sidebar-icon">
+					<a href="#" class="text-right float-right text-dark fs-20" data-toggle="sidebar-right" data-target=".sidebar-right"><i class="fe fe-x"></i></a>
+				</div>
+				<div class="sidebar-body">
+					<h5>Todo</h5>
+					<div class="d-flex p-2">
+						<label class="ckbox"><input checked  type="checkbox"><span>Hangout With friends</span></label>
+						<span class="ml-auto">
+							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						</span>
+					</div>
+					<div class="d-flex p-2 border-top">
+						<label class="ckbox"><input type="checkbox"><span>Prepare for presentation</span></label>
+						<span class="ml-auto">
+							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						</span>
+					</div>
+					<div class="d-flex p-2 border-top">
+						<label class="ckbox"><input type="checkbox"><span>Prepare for presentation</span></label>
+						<span class="ml-auto">
+							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						</span>
+					</div>
+					<div class="d-flex p-2 border-top">
+						<label class="ckbox"><input checked type="checkbox"><span>System Updated</span></label>
+						<span class="ml-auto">
+							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						</span>
+					</div>
+					<div class="d-flex p-2 border-top">
+						<label class="ckbox"><input type="checkbox"><span>Do something more</span></label>
+						<span class="ml-auto">
+							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						</span>
+					</div>
+					<div class="d-flex p-2 border-top">
+						<label class="ckbox"><input  type="checkbox"><span>System Updated</span></label>
+						<span class="ml-auto">
+							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						</span>
+					</div>
+					<div class="d-flex p-2 border-top">
+						<label class="ckbox"><input  type="checkbox"><span>Find an Idea</span></label>
+						<span class="ml-auto">
+							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						</span>
+					</div>
+					<div class="d-flex p-2 border-top mb-4 border-bottom">
+						<label class="ckbox"><input  type="checkbox"><span>Project review</span></label>
+						<span class="ml-auto">
+							<i class="fe fe-edit-2 text-primary mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Edit"></i>
+							<i class="fe fe-trash-2 text-danger mr-2" data-toggle="tooltip" title="" data-placement="top" data-original-title="Delete"></i>
+						</span>
+					</div>
+					<h5 class="pt-2">Overview</h5>
+					<div class="p-2">
+						<div class="main-traffic-detail-item">
+							<div>
+								<span>Founder &amp; CEO</span> <span>24</span>
+							</div>
+							<div class="progress">
+								<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="20" class="progress-bar progress-bar-xs wd-20p" role="progressbar"></div>
+							</div><!-- progress -->
+						</div>
+						<div class="main-traffic-detail-item">
+							<div>
+								<span>UX Designer</span> <span>1</span>
+							</div>
+							<div class="progress">
+								<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="15" class="progress-bar progress-bar-xs bg-secondary wd-15p" role="progressbar"></div>
+							</div><!-- progress -->
+						</div>
+						<div class="main-traffic-detail-item">
+							<div>
+								<span>Recruitment</span> <span>87</span>
+							</div>
+							<div class="progress">
+								<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar progress-bar-xs bg-success wd-45p" role="progressbar"></div>
+							</div><!-- progress -->
+						</div>
+						<div class="main-traffic-detail-item">
+							<div>
+								<span>Software Engineer</span> <span>32</span>
+							</div>
+							<div class="progress">
+								<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar progress-bar-xs bg-info wd-25p" role="progressbar"></div>
+							</div><!-- progress -->
+						</div>
+						<div class="main-traffic-detail-item">
+							<div>
+								<span>Project Manager</span> <span>32</span>
+							</div>
+							<div class="progress">
+								<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="25" class="progress-bar progress-bar-xs bg-danger wd-25p" role="progressbar"></div>
+							</div><!-- progress -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Sidebar -->
+        </div>
+		<!-- End Page -->
+
+        <!-- Back-to-top -->
+		<a href="#top" id="back-to-top"><i class="fe fe-arrow-up"></i></a>
+
+		<!-- Jquery js-->
+		<script src="{% static '/dentread/assets/plugins/jquery/jquery.min.js' %}"></script>
+
+		<!-- Bootstrap js-->
+		<script src="{% static '/dentread/assets/plugins/bootstrap/js/popper.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+
+		<!-- Perfect-scrollbar js -->
+		<script src="{% static '/dentread/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+
+		<!-- Sidebar js -->
+		<script src="{% static '/dentread/assets/plugins/sidebar/sidebar.js' %}"></script>
+
+		<!-- Select2 js-->
+		<script src="{% static '/dentread/assets/plugins/select2/js/select2.min.js' %}"></script>
+
+		        <!-- Internal Chart.Bundle js-->
+		<script src="{% static '/dentread/assets/plugins/chart.js/Chart.bundle.min.js' %}"></script>
+
+		<!-- Peity js-->
+        <script src="{% static '/dentread/assets/plugins/peity/jquery.peity.min.js' %}"></script>
+
+		<!-- Internal Morris js -->
+		<script src="{% static '/dentread/assets/plugins/raphael/raphael.min.js' %}"></script>
+		<script src="assets/plugins/morris.js/morris.min.js' %}"></script>
+
+		<!-- Circle Progress js-->
+		<script src="{% static '/dentread/assets/js/circle-progress.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/js/chart-circle.js' %}"></script>
+
+		<!-- Internal Dashboard js-->
+        <script src="{% static '/dentread/assets/js/index.js' %}"></script>
+
+		<!-- Sticky js -->
+		<script src="{% static '/dentread/assets/js/sticky.js' %}"></script>
+
+		<!-- Custom js -->
+		<script src="{% static '/dentread/assets/js/custom.js' %}"></script>
+
+		<script src="{% static '/dentread/assets/js/form-elements.js' %}"></script>
+
+
+		<script src="{% static '/dentread/assets/js/select2.js' %}"></script>
+
+		<script src="{% static '/dentread/assets/plugins/jquery.maskedinput/jquery.maskedinput.js' %}"></script>
+
+		<!-- Switcher js -->
+		<script src="{% static '/dentread/assets/switcher/js/switcher.js' %}"></script>
+
+
+	<script src="{% static '/dentread/assets/plugins/datatable/jquery.dataTables.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/datatable/dataTables.bootstrap4.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/datatable/dataTables.responsive.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/datatable/fileexport/dataTables.buttons.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/datatable/fileexport/buttons.bootstrap4.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/datatable/fileexport/jszip.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/datatable/fileexport/pdfmake.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/datatable/fileexport/vfs_fonts.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/datatable/fileexport/buttons.html5.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/datatable/fileexport/buttons.print.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/plugins/datatable/fileexport/buttons.colVis.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/js/table-data.js' %}"></script>
+	</body>
+
+</html>

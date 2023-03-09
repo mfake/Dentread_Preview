@@ -1,0 +1,320 @@
+{%extends "Base.html" %}
+{% load static %}
+
+{% load filename %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+
+ <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Send Mail</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/index">Home</a></li>
+              <li class="breadcrumb-item active">Send Mail</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+    <form  method="post" action="/sendmail/{{report.id}}">
+        {% csrf_token %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card card-primary">
+            <div class="card-header" style="background-color:#264d60">
+              <h3 class="card-title">Patient Report</h3>
+
+              <div class="card-tools">
+                  <a id="btn-export" class="btn btn-block bg-warning btn-sm"  onclick="{{btn}}">Download Report</a>
+
+              </div>
+            </div>
+            <div class="card-body" style="overflow-y: scroll; height:600px;">
+
+                <div class='wrapper'>
+            <div class='header'>
+                <img src="{% static '/logo/DMD Logo.png' %}" alt="logo" width="220" >
+            </div>
+       <div id="source-html">
+            <div class='heading'>
+            <br><br>
+            <b>{{invoice.study}}</b>
+                       <hr class='hrItem' />
+
+
+           <table style="width:100%">
+             <tr>
+             <th style="text-align: left; width:80%;">{{report.ptid}}</th>
+             <th style="text-align: centre; width:20%">{{report.date}}</th>
+
+            </tr>
+            <tr>
+            <th style="text-align: left; width:80%;">{{report.name}}, {{report.age}}-{{patient.gender}}</th>
+                        <td></td>
+
+            </tr>
+
+                </table>
+            </div>
+        <div>
+
+            {{report.text|safe}}
+
+
+                <img src="{{ sgn.sign.url }}" />
+
+
+
+        </div>
+       </div>
+
+            </div>
+            <!-- /.card-body -->
+          </div>
+          </div>
+            <script src="{% static '/html2pdf/dist/html2pdf.bundle.min.js' %}"></script>
+
+<script src="{% static '/src/plugin/jspdf-plugin.js' %}"></script>
+
+<script src="{% static '/html2pdf/dist/html2pdf.min.js' %}"></script>
+    <script>
+    function exporteHTML(){
+       var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+            "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+            "xmlns='http://www.w3.org/TR/REC-html40'>"+
+            "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+       var footer = "</body></html>";
+       var sourceHTML = header+document.getElementById("source-html").innerHTML+footer;
+
+       var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+       var fileDownload = document.createElement("a");
+       document.body.appendChild(fileDownload);
+       fileDownload.href = source;
+       fileDownload.download = 'document.doc';
+       fileDownload.click();
+       document.body.removeChild(fileDownload);
+    }
+</script>
+
+            <script>
+            function exportHTML(){
+
+                var elementHTML = document.getElementById("source-html").innerHTML;
+                var opt = {
+            margin:       [40, 20, 30, 20],
+            filename:     'Patient_report.pdf',
+            image:        { type: 'png', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'mm', format: 'A4', orientation: 'portrait' }
+        };
+            html2pdf().from(elementHTML).set(opt).toPdf().save();
+
+}
+
+            </script>
+                     <script>
+            function exportdsc(){
+
+                var elementHTML = document.getElementById("source-html").innerHTML;
+                var opt = {
+            margin:       [42.5, 22.5, 52.5, 25],
+            filename:     'Patient_report.pdf',
+            image:        { type: 'png', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'mm', format: 'A4', orientation: 'portrait' }
+        };
+            html2pdf().from(elementHTML).set(opt).toPdf().save();
+
+}
+
+            </script>
+            <script>
+            function exportparadise(){
+
+                var elementHTML = document.getElementById("source-html").innerHTML;
+                var opt = {
+            margin:       [65, 69.8, 10, 15.9],
+            filename:     'Patient_report.pdf',
+            image:        { type: 'png', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'mm', format: 'A4', orientation: 'portrait' }
+        };
+            html2pdf().from(elementHTML).set(opt).toPdf().save();
+
+}
+
+            </script>
+               <script>
+            function exportbrt()(){
+
+                var elementHTML = document.getElementById("source-html").innerHTML;
+                var opt = {
+            margin:       [47.5, 25.4, 10, 25.4],
+            filename:     'Patient_report.pdf',
+            image:        { type: 'png', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'mm', format: 'A4', orientation: 'portrait' }
+        };
+            html2pdf().from(elementHTML).set(opt).toPdf().save();
+
+}
+
+            </script>
+                    <!-- /.card -->
+        </div>
+        <div class="col-md-6">
+
+          <!-- /.card -->
+          <div class="card card-info">
+            <div class="card-header" style="background-color:#264d60">
+              <h3 class="card-title">Files</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>File Name</th>
+
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr>
+                      {% for i in file %}
+                    <td>{{i.file|filename}}</td>
+
+                    <td class="text-right py-0 align-middle">
+                      <div class="btn-group btn-group-sm">
+                        <a href="{{i.file.url}}" target="_blank" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                        <a href="/file_delete/{{i.id}}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                      </div>
+
+                    </td>
+                  </tr>
+               {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+
+             <div class="card card-secondary">
+            <div class="card-header" style="background-color:#264d60">
+              <h3 class="card-title">Send Mail</h3>
+
+              <div class="card-tools">
+                  <h6 class="badge badge-warning">{{report.mailstatus}}</h6>
+
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="inputEstimatedBudget">Select Data</label>
+                <select type="text" id="data" name="data"  class="form-control select2bs4" style="width: 100%;" required>
+                      <option selected="selected" disabled>Choose </option>
+                           <option value="Report">Report</option>
+                           <option value="Images">Images</option>
+                           <option value="Report & Images">Report & Images</option>
+
+                       </select>
+              </div>
+              <div class="form-group">
+                <label for="inputSpentBudget">Select Recipient</label>
+                 <select type="text" id="recipient" name="recipient"  class="form-control select2bs4" style="width: 100%;" required>
+                      <option selected="selected" value="Choose">Choose </option>
+                           <option value="Doctor">Doctor</option>
+                           <option value="Patient">Patient</option>
+                           <option value="Doctor & Patient">Doctor & Patient</option>
+
+                       </select>
+              </div>
+
+                  <div class="form-group">
+                        <label for="refdoctor">Referral Doctor (Optional)</label>
+
+                  <select  id="demo" name="demo" onchange="singleSelectChangeValue()" class="form-control select2bs4"  >
+                      <option selected="selected" disabled value="">Choose Referral Doctor</option>
+
+                    {% for i in doc %}
+
+                    <option  value="{{ i.email }}">{{ i.name }}___{{ i.clinic }}</option>
+
+                                 <script>
+                      function singleSelectChangeValue() {
+                           var selObj = document.getElementById("demo");
+                           var selValue = selObj.options[selObj.selectedIndex].value;
+                           var docValue = selObj.options[selObj.selectedIndex].text;
+
+                               document.getElementById("docemail").value = selValue;
+
+
+                            }
+</script>
+
+                      {% endfor %}
+
+                  </select>
+
+
+
+                      </div>
+
+
+                   <div class="form-group">
+                        <label for="docid">Dcotor Email</label>
+                        <input type="email" class="form-control" id="docemail"  name="docemail" placeholder="Doctor Email" readonly>
+                      </div>
+
+
+
+                <div class="form-group">
+                <label for="inputSpentBudget">Another Recipient (Optional)</label>
+                <input type="email" id="another" name="another" class="form-control" >
+
+              </div>
+<div class="row">
+    <div class="col-6">
+
+              <button type="submit" class="btn btn-block bg-gradient-success btn-lg">Send mail</button>
+
+    </div>
+    <div class="col-6">
+
+              <a type="button"  href="/marksent/{{report.id}}" class="btn btn-block bg-gradient-info btn-lg">Mark as Sent</a>
+
+    </div>
+</div>
+      </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+
+    </section>
+    <!-- /.content -->
+  </div>
+</form>
+{% endif %}
+{%endblock%}

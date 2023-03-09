@@ -1,0 +1,597 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+<script src="{% static '/ajax/jquery.min.js' %}"></script>
+<script>$(document).ready(function(){
+
+     // client id of the project
+
+     var clientId = "390501303746-dbdhedsnulu0govaql8abq966c44pog3.apps.googleusercontent.com";
+
+     // redirect_uri of the project
+
+
+
+
+     // scope of the project
+
+     var scope = "https://www.googleapis.com/auth/drive";
+     var redirect_uri = "https://cloud.dentread.com/orthanctest";
+
+     // the url to which the user is redirected to
+
+     var url = "";
+
+
+     // this is event click listener for the button
+
+     $("#login").click(function(){
+            var reportid= $(this).attr("name");
+            let csr = $("input[name=csrfmiddlewaretoken]").val();
+            mydata={reportid:reportid, csrfmiddlewaretoken:csr};
+            $.ajax({
+                 url: "/tempid/",
+                 type: "POST",
+                 data: mydata,
+                 dataType: 'json',
+                 success: function (data) {
+
+                    }
+                });
+
+
+
+        // this is the method which will be invoked it takes four parameters
+
+        signIn(clientId,redirect_uri,scope,url);
+
+     });
+
+     function signIn(clientId,redirect_uri,scope,url){
+
+        // the actual url to which the user is redirected to
+
+        url = "https://accounts.google.com/o/oauth2/v2/auth?redirect_uri="+redirect_uri
+        +"&prompt=consent&response_type=code&client_id="+clientId+"&scope="+scope
+        +"&access_type=offline";
+
+        // this line makes the user redirected to the url
+
+        window.location = url;
+
+
+
+
+     }
+
+
+
+});
+</script>
+
+
+<style>
+    body{
+        background: white;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+        margin: 0;
+        padding: 0;
+    }
+    .container{
+        margin: 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    
+    .content{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 5px solid #1f3f7f;
+    }
+    .submit-button, .reset-button{
+        width: 161px;
+        height: 36px;
+        background: #1F3F7F;
+        border-radius: 8px;
+        color: white;
+    }
+    .reset-button{
+        background-color: white;
+        color: #1F3F7F;
+        border: 1px solid #1F3F7F;
+        margin-left: auto;
+    }
+    form>.form-group{
+        display: flex;
+        margin-top: 1rem;
+        gap: 1.5rem;
+    }
+    .profile-pic{
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+        clip-path: circle(50%);
+    }
+    .user-table{
+        width: 100%;
+        border: 1px solid #dfe2e9;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        text-align: center;
+    }
+    th, td{
+        padding: 0.75rem 1rem;
+    }
+    thead{
+        background-color: #1F3F7F;
+        color: white;
+    }
+    tbody tr{
+        border-bottom: 1px solid #dfe2e9;
+    }
+    .user-table th img{
+        margin-right: 0.5rem
+    }
+    .search-box{
+        border-radius: 0.25rem;
+    }
+    .search-box input{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 175px !important;
+    }
+    .search-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+        border: 1px solid #dfe2e9;
+    }
+    .header:last-of-type{
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    .row>*{
+        text-align: center;
+        font-size: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    label{
+        margin: 0 !important;
+    }
+    .row span{
+        font-weight: 500;
+        margin-left: 0.5rem;
+    }
+    
+    .row img{
+        height: 50px;
+    }
+    .invoiceId{
+        pointer-events: none;
+        opacity: 50%;
+    }
+    .dropdown-item:hover{
+        color: white;
+    }
+   
+</style>
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5  onclick="history.back()" style="cursor: pointer;">Patient Summary</h5>
+
+        
+    </div>
+
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-6 col-md-3">
+                {% if patient.gender == 'Male' %}
+                    <img src="/static/svg_icons/Male.svg" />
+                {% endif %}
+                {% if patient.gender == 'Female' %}
+                    <img src="/static/svg_icons/female-pink.svg" />
+                {% endif %}
+                <span class="details-span ml-3">{{patient.name}}</span>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label for="">Age:</label>
+                <span class="details-span">{{patient.age}}</span>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label for="">ID:</label>
+                <span class="details-span">{{patient.pid}}</span>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label for="">Date:</label>
+                <span class="details-span">{{patient.rdate}}</span>
+            </div>
+        </div>
+    </div>
+
+    <table class="user-table">
+        <thead>
+            <tr>
+                <th>Dentread Service</th>
+                <th>Status</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in service_order %}
+                <tr>
+                    <td>{{ i.refstudy }}</td>
+                    <td>{{ i.status }}</td>
+                    <td>{{ i.ref_price }}</td>
+                    <td>{{ i.date|date:'d-m-Y' }}</td>
+                    <td>
+                        <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                            id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                        </button>
+                        
+                        <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                            <!-- <a class="dropdown-item" style="cursor: pointer;" href="/edit_user/{{ i.id }}">
+                                Edit
+                            </a>
+                            <a class="dropdown-item" style="cursor: pointer;" href="/delete_user/{{ i.id }}">
+                                Delete
+                            </a> -->
+                            <!-- {% if i.refstudy == "Radiological Report" %}
+                                <a href="/radiological_status/{{i.id}}" class="dropdown-item" style="cursor: pointer;" >
+                                    View
+                                </a>
+                            {% endif %}
+                            {% if i.refstudy == "Image Analysis Report" %}
+                                <a href="/imageAnalysis_status/{{i.id}}" class="dropdown-item" style="cursor: pointer;" >
+                                    View
+                                </a>
+                            {% endif %}
+                            {% if i.refstudy == "Implant Planning Report" %}
+                                <a href="/implantPlanning_status/{{i.id}}" class="dropdown-item" style="cursor: pointer;">
+                                    View
+                                </a>
+                            {% endif %}
+                            {% if i.refstudy == "Implant Surgical Guide" %}
+                                <a href="/guideStatus/{{i.id}}" class="dropdown-item" style="cursor: pointer;">
+                                    View
+                                </a>
+                            {% endif %}
+                            {% if i.refstudy == "Digital Lab Services" %}
+                                <a href="/DigitalLabStatus/{{i.id}}" class="dropdown-item" style="cursor: pointer;">
+                                    View
+                                </a>
+                            {% endif %} -->
+                            {% if i.refstudy == "Radiological Report" %}
+                                <a href="/manageReport/{{i.id}}" class="dropdown-item" style="cursor: pointer;">
+                                    Manage Report
+                                </a>
+                            {% endif %}
+                            {% if i.refstudy == "Image Analysis Report" %}
+                                <a href="/manageReportImage/{{i.id}}" class="dropdown-item" style="cursor: pointer;">
+                                    Manage Report
+                                </a>
+                            {% endif %}
+                            {% if i.refstudy == "Implant Planning Report" %}
+                                <a href="/manageReportPlanning/{{i.id}}"  class="dropdown-item" style="cursor: pointer;">
+                                    Manage Report
+                                </a>
+                            {% endif %}
+                            {% if i.refstudy == "Implant Surgical Guide" %}
+                                <a href="/manageReportGuide/{{i.id}}"  class="dropdown-item" style="cursor: pointer;">
+                                    Manage Report
+                                </a>
+                            {% endif %}
+                            {% if i.refstudy == "Digital Lab Services" %}
+                                <a href="/manageReportDigitalLab/{{i.id}}"  class="dropdown-item" style="cursor: pointer;">
+                                    Manage Report
+                                </a>
+                            {% endif %}
+                            <a href="" class="invoiceId dropdown-item" >
+                                {% autoescape off %}
+                                    {{icon}} Invoice
+                                {% endautoescape %}
+                            </a>
+                        </div>
+                            
+                    </td>
+                </tr>
+            {% endfor %}
+            <!-- {% for i in users %}
+                <tr>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.status }}</td>
+                    <td>
+                        <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                            id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                        </button>
+                        
+                        <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                            <a class="dropdown-item" style="cursor: pointer;" href="/edit_user/{{ i.id }}">
+                                Edit
+                            </a>
+                            <a class="dropdown-item" style="cursor: pointer;" href="/delete_user/{{ i.id }}">
+                                Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %} -->
+            
+        </tbody>
+
+    </table>
+
+</div>
+
+<script>
+
+    if("{{patient.gender}}" == 'Female'){
+        document.querySelector('.container .content').style.borderLeftColor = "#F300CC";
+    }
+
+    
+    function reverseTable(){
+        let arrayRows = document.querySelectorAll('.user-table tbody tr');
+        document.querySelector('.user-table tbody').innerHTML = '';
+        arrayRows.forEach((tr)=>{
+            document.querySelector('.user-table tbody').prepend(tr);
+        })
+
+    }
+    reverseTable();
+    
+</script>
+
+
+<!-- <div class="main-content side-content pt-0">
+
+    <div class="container-fluid">
+        <div class="inner-body">
+
+
+            <div class="page-header">
+                <div>
+                    <h4 class="text-primary">Patient Summary</h4>
+
+                </div>
+                <div class="d-flex mr-3">
+                    <div class="justify-content-center">
+                        <div class="dropdown dropleft">
+                            <button aria-expanded="false" aria-haspopup="true"
+                                    class="btn ripple btn-outline-primary btn-sm dropdown-toggle" data-toggle="dropdown"
+                                    id="dropleftMenuButton" type="button" style="font-size: 1rem;
+                                    border: 3px solid; border-width: revert;
+                                ">Choose Dentread Service
+                            </button>
+                            <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                                {% for s in topcat %}
+                                <a class="dropdown-item" href="/refer_service/{{patient.id}}/{{s.id}}">{{s.topcat}}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-lg-12 col-xl-12">
+                {% if message %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong></strong> {{message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                <div class="card  custom-card card-box" style="background-color:#2f6ebb;">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="offset-xl-3 offset-sm-6 col-xl-8 col-sm-6 col-12 img-bg ">
+                                <h4 class="d-flex  mb-3">
+                                    <span class="font-weight-bold text-white ">{{ patient.name }}, Patient ID - {{ patient.pid }}</span>
+                                </h4>
+
+                                <p class="tx-white-7 mb-1">
+                            </div>
+                            <img src="{% static '/dentread/assets/img/pngs/work3.png' %}" alt="user-img" class="wd-200">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<style>
+    #example2_filter{
+        display: flex !important;
+        justify-content: end !important;
+        text-align: end;
+    }
+    
+    #example2_length{
+        display: none !important;
+        
+    }
+    .invoiceId{
+        pointer-events: none;
+        opacity: 50%;
+    }
+    .card{
+        margin-bottom: 1rem;
+    }
+</style>
+        <div class="row">
+            <div class="col-sm-12 col-lg-12 col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                            <h3>Service Details</h3>
+                            <thead>
+                            <tr>
+                                <th style="background-color:#2f6ebb;color:white;">Actions</th>
+                                <th style="background-color:#2f6ebb;color:white;">Date </th>
+                                <th hidden> ID</th>
+                                <th style="background-color:#2f6ebb;color:white;">Dentread Service</th>
+                                <th style="background-color:#2f6ebb;color:white;">Status</th>
+                                <th style="background-color:#2f6ebb;color:white;">
+                                    Amount
+                                    {% autoescape off %}
+                                        {{icon}}
+                                    {% endautoescape %}
+                                </th>
+                                <th style="background-color:#2f6ebb;color:white;">Referred To</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in service_order %}
+                            <tr>
+                                <td style="width: 1px" >
+                                    {% if i.refstudy == "Radiological Report" %}
+                                    <a href="/radiological_status/{{i.id}}"  class="btn action-icon--buttons"  data-toggle="tooltip" data-placement="top" title="View" >
+                                      <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if i.refstudy == "Image Analysis Report" %}
+                                    <a href="/imageAnalysis_status/{{i.id}}"  class="btn action-icon--buttons" data-toggle="tooltip" data-placement="top" title="View">
+                                      <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if i.refstudy == "Implant Planning Report" %}
+                                    <a href="/implantPlanning_status/{{i.id}}" class="btn action-icon--buttons" data-toggle="tooltip" data-placement="top" title="View">
+                                      <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if i.refstudy == "Implant Surgical Guide" %}
+                                        <a href="/guideStatus/{{i.id}}" class="btn action-icon--buttons" data-toggle="tooltip" data-placement="top" title="View">
+                                        <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if i.refstudy == "Digital Lab Services" %}
+                                        <a href="/DigitalLabStatus/{{i.id}}" class="btn action-icon--buttons" data-toggle="tooltip" data-placement="top" title="View">
+                                        <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if i.refstudy == "Radiological Report" %}
+                                    <a href="/manageReport/{{i.id}}" class="btn action-icon--buttons" data-toggle="tooltip" data-placement="top" title="Report(s)">
+                                    <i class="fa-regular fa-file-lines"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if i.refstudy == "Image Analysis Report" %}
+                                    <a href="/manageReportImage/{{i.id}}" class="btn action-icon--buttons" data-toggle="tooltip" data-placement="top" title="Report(s)">
+                                    <i class="fa-regular fa-file-lines"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if i.refstudy == "Implant Planning Report" %}
+                                    <a href="/manageReportPlanning/{{i.id}}" class="btn action-icon--buttons" data-toggle="tooltip" data-placement="top" title="Report(s)">
+                                    <i class="fa-regular fa-file-lines"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if i.refstudy == "Implant Surgical Guide" %}
+                                        <a href="/manageReportGuide/{{i.id}}" class="btn action-icon--buttons" data-toggle="tooltip" data-placement="top" title="Report(s)">
+                                        <i class="fa-regular fa-file-lines"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if i.refstudy == "Digital Lab Services" %}
+                                    <a href="/manageReportDigitalLab/{{i.id}}" class="btn action-icon--buttons" data-toggle="tooltip" data-placement="top" title="Report(s)">
+                                    <i class="fa-regular fa-file-lines"></i>
+                                    </a>
+                                    {% endif %}
+                                    <a href="" id="invoiceId" class="btn action-icon--buttons" data-toggle="tooltip" data-placement="top" title="Invoice">
+                                        {% autoescape off %}
+                                        {{icon}}
+                                        {% endautoescape %}
+                                    </a>
+                                      
+                                  </td>
+                                <td>{{ i.date|date:'d-m-Y' }}</td>
+                                <td hidden>{{ i.id }}</td>
+                                <td>{{ i.refstudy }}</td>
+                                <td>{{ i.status }}</td>
+                                <td>{{ i.ref_price }}</td>
+                                <td>{{ i.reforgid }}</td>
+                                <td>{{ i.remark }}</td> 
+
+
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script src="{% static '/dentread/assets/js/form-elements.js' %}"></script>
+<script src="{% static '/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+
+
+<script>
+$(function () {
+  bsCustomFileInput.init();
+});
+
+</script>
+<script>
+    window.alert = (function() {
+        var nativeAlert = window.alert;
+        return function(message) {
+            window.alert = nativeAlert;
+            message.indexOf("DataTables warning") === 0 ?
+                console.warn(message) :
+                nativeAlert(message);
+        }
+    })();
+
+    $(function () {
+        $("#example2").DataTable({
+
+        "order": [[ 2, "desc" ]],
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+
+        });
+
+    });
+</script> -->
+
+{% endif %}
+{%endblock%}

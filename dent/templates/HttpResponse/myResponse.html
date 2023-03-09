@@ -1,0 +1,18 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+{% if message %}
+    <h3>{{message}}</h3>
+{% endif %}
+{% if messageExc %}
+    <h3>{{messageExc}}</h3>
+{% endif %}
+{% if eventMessage %}
+    <h3>{{eventMessage}}</h3>
+{% endif %}
+{% if eventMessage %}
+    <h3>{{eventMessage}}</h3>
+{% endif %}
+{% endif %}
+{%endblock%}

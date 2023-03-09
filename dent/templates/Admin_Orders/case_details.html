@@ -1,0 +1,1200 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <script src="{% static '/dropzone/dropzone.js' %}"></script>
+
+
+    <script src="{% static '/tinymce/tinymce.min.js' %}"></script>
+
+    <script src="https://kit.fontawesome.com/1e67968654.js" crossorigin="anonymous"></script>
+    <script>
+            tinymce.init({
+  selector: '#text',
+  plugins: 'print preview paste importcss searchreplace save autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap emoticons',
+  imagetools_cors_hosts: ['picsum.photos'],
+  menubar: 'file edit view insert format tools table help',
+  toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | save | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+  toolbar_sticky: true,
+  autosave_ask_before_unload: true,
+  autosave_interval: "30s",
+  autosave_prefix: "{path}{query}-{id}-",
+  autosave_restore_when_empty: false,
+  autosave_retention: "2m",
+  image_advtab: true,
+ content_style: "body { background: white; color: Black; font-size: 12pt; font-family: Arial; }",
+
+  link_list: [
+    { title: 'My page 1', value: 'http://www.tinymce.com' },
+    { title: 'My page 2', value: 'http://www.moxiecode.com' }
+  ],
+
+  image_list: [
+    { title: 'My page 1', value: 'http://www.tinymce.com' },
+    { title: 'My page 2', value: 'http://www.moxiecode.com' }
+  ],
+  image_class_list: [
+    { title: 'None', value: '' },
+    { title: 'Some class', value: 'class-name' }
+  ],
+  importcss_append: true,
+  height: 800,
+
+  file_picker_callback: function (callback, value, meta) {
+    /* Provide file and text for the link dialog */
+    if (meta.filetype === 'file') {
+      callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
+    }
+
+    /* Provide image and alt text for the image dialog */
+    if (meta.filetype === 'image') {
+      callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+    }
+
+    /* Provide alternative source and posted for the media dialog */
+    if (meta.filetype === 'media') {
+      callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
+    }
+  },
+  templates: [
+        { title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
+    { title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
+    { title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
+  ],
+  template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
+  template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
+
+
+  image_caption: true,
+  quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+  noneditable_noneditable_class: "mceNonEditable",
+  toolbar_mode: 'sliding',
+  contextmenu: "link image imagetools table",
+ });
+
+
+    </script>
+</head>
+
+<div class="container-div">
+
+    <!-- order details container  -->
+
+    <div class="order-details--container">
+        <h4 class="main-centered--heading">Order Details</h4>
+        <table style="width: 100%;  margin: 1rem 0;border-collapse: separate;border-spacing: 0 10px;">
+            <tbody>
+                <tr>
+                    <th >
+                        Dental Clinic:
+                    </th>
+                    <td >
+                        {{service_order.locate}}
+                    </td>
+                    <th >
+                        Order ID:
+                    </th>
+                    <td >
+                        {{service_order.order_id}}
+                    </td>
+                    <th >
+                        Order Date:
+                    </th>
+                    <td >
+                        {{service_order.date}}
+                    </td>
+                </tr> 
+                <tr>
+                    <th >
+                        Patient Name:
+                    </th>
+                    <td >
+                        {{service_order.name}}
+                    </td>
+                    <th >
+                        Patient ID:
+                    </th>
+                    <td >
+                        {{patient.pid}}
+                    </td>
+                    <th >
+                        Last Modified:
+                    </th>
+                    <td >
+                        {{service_order.date}}
+                    </td>
+                </tr>
+                <tr>
+                    <th >
+                        Service:
+                    </th>
+                    <td >
+                        {{service_order.refstudy}}
+                    </td>
+                    <th >
+                        Total Amount:
+                    </th>
+                    <td >
+                        {% autoescape off %}
+                            {{icon}}
+                        {% endautoescape %}
+                        {{service_order.ref_price}}
+                    </td>
+                    <th >
+                        Payment Status:
+                    </th>
+                    <td >
+                        {{service_order.paymentStatus}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="table-responsive">
+            <table class="table" style="white-space: nowrap; width: 100%; table-layout: auto;">
+                <thead>
+                    <tr>
+                        <th>Actions</th>
+                        <th>Order Line-Item ID</th>
+                        <th>Tooth Site(s)</th>
+                        <th>Data Type</th>
+                        <th>Service Category</th>
+                        <th>Sub-Category</th>
+                        <th>Price {% autoescape off %}
+                            {{icon}}
+                        {% endautoescape %}</th>
+                        <th>Clinical Notes</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align-last: left;">
+                    <!-- for loop here  -->
+                    {% for i in image_order %}
+                    <tr>
+                        <td>
+                            <button aria-expanded="false" aria-haspopup="true"
+                                class="btn ripple btn-sm btn-outline-primary" data-toggle="dropdown"
+                                id="dropleftMenuButton" type="button"><i
+                                class="si si-options-vertical"></i>
+                            </button>
+                            <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+
+                                <a class="dropdown-item" href="" type="button" data-toggle="modal"
+                                data-target="#editLineOrderModal" onclick="onLineItemClick({{i.id}},`{{i.data_type}}`,`{{i.service_catagory}}`,`{{i.sub_category}}`,`{{i.price}}`, `{{i.remark}}`)"><i
+                                        class="fas fa-pencil-alt"></i> Edit Line Order Item</a>
+
+                                <a class="dropdown-item" href="" type="button" data-toggle="modal" onclick="imageUploadBtnClick({{i.id}})"
+                                data-target="#manageFilesModal"><i class="fa fa-solid fa-file"></i> Manage Files </a>
+
+                                <a class="dropdown-item {{i.down}}" href="/orthancdownload/{{service_order.id}}"><i class="fa fa-download"></i> Download
+                                    Dicom</a>
+
+                                <a class="dropdown-item {{i.down}}"
+                                href="http://68.178.166.31:3000/viewer/{{ service_order.StudyInstanceUID }}"
+                                target="_blank"><i class="fa fa-eye"></i> Open in Viewer</a>
+
+                                <a class="dropdown-item" href="/service_ordering_image/{{service_order.id}}/{{mycat.id}}/{{i.id}}"><i class="fa-solid fa-pen-to-square"></i>Create/Edit Report</a>
+
+                                <a class="dropdown-item" href="" onclick="onShareFunction({{i.id}})" type="button" target="_blank" data-toggle="modal"
+                                data-target="#shareModal"><i class=" fa fa-solid fa-share"></i>Share Report</a>
+                            </div>
+                        </td>
+                        <td>
+                            {{i.item_id}}
+                        </td>
+                        <td>
+                            {{i.tooth}}
+                        </td>
+                        <td>
+                            {{i.data_type}}
+                        </td>
+                        <td>
+                            {{i.service_catagory}}
+                        </td>
+                        <td>
+                            {{i.sub_category}}
+                        </td>
+                        <td>
+                            {{i.price}}
+                        </td>
+                        <td>
+                            {{i.remark}}
+                        </td>
+                        <td>
+                            {{i.status}}
+                        </td>
+                        
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+
+    <!-- admin updates container  -->
+
+    <div class="admin-updates--container">
+        <h4 class="main-centered--heading">Admin Updates</h4>
+
+        <div class="row">
+            <div class="col-sm-6 d-flex flex-column">
+                <label for="service-log--textarea" class="admin-updates--label">Service Log</label>
+                <div id="service-log" disabled style="padding: 5px 0 5px 0; flex: 1;">
+                    {% for i in log %}
+                        <div style="padding: 5px 10px; margin: 5px 0;">
+                            <span style="font-size: 12px;" class="service-log--date">
+                                ({{i.date}})
+                            </span>
+                            <span style="font-size: 14px;">
+                                {{i.user}}:
+                            </span>
+                            <span style="font-size: 14px;">
+                                {{i.message}}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-sm-6 logistic-n-details--area">
+                <form method="post" action="/adminUpdatesImage/{{service_order.id}}/{{mycat.id}}">
+                    {% csrf_token %}
+                    <input type="text" id="badge" name="badge" value="{{service_order.badge}}" hidden></input>
+                    <div class="form enclosing-row">
+                        <div class="form-group">
+                            <label for="status-select" class="admin-updates--label">Status</label>
+                            <div class="d-flex">
+                                <select name="status-select" id="status-select" class="form-control" style="width: 80%;" >
+                                    <option selected value="{{ service_order.status }}">{{ service_order.status}}</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="In Process">In Process</option>
+                                    <option value="For Review">For Review</option>
+                                    <option value="Report Complete">Report Completed</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary ml-3" style="flex: 1; font-size: 15px;">Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+                <div class="case-chat-body">
+                    <div id="case-chat"></div>
+                    <form method="post" action="/adminCommentImage/{{service_order.id}}/{{mycat.id}}" class="form">
+                        {% csrf_token %}
+                        <div class="input-group w-100">
+                            <input type="text" class="form-control" name="comment" placeholder="Type your comment here..." aria-label="Type your comment here..." aria-describedby="comment-send">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn" style="border-color: #e8e8f7;" id="comment-send"><i class="fa fa-sharp fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+<!-- 
+    <div class="admin-updates--container">
+        <h4 class="main-centered--heading">Admin Updates</h4>
+        <div class="wrapping-div">
+            <div class="service-log--area">
+                <label for="service-log--textarea" class="admin-updates--label">Service Log</label>
+                <div id="service-log" disabled style="  
+                height: -webkit-fill-available; padding: 5px 0 5px 0;">
+                    {% for i in log %}
+                        <div style="padding: 0 5px 0 5px; margin-top: 5px;">
+
+                            <span style="font-size: 11px;" class="service-log--date">
+                                ({{i.date}})
+                            </span>
+                            <span style="font-size: 12px;">
+                                {{i.user}}:
+                            </span>
+                            
+                            <span style="font-size: 12px;">
+                                {{i.message}}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="logistic-n-details--area">
+                <form method="post" action="/adminUpdatesImage/{{service_order.id}}/{{mycat.id}}">
+                    {% csrf_token %}
+                    <input type="text" id="badge" name="badge" value="{{service_order.badge}}" hidden></input>
+                    <div class="form enclosing-form">
+                        <div class="form-group">
+                            <label for="status-select" class="admin-updates--label">Status</label>
+                            <select name="status-select" id="status-select" style="height: 27px; border: 1px solid #d0d0d0;">
+                                <option selected value="{{ service_order.status }}">{{ service_order.status}}</option>
+                                <option >Pending</option>
+                                <option >In Process</option>
+                                <option >For Review</option>
+                                <option >Report Completed</option>
+                                <option >Completed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="shipped-by" name="shipped-by" class="admin-updates--label">Shipped By</label>
+                            <input id="shipped-by" type="text" placeholder="Logistics Company" style="border: 1px solid #d0d0d0;"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="tracking" name="tracking" class="admin-updates--label" >Tracking</label>
+                            <input id="tracking" type="text" placeholder="Tracking ID" style="border: 1px solid #d0d0d0;"/>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="save-button" style="color: white;
+                    position: absolute;
+                    bottom: 1rem;
+                    padding: 0.2rem 3rem;
+                    background: #2f6ebb;
+                    border: #2f6ebb;
+                    border-radius: 3px;">
+                        Save
+                    </button>
+                </form>
+
+                <form method="post" action="/adminCommentImage/{{service_order.id}}/{{mycat.id}}" class="form">
+                    {% csrf_token %}
+                    <div class="form-group" style="flex-direction: row;">
+                        <label for="comment" style="margin: auto 0; width: 14%;"
+                               class="admin-updates--label">Comment</label>
+                        <input type="text" id="comment" name="comment" style="width: 60%; border: 1px solid #d0d0d0;"
+                               placeholder="Enter Your Comment"/>
+                        <button type="submit" class="add-comment--button" style="width: 26%;">Add</button>
+                    </div>
+                    <div>
+                        <label for="case-chat" style="margin: auto 0;" class="admin-updates--label">
+                            Case Chat
+                        </label>
+                        <div id="case-chat">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+<!-- all modals are here  -->
+
+<!-- 1. share report modal  -->
+<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Share Report</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="/" id="sendMail" class="form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="email">Share With</label>
+                        <input type="email" name="email" id="email" placeholder="example@gmail.com">
+                        <label for="report-type" style="margin-top:1rem;">Report Type</label>
+                        <select id="report-type" name= "data" style="height: 27px;">
+                            <option selected>Select</option>                           
+                            <option name="Images" value="Images">Image PDF(s)</option>
+                        </select>
+                    </div>
+                    <div style="display: flex;">
+                        <button type="submit" class="share-report--button">Send</button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 2. Manage files modal  -->
+<div class="modal fade" id="manageFilesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Manage Files</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <h6 style="color: red;">View/Download patient's scans, images and reports</h6>
+                <div class="file-management">
+                    <div class="uploaded-files">
+                        <h6 style="background-color: aliceblue; padding: 10px">Uploaded Files</h6>
+                        <!-- for loop here  -->
+
+                        <div  id="fileNameData">
+                        
+                        </div>
+                        <!-- for loop ends here  -->
+                    </div>
+
+                    <div class="uploaded-files" style="margin-top: 1rem;">
+                        <h6 style="background-color: aliceblue; padding: 10px">Reports</h6>
+                        <!-- for loop here  -->
+
+                        <div id="feedFileData">
+
+
+                        </div>
+                        <!-- for loop ends here  -->
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editLineOrderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit/Update Line Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="/" onsubmit="return onEditFormSubmit()"
+                              id="orderForm" multi>
+                            {% csrf_token %}
+                    <div class="container">
+                        <div class="row">
+                            
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none"
+                                        >Data Type</label
+                                        >
+                                        <select
+                                                class="form-control"
+                                                required
+                                                name="title"
+                                                id="title"
+                                                onchange="onTypeChangeM(this, document.getElementById('categ'))"
+                                        >
+                                            <option selected="selected" disabled>
+                                                Select Data Type
+                                            </option>
+                                            <option value="CBCT">CBCT</option>
+                                            <option value="X-Ray">X-Ray</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none"
+                                        >Service Catagory</label
+                                        >
+                                        <select
+                                                class="form-control"
+                                                name="categ"
+                                                id="categ"
+                                                required
+                                                onchange="onServiceChangeM(this, document.getElementById('sub-categ'))"
+                                        >
+                                            <option selected="selected" disabled>
+                                                Select Category
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none"
+                                        >Service Sub-Catagory</label
+                                        >
+                                        <select
+                                            class="form-control"
+                                            name="sub-categ"
+                                            id="sub-categ"
+                                            required
+                                            onchange="onSubCategChangeM()"
+                                        >
+                                            <option selected="selected" disabled>
+                                                Select Sub-Category
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none">Price</label>
+                                        <input
+                                                class="form-control"
+                                                placeholder="price"
+                                                type="text"
+                                                value=""
+                                                name="price"
+                                                id="price"
+                                                readonly
+                                        />
+                                    </div>
+                                </div>
+
+                                <!-- <div class="row"> -->
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label d-none">Clinical Notes</label>
+                                        <input
+                                                class="form-control"
+                                                placeholder="Enter Clinical Notes"
+                                                type="text"
+                                                name="remark"
+                                                id="remark"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-4 ">
+                                    <label class="form-control-label d-none"> </label>
+                                    <button
+                                            
+                                            type="submit"
+                                            class="btn btn-block ripple btn-primary"
+                                            id="updateBtn"                                     
+                                    >
+                                        Update
+                                    </button>
+                                </div>
+                            
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<input id="service_orderid" name="service_orderid" value="{{service_order.id}}" hidden>
+
+
+<style>
+
+    #service-log>div:nth-child(odd) {
+        background-color: #f0f8ff;
+    }
+
+    .floating-date-left{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      left: 5px;
+    }
+    .floating-date-right{
+      position: absolute;
+      font-size: x-small;
+      color: black;
+      bottom: 0;
+      right: 5px;
+    }
+    .admin-side--comment{
+      font-size: 14px;
+      position: relative;
+      margin: 0 0 10px 0;
+      color: black;
+      padding: 3px 10px;
+      width: 60%;
+      border-radius: 4px;
+      margin-left: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+      background: lavender;
+    }
+    .clinic-side--comment{
+      margin-right: 10px;
+      font-size: 14px;
+      position: relative;
+      margin: 0 0 10px 0;
+      color: black;
+      padding: 3px 3.2rem 3px 10px;
+      width: 60%;
+      margin-left: auto;
+      border-radius: 4px;
+      margin-right: 10px;
+      overflow-wrap: break-word;
+      box-shadow: 1px 4px 14px 0px #8177771A;
+    }
+    .dateEle{
+        text-align: center;
+        background: lavender;
+        font-size: 13px;
+        width: 100px;
+        margin: 10px auto;
+        border-radius: 10px;
+    }
+
+    .logistic-n-details--area{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .uploaded-files{
+        border: 1px solid #e8e9ed;
+    }
+
+    .case-chat-body{
+        border:  1px solid #e8e8f7;
+        padding: 0 10px 10px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        border-radius: 5px;
+    }
+    
+    #case-chat{
+        overflow: auto;
+        flex: 1;
+        max-height: 250px;
+    }
+
+    html {
+        --scrollbarBG: #CFD8DC;
+        --thumbBG: #90A4AE;
+    }
+    div#case-chat::-webkit-scrollbar, div#service-log::-webkit-scrollbar {
+        width: 11px;
+    }
+    div#case-chat, div#case-chat{
+        scrollbar-width: thin;
+        scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+    }
+    #case-chat::-webkit-scrollbar-thumb, #service-log::-webkit-scrollbar-thumb{
+        background-color: var(--thumbBG) ;
+        border-radius: 6px;
+        border: 3px solid white;
+    }
+
+    #service-log{
+        border: 1px solid #e8e8f7;
+        min-height: 300px;
+        border-radius: 5px;
+        max-height: 350px;
+        overflow: auto;
+    }
+
+    .enclosing-div{
+        padding: 5px 1rem;
+        display: flex;
+        align-items: centers;
+        justify-content: space-around;
+    }
+    a.action-icon--buttons.primary-icon, a.action-icon--button.danger-icon{
+      color: #8f9cc0;
+    }
+    a.action-icon--buttons.primary-icon:hover{
+      color: #1f3f7f;
+    }
+    a.action-icon--buttons.danger-icon:hover{
+      color: red;
+    }
+    .add-comment--button, .share-report--button{  
+        border: #2f6ebb;
+        background-color: #2f6ebb;
+        color: white;
+        margin-left: 1rem;
+        padding: 0 1.7rem;
+        border-radius: 3px;
+    }
+    .share-report--button{
+        padding: 0.3rem 1rem;
+        margin: 0 auto;
+    }
+    #status-select{
+        height: 33px !important;
+    }
+    .form-group{
+        display: flex;
+        flex-direction: column;
+    }
+    .container-div{
+        /* border: 1px solid; */
+        /* max-width:  800px; */
+        margin: 1rem auto;
+    }
+    .order-details--container, .admin-updates--container{
+        width: 100%;
+        border: none;
+        border-radius: 5px;
+        margin: 1.5rem 0;
+        background-color: white;
+        padding: 0 1.5rem;
+        padding-top: 10px;
+        max-width: 1100px;
+    }
+
+    .admin-updates--container{
+        position: relative;
+        padding-bottom: 3rem;
+
+    }
+    .main-centered--heading{
+        text-align: center;
+        margin: 1.5rem 0;
+        color: white;
+        background-color: #2f6ebb;
+        padding: 5px;
+        border-radius: 3px;
+        
+    }
+    table.table tr{
+        text-align: center;
+    }
+    table.table{
+        table-layout: auto;
+        width: 100%;
+        margin: 1rem auto;
+        border: 1px solid #eaedf7;
+        white-space: nowrap;
+    }
+    table.table thead tr{
+        background-color: aliceblue;
+    }
+    .service-log--area{
+        width: 35%;
+        display: flex;
+        flex-direction: column;
+    }
+    .wrapping-div{
+        display: flex;
+        margin-bottom: 1rem;
+    }
+    
+    .admin-updates--label{
+        font-weight: 500;
+    }
+
+    .save-button{
+        color: white;
+        position: absolute;
+        bottom: -4rem;
+        right: -4rem;
+        padding: 0.2rem 3rem;
+        background: #2f6ebb;
+        border: #2f6ebb;
+        border-radius: 3px;
+    }
+
+    @media (min-width: 576px){
+
+        #editLineOrderModal .modal-dialog {
+            max-width: 600px;
+            margin: 1.75rem auto;
+        }
+    }
+</style>
+<!-- </div> -->
+
+<script>
+
+    for(let x of document.getElementsByClassName('service-log--date')){
+        x.innerText= x.innerText.replace('a.m.', 'AM')
+        x.innerText= x.innerText.replace('p.m.', 'PM')
+    }
+    
+    // chat section starts here
+    
+    let parent=  document.getElementById('case-chat')
+    let prevDate = ''
+    '{% for i in comment %}'
+        var ele= document.createElement('div');
+        
+        var date= document.createElement('span');
+        date.innerText=`{{i.date}}`.slice(15);
+        
+        if('{{i.date}}'.slice(0, 13) != prevDate ){
+            prevDate = '{{i.date}}'.slice(0, -11);
+            var dateEle= document.createElement('div');
+            dateEle.innerText = prevDate;
+            dateEle.classList.add('dateEle');
+            parent.appendChild(dateEle);
+        }
+        
+        var text= document.createElement('span');
+        text.innerText= `{{i.comment}}`
+        
+    
+        if(`{{i.orgid}}`=='{{org}}'){
+            
+            date.classList.add('floating-date-right');
+            ele.appendChild(date);
+            ele.appendChild(text);
+            ele.classList.add('clinic-side--comment');
+        }    
+        else{
+            date.classList.add('floating-date-right');
+            ele.appendChild(text);
+            ele.appendChild(date);
+            ele.classList.add('admin-side--comment')
+            
+        }    
+        parent.appendChild(ele);           
+        
+    '{% endfor %}'
+    
+    // chat section ends here
+
+</script>
+
+<script>
+
+  
+    let typeM = [{% for i in studies %}'{{ i.title | escapejs }}',{% endfor %}];
+    let serviceM = [{% for i in studies %} '{{ i.maincat | escapejs }}', {% endfor %}];
+    let subCategM = [{% for i in studies %} '{{ i.subcat | escapejs }}', {% endfor %}];
+    let pricesM = [];
+    {% if currency == 'price' %}
+        pricesM = [{% for i in studies %} '{{ i.price | escapejs }}', {% endfor %}];
+    {% endif %}
+    {% if currency != 'price' %}
+        pricesM = [{% for i in studies %} '{{ i.dollarPrice | escapejs }}', {% endfor %}];
+    {% endif %}
+
+    // console.log(typeM, serviceM, subCategM, pricesM);
+
+    function onTypeChangeM(self, target){
+        document.getElementById('sub-categ').innerHTML = '<option selected disabled> Select Sub-Category</option>';
+        document.getElementById('price').value = '';
+        target.innerHTML='';
+        let values= [];
+        typeM.forEach((el, index)=>{
+            if(el==self.value && !values.includes(serviceM[index])){
+            values.push(serviceM[index]);
+            let option = document.createElement('option');
+            let optionText = document.createTextNode(`${serviceM[index]}`);
+            option.appendChild(optionText);
+            option.setAttribute('value', serviceM[index])
+
+            target.appendChild(option);
+            }
+        })
+        // console.log('on type change ran');
+        onServiceChangeM(target, document.getElementById('sub-categ'));
+        
+    }
+        
+    function onServiceChangeM(self, target){
+        document.getElementById('price').value = '';
+        target.innerHTML='';
+        let values= [];
+        serviceM.forEach((el, index)=>{
+        if(el==self.value && !values.includes(subCategM[index])){
+            values.push(subCategM[index]);
+            let option = document.createElement('option');
+            let optionText = document.createTextNode(`${subCategM[index]}`);
+            option.appendChild(optionText);
+            option.setAttribute('value', subCategM[index])
+
+            target.appendChild(option);
+        }
+        })
+        // console.log('on service change ran');
+        onSubCategChangeM();
+    }
+
+    function onSubCategChangeM(){
+        // console.log('inside onsubcateg change function first line')
+        let self = document.getElementById('sub-categ').value;
+        let categ = document.getElementById('categ').value;
+        let type = document.getElementById('title').value;
+        console.log("the value of sub categ is ", self);
+        console.log("the value of categ is ", categ);
+        console.log("the value of title is ", type);
+        subCategM.forEach((el, index)=>{
+        //   console.log('for element', el);
+        //   console.log(el == self);
+        //   console.log(categ == serviceM[index]);
+        //   console.log(type == typeM[index]);
+        if( el == self && categ == serviceM[index] && type == typeM[index]){
+            // console.log('inside last price function')
+            document.getElementById('price').value = pricesM[index];
+        }
+        })
+        
+    }
+
+    ///important
+
+    function onLineItemClick(id,data_type, service_category, sub_categ, price, remark){
+        // console.log(id,data_type, service_category, sub_categ, price, remark)
+        for (let x of document.getElementById('title').options){
+            if (x.value==data_type){
+                // console.log('inside service title equalizer');
+                x.selected =true;
+                break
+            }
+        }
+        onTypeChangeM(document.getElementById('title'), document.getElementById('categ'));
+        for (let x of document.getElementById('categ').options){
+            if (x.value==service_category){
+                // console.log('inside service categ equalizer');
+                x.selected =true;
+                break
+            }
+        } 
+        for (let x of document.getElementById('sub-categ').options){
+            // console.log('outside service sub categ equalizer', x.value, sub_categ);
+
+            if (x.value==sub_categ){
+                // console.log('inside service sub categ equalizer');
+                x.selected =true;
+                break
+            }
+        } 
+        document.getElementById('price').value = price
+        document.getElementById('remark').value = remark
+
+        document.getElementById('orderForm').action=`/updateOrderImage/{{service_order.id}}/${id}`
+        
+    }
+
+
+</script>
+
+<script>
+    function onEditFormSubmit(){
+        console.log(document.getElementById('title').value)
+        console.log(document.getElementById('categ').value)
+        console.log(document.getElementById('sub-categ').value)
+        console.log(document.getElementById('remark').value)
+        console.log(document.getElementById('price').value)
+        let title = document.getElementById('title').value != '';
+        let categ = document.getElementById('categ').value != '';
+        let sub_categ = document.getElementById('sub-categ').value != '';
+        let price = document.getElementById('price').value != '';
+        let remark = document.getElementById('remark').value != '';
+        // return false;
+        // if(title && categ && sub_categ && price && remark)return true;
+        // return false
+    }
+</script>
+
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<script>
+window.alert = (function() {
+    var nativeAlert = window.alert;
+    return function(message) {
+        window.alert = nativeAlert;
+        message.indexOf("DataTables warning") === 0 ?
+            console.warn(message) :
+            nativeAlert(message);
+    }
+})();
+
+
+</script>
+<script>
+ $(function () {
+    $("#example2").DataTable({
+
+       "order": [[ 1, "desc" ]],
+       "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+
+    });
+
+  });
+
+  // ajax call function 
+  function imageUploadBtnClick(id1){
+    let index= 0; 
+    let index_radio = 0;
+    let pk =$('#service_orderid').val();
+    let csr = $("input[name=csrfmiddlewaretoken]").val();    
+    mydata={'pk': pk,'csrfmiddlewaretoken': csr};
+    let f= document.getElementById('fileNameBody');
+    $.ajax(
+      {
+        url: `/viewUploadedImage/${pk}`,
+        method:'GET',
+        data: mydata,
+        success: function (data) {
+            document.getElementById('fileNameData').innerHTML=''
+            if(data.length>0){
+
+                var main_id= data[0]['id'];
+                $( data ).each(function(i) {
+                    // console.log(data);
+                    var fileName1 = data[i]['file'].match(/[ \w-]+\.[\w-]*$/)[0];
+                    // console.log(fileName1);
+
+                    var tab= document.getElementById('fileNameData');
+                    
+                    
+                    var table_div= document.createElement('div');
+                    
+                    //name creation
+                    var table_data_span= document.createElement('div');
+                    table_data_span.innerText= fileName1;
+                    
+                    
+                    // icon creation 
+                    var table_viewIcon= document.createElement('div');
+                    
+                    
+                    var view_a= document.createElement('a');
+                    view_a.classList.add('btn', 'action-icon--buttons', 'primary-icon');
+                    
+                    var view_icon= document.createElement('i');
+                    view_icon.classList.add('fa', 'fa-duotone', 'fa-eye');
+                    
+                    view_a.appendChild(view_icon);
+                    table_viewIcon.appendChild(view_a);
+                    
+                    
+                    var table_deleteIcon= document.createElement('div');
+                    
+                    var delete_a= document.createElement('a');
+                    delete_a.classList.add('btn', 'action-icon--buttons', 'danger-icon');
+                    
+                    var delete_icon= document.createElement('i')
+                    delete_icon.classList.add('fa', 'fa-trash');
+
+                    delete_a.appendChild(delete_icon);
+                    table_deleteIcon.appendChild(delete_a);
+                    
+                    table_div.appendChild(table_data_span);
+                    table_div.appendChild(table_viewIcon);
+                    table_div.appendChild(table_deleteIcon);
+                    
+                    tab.appendChild(table_div);
+                    
+                    table_div.style.cssText = `
+                    display: flex; 
+                    align-items: center;
+                    `;
+                    
+                    table_div.firstElementChild.style.cssText= `padding-left: 10px;`;
+                    
+                    table_div.firstElementChild.nextElementSibling.style.cssText= `margin-left: auto;`;
+                    
+                    var fileAdd = data[index++]['file'];
+                    view_a.href = `${fileAdd}`;
+                    delete_a.href=`/ios_delete/${main_id}`
+
+                }); 
+            }
+        }
+    });
+    $.ajax(
+        {
+            url: `/ViewImagePDF/${pk}/${id1}`,
+            method:'GET',
+            data: mydata,
+        success: function (data) {
+            document.getElementById('feedFileData').innerHTML=''
+            if(data.length>0){
+                var main_id= data[0]['id'];
+                $( data ).each(function(i) {
+                    // console.log(data);
+                    var fileName1 = data[i]['file'].match(/[ \w-]+\.[\w-]*$/)[0];
+                    // console.log(fileName1);
+                    
+                    var tab= document.getElementById('feedFileData');
+                    
+                    
+                    var table_div= document.createElement('div');
+                    
+                    //name creation
+                    var table_data_span= document.createElement('div');
+                    table_data_span.innerText= fileName1;
+                    
+                    
+                    // icon creation 
+                    var table_viewIcon= document.createElement('div');
+                
+                    
+                    var view_a= document.createElement('a');
+                    view_a.classList.add('btn', 'action-icon--buttons', 'primary-icon');
+                    
+                    var view_icon= document.createElement('i');
+                    view_icon.classList.add('fa', 'fa-duotone', 'fa-eye');
+                    
+                    view_a.appendChild(view_icon);
+                    table_viewIcon.appendChild(view_a);
+                    
+                    
+                    var table_deleteIcon= document.createElement('div');
+                    
+                    var delete_a= document.createElement('a');
+                    delete_a.classList.add('btn', 'action-icon--buttons', 'danger-icon');
+                    
+                    var delete_icon= document.createElement('i')
+                    delete_icon.classList.add('fa', 'fa-trash');
+                    
+                    delete_a.appendChild(delete_icon);
+                    table_deleteIcon.appendChild(delete_a);
+
+                    table_div.appendChild(table_data_span);
+                    table_div.appendChild(table_viewIcon);
+                    table_div.appendChild(table_deleteIcon);
+                    
+                    tab.appendChild(table_div);
+                    
+                    table_div.style.cssText = `
+                    display: flex; 
+                    align-items: center;
+                    `;
+                    
+                    table_div.firstElementChild.style.cssText= `padding-left: 10px;`;
+                    
+                    table_div.firstElementChild.nextElementSibling.style.cssText= `margin-left: auto;`;
+                    
+                    var fileAdd = data[index_radio++]['file'];
+                    view_a.href =`${fileAdd}`;
+                    delete_a.href=`/feedFile_delete/${main_id}`
+          
+                }); 
+            }
+        }
+    });
+  }
+
+
+</script>
+<script>
+    function onShareFunction(id){
+        // console.log(id)
+        document.getElementById('sendMail').action=`/sendmail_image/{{service_order.id}}/{{mycat.id}}/${id}`
+        // console.log(document.getElementById('sendMail').action)
+    }
+
+</script>
+{% endif %}
+{%endblock%}

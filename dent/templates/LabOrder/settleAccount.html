@@ -1,0 +1,352 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+<style>
+    body{
+        background: white;
+    }
+    .content{
+        width: 85%;
+        max-width: 1300px;
+        margin: 0.5rem auto 0 auto;
+    }
+    .add-product--section, .product-listing--section, .footnotes-listing--section{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 100%;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+    }
+    form{
+        position: relative;
+        padding: 2rem 5rem 3rem 2rem;
+    }
+    .save-button, .reset-button{
+        position: absolute;
+        right: 0;
+        width: 161px;
+        height: 36px;
+        color: white;
+        border: 1px solid #1F3F7F;
+        margin-top: 1rem;
+        background: #1F3F7F;
+        border-radius: 8px;
+    }
+    .reset-button{
+        right: 11rem;
+        border: 1px solid #1F3F7F;
+        background: white;
+        color: #1F3F7F;
+    }
+    .search-box{
+        float: right;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+    }
+    .search-box input{
+        box-shadow: 1px 2px 10px 0px #79797942;
+    }
+    .search-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    .header img{
+        width: 20px;
+    }
+    .animate{
+        animation: search-animate 2s ease-in;
+    }
+    @keyframes search-animate {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(1);
+        }
+    }
+    
+    .card{
+        position: relative;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        margin-bottom: 1rem;
+        padding: 1.5rem 4.5rem 1.5rem 2.5rem;
+    }
+    .card h6{
+        margin-bottom: 1rem;
+    }
+    .card .row{
+        row-gap: 0.75rem;
+    }
+    .kebab-button{
+        position: absolute;
+        right: 3%;
+        top: 40%;
+    }
+    .modal--header{
+        padding: 2rem 0 1rem 2rem;
+    }
+    .edit-confirm--button{
+        width: 132px; 
+        height: 36px !important; 
+        float: right; 
+        border-radius: 8px; 
+        background-color: #1f3f7f;
+    }
+    .form-edit--pencil{
+        float: right;
+        height: 15px;
+        margin-right: 5px;
+        margin-top: 5px;
+    }
+    input + label::before, input + label::after{
+        display: none !important;
+    }
+    #editProductModal .modal-body, #editFootnoteModal .modal-body{
+        padding-top: 0;
+    }
+</style>
+
+<div class="content container">
+    <div class="add-product--section">
+        <h5>Account Settlement For Labs</h5>
+        <form method="post" action="/addOrderItems">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="labNamae">Lab Name</label>
+                    <select id="labNamae" name="labNamae" class="form-control">
+                        {% for i in allLab %}
+                            <option value="{{ i.id }}">{{ i.orgname }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" value="25-04-2022" name="startDate">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="endDate">End Date</label>
+                    <input type="date" class="form-control" id="endDate" name="endDate" value="{{start_date}}" placeholder="Enter End Date">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="total-income">Total Income</label>
+                    <input type="number" class="form-control" id="total-income" name="total-income" placeholder="Enter Income">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="total-expense">Total Expense</label>
+                    <input type="number" class="form-control" id="total-expense" name="total-expense" placeholder="Enter Expense">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="total-gst">Total GST</label>
+                    <input type="number" class="form-control" id="total-gst" name="total-gst" placeholder="Enter Sub Method">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="application">Total Transfer</label> 90
+
+                    <input type="number" class="form-control" id="application" name="application" placeholder="Entre Total Transfer">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="warranty">Payment Gateway Fee</label>
+                    <input type="number" list="numbers"  class="form-control" id="warranty" name="warranty"  placeholder="Enter Payment Gateway Fee"/>    
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="price">Logistics Partner Fee </label>
+                    <input type="number" class="form-control" id="price" name="price" placeholder="Enter Logistics Partner Fee ">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="description">Shipping LabelFee </label>
+                    <input type="number" class="form-control" id="description" name="description" placeholder="Entre Shipping Label Fee">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="description">Dentread Service Fee </label>
+                    <input type="number" class="form-control" id="description" name="description" placeholder="Entre Service Fee ">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="description">Advertiseing Cost </label>
+                    <input type="number" class="form-control" id="description" name="description" placeholder="Entre Advertiseing Cost">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="description">GST Collected </label>
+                    <input type="number" class="form-control" id="description" name="description" placeholder="Entre GST Collected ">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="description">GST Refund </label>
+                    <input type="number" class="form-control" id="description" name="description" placeholder="Entre GST Refund ">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="description">Transfer To Bank Account </label>
+                    <input type="number" class="form-control" id="description" name="description" placeholder="Entre Transfer To Bank Account ">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="description">Failed Transfer Amount</label>
+                    <input type="number" class="form-control" id="description" name="description" placeholder="Entre Failed Transfer Amount">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="description">Settlement Status</label>
+                    <select id="labNamae" name="labNamae" class="form-control">
+                            <option value="Yes">Settled</option>
+                            <option value="No">Not Settled</option>
+                    </select>
+                </div>  
+            </div>
+            
+            <button type="reset" class="reset-button">Reset</button>
+            <button type="submit" class="save-button">Save</button>
+        </form>
+    </div>
+
+    <div class="product-listing--section">
+
+        <div class="header">
+            <h5>Un-settled Organisation Listing</h5>
+            <div class="search-enclosing" onclick="onSearchAnimate(this)">
+                <img src="/static/svg_icons/ei_search_icon.svg" alt="">
+            </div>
+            <div class="search-box d-none ml-2">
+                <input type="text" placeholder="Search here..." class="form-control" id="cardSearch" onkeydown="onCardSearch(this.value)">
+            </div>
+        </div>
+
+        <!-- --- for loop for products here ---  -->
+        {% for i in accountInfo %}
+        <div class="card">
+            <h6>Organisation: {{i.Organisation}}</h6>
+            <div class="row">
+                {% if i.fromDate %}
+                <div class="col-sm-6 col-md-4 d-none">From Date: {{i.fromDate}}</div>
+                {% endif %}
+                {% if i.toDate %}
+                    <div class="col-sm-6 col-md-4">Todate: {{i.toDate}}</div>
+                {% endif %}
+                {% if i.totalIncome %}
+                    <div class="col-sm-6 col-md-4">Total Income: {{i.totalIncome}}</div>
+                {% endif %}
+                {% if i.totalExpense %}
+                    <div class="col-sm-6 col-md-4">totalExpense: {{i.totalExpense }}</div>
+                {% endif %}
+                {% if i.totalGST %}
+                    <div class="col-sm-6 col-md-4">Total GST: {{i.totalGST}}</div>
+                {% endif %}
+                {% if i.totalTransfer %}
+                    <div class="col-sm-6 col-md-4">Total Transfer: {{i.totalTransfer}}</div>
+                {% endif %}
+                {% if i.paymentGatewayFee %}
+                    <div class="col-sm-6 col-md-4">Payment Gateway Fee: {{i.paymentGatewayFee}} </div>
+                {% endif %}
+                {% if i.logisticsPartnerFee %}
+                    <div class="col-sm-6 col-md-4">Logistics Partner Fee: {{i.logisticsPartnerFee}} </div>
+                {% endif %}
+            </div>
+            <button aria-expanded="false" aria-haspopup="true" class="kebab-button btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+            </button>
+            
+            <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal" data-target="#editProductModal" onclick="editLabOrderItem()">
+                    Edit
+                </a>
+                <a class="dropdown-item" style="cursor: pointer;" href="/removeLabOrderItem/{{i.id}}">
+                    Delete
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+
+{% comment %} <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+           <div class="modal--header">
+                <h5>
+                    Are you sure you want to edit this product?
+                    <button type="button" class="close mr-4" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="font-size: 1.5rem;" >&times;</span>
+                    </button>
+                </h5>
+               
+           </div>
+
+            <div class="modal-body">
+                <div class="actual-editable--content">
+                    <form class="form container" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+
+                            <div class="form-group col-6">
+                                <label for="item-edit">Item </label>
+                                <select id="item-edit" name="item-edit" class="form-control">
+                                    {% for i in labItem %}
+                                        <option value="{{ i.item }}">{{ i.item }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="type-edit">Type </label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="type-edit" id="type-edit" >
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="method-edit">Method </label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="method-edit" id="method-edit" >
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label for="material-edit">Material</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="material-edit" id="material-edit" >
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label for="subMethod-edit">Sub Method</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="subMethod-edit" id="subMethod-edit">
+                            </div>
+
+                            <div class="form-group col-6">
+                                <label for="application-edit">Application </label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="application-edit" id="application-edit" >
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label for="warranty-edit">Warranty ( in years )</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="warranty-edit" id="warranty-edit" >
+                            </div>
+                            
+                            <div class="form-group col-6">
+                                <label for="price-edit">Price ( in Rupees )</label>
+                                <img src="/static/svg_icons/pencil_icon.svg" alt="" class="form-edit--pencil">
+                                <input type="text" class="form-control" name="price-edit" id="price-edit">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary edit-confirm--button" >Confirm</button>
+                      </form>
+                </div>
+
+            </div>
+           
+        </div>
+    </div>
+</div> {% endcomment %}
+
+
+{% endif %}
+{% endblock %}

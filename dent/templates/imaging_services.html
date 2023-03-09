@@ -1,0 +1,251 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+        	<!-- Main Content-->
+		<div class="main-content pt-0">
+				<div class="container">
+					<div class="inner-body">
+
+
+
+
+						<!--Row-->
+						<div class="row row-sm">
+							<div class="col-sm-12 col-lg-12 col-xl-12">
+
+								<!--Row-->
+								<div class="row row-sm  mt-lg-4">
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+
+									</div>
+								</div>
+								<!--Row -->
+
+								<!--Row-->
+								<div class="row row-sm">
+									<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+										<h5 class="btn btn-block btn-primary" style="background-color:#4065a5;height:30px">Diagnostics Services</h5>
+
+									</div>
+
+
+
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Pre-reads</label>
+														<span class="d-block tx-12 mb-0 text-muted">An expert Pre-reads Service </span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-bars" aria-hidden="true"></i></h4>
+															<a href="/refer_dent"><small><b class="text-success">Share Case for Pre-reads </b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+
+										<div class="card custom-card" style="background-color:#dbd7d7;">
+											<div class="card-body">
+												<div class="card-item">
+
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Second Opinions</label>
+														<span class="d-block tx-12 mb-0 text-dark">Pre-reads Service</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-bars" aria-hidden="true"></i></h4>
+															<a ><small><b class="text-dark"> Share Case for Second Opinions</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+
+										<div class="card custom-card" style="background-color:#dbd7d7;">
+											<div class="card-body">
+												<div class="card-item">
+
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Image Processing</label>
+														<span class="d-block tx-12 mb-0 text-dark">Image Processing Service</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-bars" aria-hidden="true"></i></h4>
+															<a ><small><b class="text-dark"> Share Case for Image Processing</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+
+
+
+
+
+
+
+									</div>
+<hr>
+								<div class="row row-sm">
+									<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+<h5 class="btn btn-block btn-primary" style="background-color:#4065a5;height:30px">Digital Treatment Solutions</h5>
+
+									</div>
+								     <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+
+										<div class="card custom-card" style="background-color:#dbd7d7;">
+											<div class="card-body">
+												<div class="card-item">
+
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Navigated Implantology</label>
+														<span class="d-block tx-12 mb-0 text-dark">Navigated Implantology Services</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-bars" aria-hidden="true"></i></h4>
+															<a ><small><b class="text-dark">Share Case for Navigated Implantology</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+
+										<div class="card custom-card" style="background-color:#dbd7d7;">
+											<div class="card-body">
+												<div class="card-item">
+
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">3D Printing</label>
+														<span class="d-block tx-12 mb-0 text-dark">3D Printing Services</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-bars" aria-hidden="true"></i></h4>
+															<a ><small><b class="text-dark"> See Services</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+
+<hr>
+
+								<div class="row row-sm">
+									<div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+										<h5 class="btn btn-block btn-primary" style="background-color:#4065a5;height:40px">CBCT Research Services</h5>
+
+
+									</div>
+								     <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+
+										<div class="card custom-card" style="background-color:#dbd7d7;">
+											<div class="card-body">
+												<div class="card-item">
+
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">DICOM Data</label>
+														<span class="d-block tx-12 mb-0 text-dark">DICOM Data Services</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-bars" aria-hidden="true"></i></h4>
+															<a ><small><b class="text-dark">Share Cases</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									 <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+
+										<div class="card custom-card" style="background-color:#dbd7d7;">
+											<div class="card-body">
+												<div class="card-item">
+
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Specialized Data Analytics</label>
+														<span class="d-block tx-12 mb-0 text-dark">Data Analytics Services</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-bars" aria-hidden="true"></i></h4>
+															<a ><small><b class="text-dark">Share case for Data Analytics</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+
+										<div class="card custom-card" style="background-color:#dbd7d7;">
+											<div class="card-body">
+												<div class="card-item">
+
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Digital Implantology</label>
+														<span class="d-block tx-12 mb-0 text-dark">Digital Implantology Services</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-bars" aria-hidden="true"></i></h4>
+															<a ><small><b class="text-dark">Share case Digital Implantology</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+								<!--End row-->
+
+								<!--row-->
+								<!-- Row end -->
+							</div><!-- col end -->
+
+						</div><!-- Row end -->
+
+
+        			</div>
+				</div>
+		</div>
+			<!-- End Main Content-->
+
+{% endif %}
+{% endblock %}

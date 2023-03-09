@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DMD IMAGING | Label Print</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static '/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static '/dist/css/adminlte.min.css' %}">
+</head>
+<body>
+<style>
+table, th, td {
+  border:1px solid black;
+
+
+}
+</style>
+<body>
+
+
+
+<table style="width:50%;transform:rotate(90deg);margin-top: 220px;margin-left: -105px;margin-bottom: 15px;font-size: 28px;">
+  <tr>
+    <th>{{patient.ptid}}</th>
+    <th>{{patient.rdate|date:'d-m-Y'}}</th>
+
+  </tr>
+  <tr>
+    <td>{{patient.name}}</td>
+    <td>{{patient.age}}{{patient.gender}}</td>
+
+  </tr>
+  <tr>
+    <td>{{service_order.study}}</td>
+    <td></td>
+
+  </tr>
+</table>
+
+   <script>
+    window.addEventListener("load", window.print());
+  </script>
+</body>
+</html>

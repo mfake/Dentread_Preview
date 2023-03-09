@@ -1,0 +1,104 @@
+<!doctype html>
+{% load static %}
+{% load static %}
+{% load bleach_tags %}
+<html>
+    <head>
+        <title>Dentread | Patient Report</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: left;
+                color: #007cae;
+            }
+            .footer {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: left;
+                color: #007cae;
+            }
+
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                font-size: 14px;
+                text-align: justify !important;
+                padding: 10px 0px 0px 0px;
+
+
+            }
+            .heading {
+
+                font-size: 16px;
+                text-align: left !important;
+
+            }
+
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+
+        </style>
+
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <img src="{{logo}}" alt="logo" width="180">
+            </div>
+        <div>
+        <div class='heading'>
+            <br><br>
+            <br>
+
+            <b>{{service_order.study}}</b>
+                       <hr class='hrItem' />
+
+
+           <table style="width:100%">
+  <tr>
+    <th style="text-align: left; width:80%;">{{patient.pid}}</th>
+    <th style="text-align: right; width:20%">{{service_order.date}}</th>
+
+  </tr>
+  <tr>
+    <th style="text-align: left; width:80%;">{{service_order.name}}, {{service_order.age}}-{{patient.gender}}</th>
+    <td></td>
+
+  </tr>
+
+</table>
+             </div>
+<div class='details'>
+
+            {{service_order.text| bleach }}
+
+<div class="pos-absolute" >
+									<img src="{{sgn}}" />
+									<span><h5 class="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{service_order.sgn}}, {{service_order.edu}}<br>{{service_order.spec}}</h5></span>
+            <div class="float-right d-none d-sm-inline-block">
+      <b style="color:grey;font-size:12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Powered by Dentread
+</b>
+    </div>
+                </div>
+
+    </div>
+    </body>
+</html>

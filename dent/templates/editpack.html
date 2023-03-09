@@ -1,0 +1,146 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+ <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Edit Pack</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+
+    <!-- Main content -->
+
+
+
+
+
+            <!-- /.card -->
+
+
+
+
+
+    <!-- Main content -->
+
+    <form  method="post" action="/edit_pack/{{packs.id}}">
+        {% csrf_token %}
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+          <div class="col-md-8">
+
+            <div class="card card-success">
+              <div class="card-header bg-primary text-white" >
+                <h6 class="card-title">Pack Details</h6>
+              </div>
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Pack Type</label>
+                      <select type="text" id="type" name="type"  class="form-control select2bs4" style="width: 100%;" required>
+                      <option selected="selected" value="{{packs.type}}">{{packs.type}}</option>
+                           <option value="Basic">Basic</option>
+                           <option value="Premium">Premium</option>
+                           <option value="Ultimate">Ultimate</option>
+
+                       </select>
+
+                      </div>
+
+
+                   <div class="form-group">
+                        <label for="exampleInputPassword1">Applicable For</label>
+                      <select type="text" id="applied" name="applied"  class="form-control select2bs4" style="width: 100%;" required>
+                      <option selected="selected" value="{{packs.applied}}">{{packs.applied}}</option>
+                           <option value="Imaging Centre">Imaging Centre</option>
+                           <option value="Dental Clinic">Dental Clinic</option>
+                           <option value="Radiologist">Radiologist</option>
+
+                       </select>
+
+                      </div>
+
+                <!-- phone mask -->
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Scans (scan count)</label>
+                        <input type="text" class="form-control" id="scans"  value="{{packs.scans}}" name="scans" placeholder="No of Scans" required>
+                      </div>
+                   <div class="form-group">
+                        <label for="exampleInputPassword1">Validity (days)</label>
+                        <input type="text" class="form-control" id="validity" value="{{packs.validity}}" name="validity" placeholder="validity (days)" required>
+                      </div>
+                <!-- /.form group -->
+
+                <!-- IP mask -->
+             <div class="form-group">
+                        <label for="exampleInputPassword1">Price</label>
+                        <input type="number" class="form-control" id="price" value="{{packs.price}}" name="price" placeholder="Price" required>
+                      </div>
+                <!-- /.form group -->
+  <div class="form-group">
+                        <label for="exampleInputPassword1">Status</label>
+                      <select type="text" id="status" name="status"  class="form-control select2bs4" style="width: 100%;" required>
+                      <option selected="selected" value="{{packs.status}}" readonly>{{packs.status}}</option>
+                           <option value="Active">Active</option>
+                           <option value="Deactive">Deactivate</option>
+
+                       </select>
+                      </div>
+
+              <!-- /.card-body -->
+
+            <!-- /.card -->
+
+
+
+
+<div class="col-md-12">
+<div class="row">
+
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary ">Update</button>
+                  </div>
+                      <div class="col-sm-6">
+
+                        <button type="reset" value="reset" class="btn btn-block ripple btn-warning" hidden>Reset</button>
+                      </div>
+
+
+     </div>
+      </div>
+              </form>
+   </div>
+          </div>
+      </div>
+ </div>
+</div>
+</div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+function getval(sel)
+{
+    var head = $("#code  option:selected").attr('title');
+    $("#head").val(head);
+    var name = $("#code  option:selected").attr('name');
+    $("#pack").val(name);
+
+}
+</script>
+{% endif %}
+{%endblock%}

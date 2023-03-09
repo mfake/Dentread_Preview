@@ -1,0 +1,178 @@
+
+<!doctype html>
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Implant Surgical Guide</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+    <!-- Main content -->
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+              	{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+            <div class="card">
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+  <form  method="post" action="/assign_case_dent">
+        {% csrf_token %}
+                 <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead >
+                  <tr >
+
+                    <th style="background-color:#2f6ebb;color:white;">Date</th>
+                      <th hidden>ID</th>
+
+
+                    <th style="background-color:#2f6ebb;color:white;">Name </th>
+                    <th style="background-color:#2f6ebb;color:white;">Age</th>
+                      <th style="background-color:#2f6ebb;color:white;">Study</th>
+
+
+
+                      <th style="background-color:#2f6ebb;color:white;">Refer By</th>
+                       <th style="background-color:#2f6ebb;color:white;">Status</th>
+
+
+
+                      <th style="background-color:#2f6ebb;color:white;">Actions</th>
+
+
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                   {% for i in rep %}
+                  <tr>
+
+                    <td>{{ i.date|date:'d-m-Y' }}</td>
+                     <td hidden>{{ i.id }}</td>
+
+
+                      <td><small class="{{i.st}}"></small>{{ i.name }}</td>
+                    <td>{{ i.age }}</td>
+                      <td>{{ i.refstudy }}</td>
+
+
+
+
+                      <td>{{ i.refby }}</td>
+                      <td>{{ i.status }}</td>
+
+
+
+                    <td>
+                       <div class="dropdown dropleft">
+				<button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-sm btn-outline-primary" data-toggle="dropdown" id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i></button>
+				<div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+
+
+                    <a class="dropdown-item " href="/view_surgident/{{ i.id }}"><i class="fe fe-file-text"></i> View/Edit order</a>
+
+				</div>
+			</div>
+
+
+                      </td>
+
+
+
+
+                  </tr>
+                {% endfor %}
+                  </tbody>
+
+                                      </form>
+</div>
+
+                </table>
+
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+      </div>
+
+
+
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<script>
+window.alert = (function() {
+    var nativeAlert = window.alert;
+    return function(message) {
+        window.alert = nativeAlert;
+        message.indexOf("DataTables warning") === 0 ?
+            console.warn(message) :
+            nativeAlert(message);
+    }
+})();
+    </script>
+<script>
+ $(function () {
+    $("#example2").DataTable({
+
+       "order": [[ 2, "desc" ]],
+       "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+
+    });
+
+  });
+</script>
+
+<!-- Bootstrap 4 -->
+
+<!-- AdminLTE for demo purposes -->
+
+<!-- Page specific script -->
+
+
+</body>
+{% endif %}
+  {%endblock%}

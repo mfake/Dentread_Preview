@@ -1,0 +1,357 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+<style>
+    body{
+        background: white;
+    }
+    *{
+        box-sizing: border-box;
+        line-height: 30px;
+    }
+    .container{
+        margin: 0rem auto 1rem auto;
+        max-width: 1150px;
+    }
+    .header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .header img{
+        transform: rotate(90deg);
+        width: 22px;
+    }
+    .header h5{
+        margin-bottom: 0 !important;
+        margin-left: 1rem;
+    }
+    .content{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        padding: 2rem;
+        border-radius: 8px;
+    }
+    .submit-button, .reset-button{
+        width: 161px;
+        height: 36px;
+        background: #1F3F7F;
+        border-radius: 8px;
+        color: white;
+    }
+    .reset-button{
+        background-color: white;
+        color: #1F3F7F;
+        border: 1px solid #1F3F7F;
+        margin-left: auto;
+    }
+    form>.form-group{
+        display: flex;
+        margin-top: 1rem;
+        gap: 1.5rem;
+    }
+    .profile-pic{
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+        clip-path: circle(50%);
+    }
+    .user-table{
+        width: 100%;
+        border: 1px solid #dfe2e9;
+        box-shadow: 1px 2px 10px 0px #79797942;
+        text-align: center;
+    }
+    th, td{
+        padding: 0.75rem 1rem;
+    }
+    thead{
+        background-color: #1F3F7F;
+        color: white;
+    }
+    tbody tr{
+        border-bottom: 1px solid #dfe2e9;
+    }
+    .user-table th img{
+        margin-right: 0.5rem
+    }
+    .search-box{
+        border-radius: 0.25rem;
+    }
+    .search-box input{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 175px !important;
+    }
+    .search-enclosing{
+        box-shadow: 1px 2px 10px 0px #79797942;
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+        border: 1px solid #dfe2e9;
+    }
+    .header:last-of-type{
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <img src="/static/svg_icons/arrowleft2.svg" alt="left arrow" style="cursor: pointer;" onclick="history.back()">
+        <h5  onclick="history.back()" style="cursor: pointer;">Edit Patient</h5>
+        <div class="search-enclosing" onclick="onSearchAnimate(this)">
+            <img src="/static/svg_icons/ei_search_icon.svg" alt="">
+        </div>
+        <div class="search-box d-none ml-3">
+            <input type="text" placeholder="Search Token Number..." class="form-control" id="cardSearch" onkeydown="onNameSearch(this.value)">
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="row">
+            <div class="col-sm-12 col-md-5 d-flex align-items-center">
+                <img src="/static/svg_icons/patientRegistration.svg" height="500px" alt="User Registration">
+            </div>
+            <div class="col-sm-12 col-md-7">
+                <form  method="post" action="/edit_patient/{{ pt.id }}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        {% if message %}
+                            <div class="alert alert-{{class}} alert-dismissible fade show" role="alert">
+                                <strong></strong> {{message}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="locate">Center Name</label>
+                            <input type="text" class="form-control" id="locate" value="{{org.orgname}}" name="locate" placeholder="Center Name" required readonly>
+                        </div>
+                        <div class="col-md-6"></div>
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="name">Patient Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Patient Name" value="{{pt.name}}" required>
+                        </div>
+                        
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="contact">Contact</label>
+                            <input type="tel" class="form-control" id="contact" value="{{pt.contact}}" name="contact" placeholder="+12 0123456789" required >
+                        </div>
+
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="age">Age </label>
+                            <input type="number" class="form-control" id="age" value="{{pt.age}}" name="age" placeholder="Enter Patient Age" required>
+                        </div>
+
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="gender">Gender </label>
+                            <select name="gender" id="gender" class="form-control" required>
+                                <option value="{{pt.gender}}" selected>{{pt.gender}}</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-sm-12 col-md-6">    
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" value="{{pt.email}}" id="email" name="email" placeholder="abc@xyz.com" required >
+                        </div>
+                        
+
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="pincode">Pincode</label>
+                            <input type="number" value="{{pt.zip_code}}" class="form-control" id="pincode" name="pincode" placeholder="Enter Pincode" required >
+                        </div>
+                        
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="address">Address</label>
+                            <input type="text" value="{{pt.address_1}}" class="form-control" id="address" name="address_1" placeholder="Enter Adress" required >     
+                        </div>
+
+                        <div class="form-group col-sm-12 col-md-6">
+                            <label for="prescription">Prescription</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="prescription" name="prescription" >
+                                <label class="custom-file-label" for="prescription">Choose file</label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="form-group">
+                        <button type="reset" class="btn reset-button">Cancel</button>
+                        <button type="submit" class="btn submit-button">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function onSearchAnimate(target){
+        target.parentElement.querySelector('.search-box').classList.toggle('d-none');
+    }
+
+</script>
+
+ <!-- <div class="main-content pt-0 ">
+
+
+      <div class="container">
+          <div class="inner-body">
+
+            <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Edit Patient</h5></a></li>
+                    </ol>
+
+                 </div>
+
+            </div>
+
+<div class="row mb-2">
+                <div class="col-sm-12 col-lg-12 col-xl-12">
+
+
+    <form  method="post" action="/edit_patient/{{ pt.id }}">
+        {% csrf_token %}
+
+          <div class="col-md-12">
+            <div class="card card-primary">
+              <div class="card-header  text-white" style="background-color:#2f6ebb;">
+                <h6 class="card-title">Patient Details</h6>
+              </div>
+              <div class="card-body">
+                
+
+                      <div class="form-group">
+                                                    <label class="">Centre<span><small class="text-danger"> *</small></span></label>
+                                              <input type="text" class="form-control" id="locate" name="locate" value="{{org.orgname}}"  readonly>
+                                                     </div>
+                  {% if org.orgtype != "Dental Clinic" %}
+                                                <div class="form-group">
+
+                                                 <label class="">Referred By<span><small class="text-danger"> *</small></span> </label>
+                                                <select  id="demo" name="demo" onchange="singleSelectChangeValue()" class="form-control select2"  required>
+                                                    <option selected="selected"  value="{{pt.refdoctor}}">{{pt.refdoctor}}</option>
+
+
+                                                    {% for i in doctors %}
+
+                                                 <option  value="{{ i.id }}">{{ i.name }}___{{ i.clinic }}</option>
+
+
+
+                                                    {% endfor %}
+                                                </select>
+
+
+
+                                                </div>
+                  {% endif %}
+
+                                                            <input id="refdoctor" name="refdoctor" value="{{pt.refdoctor}}" hidden></input>
+                                                    <input id="docid" name="docid" value="{{pt.docid}}" hidden></input>
+                                                <div class="form-group">
+                                         <label class="">Patient Name<span><small class="text-danger"> *</small></span></label>
+                                               <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{pt.name}}" required>
+                                                     </div>
+                                                <div class="row">
+                  <div class="col-sm-6">
+                                                <div class="form-group">
+                                     <label class="">Age<span><small class="text-danger"> *</small></span></label>
+                                               <input type="text" class="form-control" id="age" name="age" placeholder="Age" value="{{pt.age}}" required>
+                                                     </div>
+                  </div>
+                                                    <div class="col-sm-6">
+                                                <div class="form-group">
+                                 <label class="">Gender<span><small class="text-danger"> *</small></span></label>
+                                                <select type="text" id="gender" name="gender"  class="form-control select2" style="width: 100%;" required>
+                      <option selected="selected" value="{{pt.gender}}">{{pt.gender}}</option>
+                           <option value="Male">Male</option>
+                           <option value="Female">Female</option>
+                           <option value="Other">Other</option>
+
+                       </select>
+                                                     </div>
+                                                    </div>
+                                                </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                <div class="form-group">
+                   <label class="">Email Address</label>
+                                               <input type="text" class="form-control" id="email" name="email" placeholder="Email" value="{{pt.email}}">
+                                                     </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                <div class="form-group">
+               <label class="">Contact</label>
+                                                <input type="text" class="form-control" id="contact" name="contact" placeholder="Contact" value="{{pt.contact}}" >
+                                                     </div>
+                                                        </div>
+                                                    </div>
+                                                 <div class="form-group">
+               <label class="">Address</label>
+                                                <input type="text" class="form-control" name="address_1" id="address_1" value="{{pt.address_1}}" placeholder="1234 Main St">
+                                                     </div>
+
+
+
+
+
+
+  <div class="row">
+
+         <div class="col-6">
+
+                      <button type="submit" class="btn btn-block ripple btn-primary">Update</button>
+                  </div>
+
+
+
+     </div>
+      </div>
+   </div>
+                </div>
+                    </div>
+                </div>
+</div>
+          </form>
+          </div>
+     <script src="{% static '/dentread/assets/plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static '/dentread/assets/plugins/checkout-jquery-steps/jquery.steps.min.js' %}"></script>
+		<script src="{% static '/dentread/assets/js/checkout-jquery-steps.js' %}"></script>
+
+<script src="{% static '/dentread/assets/js/form-elements.js' %}"></script>
+<script src="{% static '/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+<script>
+$(function () {
+  bsCustomFileInput.init();
+});
+</script>
+     <script>
+  function singleSelectChangeValue() {
+                          var selObj = document.getElementById("demo");
+                           var selValue = selObj.options[selObj.selectedIndex].value;
+                           var docValue = selObj.options[selObj.selectedIndex].text;
+
+                               document.getElementById("docid").value = selValue;
+                               document.getElementById("refdoctor").value = docValue;
+
+                            }
+</script>
+      </div> -->
+
+{% endif %}
+{%endblock%}

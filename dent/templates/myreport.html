@@ -1,0 +1,164 @@
+{%extends "Base.html" %}
+{% load static %}
+{% load filename %}
+
+{% block content %}
+
+
+
+ <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Report & Files</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Report & Files</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+
+      <div class="row">
+        <div class="col-md-6">
+            {% for i in service_order %}
+          <div class="card card-primary">
+            <div class="card-header" style="background-color:#264d60">
+              <h3 class="card-title">{{i.study}}</h3>
+
+              <div class="card-tools">
+                  <a id="btn-export" class="btn btn-block bg-warning btn-sm"  onclick="exportHTML();">Download Report</a>
+              </div>
+                       </div>
+              <div class="card-body" style="overflow-y: scroll; height:600px;" hidden>
+               <div id="source-html">
+                <div class='wrapper'>
+                     <div class='header'>
+                <img src="{% static '/logo/DMD Logo.png' %}" alt="logo" width="220" >
+                         </div>
+                        <div>
+                    <div class='heading'>
+                      <br><br>
+                         <b>{{i.study}}</b>
+                       <hr class='hrItem' />
+
+
+                     <table style="width:100%">
+                             <tr>
+                        <th style="text-align: left; width:80%;">{{i.ptid}}</th>
+                        <th style="text-align: right; width:20%">{{i.date}}</th>
+
+                      </tr>
+                          <tr>
+                            <th style="text-align: left; width:80%;">{{i.name}}</th>
+                            <td></td>
+
+                          </tr>
+
+                                </table>
+                                             </div>
+                                <div >
+
+                                            {{i.text|safe}}
+
+
+                                                <img src="{{ sgn.sign.url }}" />
+
+                                </div>
+                        </div>
+
+                  </div>
+               </div>
+            <!-- /.card-body -->
+               </div>
+          </div>
+            {% endfor %}
+                <script src="{% static '/html2pdf/dist/html2pdf.bundle.min.js' %}"></script>
+
+<script src="{% static '/src/plugin/jspdf-plugin.js' %}"></script>
+
+<script src="{% static '/html2pdf/dist/html2pdf.min.js' %}"></script>
+    <script>
+            function exportHTML(){
+
+                var elementHTML = document.getElementById("source-html").innerHTML;
+                var opt = {
+            margin:       [15, 20, 20, 20],
+            filename:     'Patient_report.pdf',
+            image:        { type: 'png', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'mm', format: 'A4', orientation: 'portrait' }
+        };
+            html2pdf().from(elementHTML).set(opt).toPdf().save();
+
+}
+
+            </script>
+                    <!-- /.card -->
+        </div>
+        <div class="col-md-6">
+
+          <!-- /.card -->
+          <div class="card card-info">
+            <div class="card-header" style="background-color:#264d60">
+              <h3 class="card-title">Files</h3>
+
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>File Name</th>
+
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr>
+                      {% for i in file %}
+                    <td>{{i.file|filename}}</td>
+
+                    <td class="text-right py-0 align-middle">
+                      <div class="btn-group btn-group-sm">
+                        <a href="{{i.file.url}}" target="_blank" class="btn btn-info"><i class="fas fa-eye"></i></a>
+
+                      </div>
+
+                    </td>
+                  </tr>
+               {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+
+
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+
+    </section>
+    <!-- /.content -->
+  </div>
+
+
+{%endblock%}

@@ -1,0 +1,345 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+        	<!-- Main Content-->
+		<div class="main-content pt-0">
+				<div class="container">
+					<div class="inner-body">
+
+
+
+
+						<!--Row-->
+						<div class="row row-sm">
+							<div class="col-xl-12 col-lg-12 col-xl-12">
+
+								<!--Row-->
+								<div class="row row-sm  mt-lg-4">
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+										<div class="card-body p-3 pb-0" hidden>
+  								 <div class="col-xl-12">
+                                       <div class="alert alert-danger alert-rounded solid alert-dismissible fade show">
+                                    		<button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span>
+                                   					 </button>
+										   <div class="media">
+										   		<div class="alert-left-icon-big">
+                                                    <span><i class="mdi mdi-cross-circle-outline"></i></span>
+													You do not have active subscription ! Buy subscription to continue  <a href="/buysubs_imaging" class="badge badge-sm btn-rounded light badge-success ml-1">Buy Now</a>
+                                				</div>
+										   </div>
+									   </div>
+                                    </div>
+	  </div>
+										<div class="card  custom-card card-box" style="background-color:#4065a5;color:white;">
+											<div class="card-body p-4">
+												<div class="row align-items-center">
+													<div class="offset-xl-3 offset-sm-6 col-xl-8 col-sm-6 col-12 img-bg ">
+														<h4 class="d-flex  mb-3">
+															<span class="font-weight-bold "  >Hello {{usr.name}}!</span>
+														</h4>
+														<p class="tx-white-7 mb-1">
+													</div>
+													<img src="{% static '/dentread/assets/img/pngs/work3.png' %}" alt="user-img" class="wd-200">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!--Row -->
+
+								<!--Row-->
+								<div class="row row-sm">
+
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="/createpatient">
+													<div class="card-item-icon card-icon" style="color:#4065a5;" data-toggle="tooltip" data-placement="top" title="Add New Patient">
+													<i class="fa fa-plus-circle fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Patients</label>
+														<span class="d-block tx-12 mb-0 text-muted">Register and history of Patients</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-user" aria-hidden="true"></i></h4>
+															<a href="/showpatients"><small><b class="text" style="color:#4065a5;"> View Details</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+										<a href="">
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="/appointments">
+													<div class="card-item-icon card-icon" style="color:#4065a5;" data-toggle="tooltip" data-placement="top" title="Add New Appointment">
+													<i class="fa fa-plus-circle fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Appointments</label>
+														<span class="d-block tx-12 mb-0 text-muted">Appointments this month</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-calendar-o" aria-hidden="true"></i></h4>
+															<a href="/appointments"><small><b class="text" style="color:#4065a5;"> View Details</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										</a>
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+										<a href="">
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="/createstudy">
+													<div class="card-item-icon card-icon" style="color:#4065a5;" data-toggle="tooltip" data-placement="top" title="Add New Study">
+													<i class="fa fa-plus-circle fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Studies</label>
+														<span class="d-block tx-12 mb-0 text-muted">Register and details of studies</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-book" aria-hidden="true"></i></h4>
+															<a href="/showstudies"><small><b class="text" style="color:#4065a5;"> View Details</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										</a>
+									</div>
+
+
+
+
+<div class="col-sm-12 col-md-12 col-lg-12 col-xl-4">
+
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="">
+													<div >
+													</div>
+													</a>
+													<div class="card-item-title  mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Dentread Services</label>
+														<span class="d-block tx-12 mb-0 text-muted">See and Avail Dentread Services</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-briefcase" aria-hidden="true"></i></h4>
+															<a href="/imaging_services"><small><b class="text" style="color:#4065a5;">View Details</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									{% if usr.department == 'Admin' %}
+									<div class="col-sm-12 col-md-12 col-lg-12 col-xl-4">
+										<a href="">
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="/createuser">
+													<div class="card-item-icon card-icon" style="color:#4065a5;" data-toggle="tooltip" data-placement="top" title="Add New User">
+													<i class="fa fa-plus-circle fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title  mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Users</label>
+														<span class="d-block tx-12 mb-0 text-muted">Register and details of Users</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-user-plus" aria-hidden="true"></i></h4>
+														<a href="/allusers"><small><b class="text" style="color:#4065a5;"> View Details</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										</a>
+									</div>
+									{% endif %}
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+										<a href="">
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="/createdoctor">
+													<div class="card-item-icon card-icon" style="color:#4065a5;" data-toggle="tooltip" data-placement="top" title="Add New Doctor">
+													<i class="fa fa-plus-circle fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Referral Doctors</label>
+														<span class="d-block tx-12 mb-0 text-muted">Register and history of Referred Doctors</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-user-md" aria-hidden="true"></i></i></h4>
+															<a href="/showdoctors"><small><b class="text" style="color:#4065a5;"> View Details</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										</a>
+									</div>
+									{% if usr.department == 'Admin' %}
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+										<a href="">
+
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+												<a href="/allinvoices">
+													<div class="card-item-icon card-icon" style="color:#4065a5;" data-toggle="tooltip" data-placement="top" title="See details">
+													<i class="fa fa-plus-circle fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Business</label>
+														<span class="d-block tx-12 mb-0 text-muted">Check Invoices </span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-sticky-note" aria-hidden="true"></i></h4>
+															<a href="/business"><small><b class="text" style="color:#4065a5;"> View Details</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										</a>
+									</div>
+									{% endif %}
+
+
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+										<a href="">
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="/editprofile">
+													<div class="card-item-icon card-icon" style="color:#4065a5;" data-toggle="tooltip" data-placement="top" title="Edit Profile">
+													<i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">My Profile</label>
+														<span class="d-block tx-12 mb-0 text-muted">See and Update your Profile</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-user-circle" aria-hidden="true"></i></h4>
+															<a href="/myprofile"><small><b class="text" style="color:#4065a5;"> View Profile</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										</a>
+									</div>
+									{% if usr.department == 'Admin' %}
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+										<a href="">
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+													<a href="/editorgprofile">
+													<div class="card-item-icon card-icon" style="color:#4065a5;" data-toggle="tooltip" data-placement="top" title="Edit Profile">
+													<i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" ></i>
+													</div>
+													</a>
+													<div class="card-item-title mb-2">
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Organistation Profile</label>
+														<span class="d-block tx-12 mb-0 text-muted">See and Update Organisation Profile</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-building" aria-hidden="true"></i></h4>
+															<a href="/orgprofile"><small><b class="text" style="color:#4065a5;"> View Profile</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										</a>
+									</div>
+									{% endif %}
+
+									{% if usr.department == 'Admin' %}
+									<div class="col-sm-12 col-md-6 col-lg-6 col-xl-4" hidden>
+
+										<div class="card custom-card">
+											<div class="card-body">
+												<div class="card-item">
+
+													<div class="card-item-title mb-2" >
+														<label class="main-content-label tx-13 font-weight-bold mb-1">Subscription</label>
+														<span class="d-block tx-12 mb-0 text-muted">Check your subscription details</span>
+													</div>
+													<div class="card-item-body">
+														<div class="card-item-stat">
+															<h4 class="font-weight-bold"><i class="fa fa-user" aria-hidden="true"></i></h4>
+															<a href="/mysubs_imaging"><small><b class="text" style="color:#4065a5;">My Subscriptions</b></small></a>
+														</div>
+														<div class="card-item-stat">
+
+															<a href="/buysubs_imaging"><small><b class="text" style="color:#4065a5;">Buy Subscription</b></small></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									{% endif %}
+								</div>
+								<!--End row-->
+
+								<!--row-->
+								<!-- Row end -->
+							</div><!-- col end -->
+
+						</div><!-- Row end -->
+
+
+        			</div>
+				</div>
+		</div>
+			<!-- End Main Content-->
+
+{% endif %}
+{% endblock %}

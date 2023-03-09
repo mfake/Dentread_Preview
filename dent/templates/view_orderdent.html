@@ -1,0 +1,133 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+
+          <div class="inner-body">
+
+   <div class="row row-sm">
+							<div class="col-lg-12 col-md-12">
+								<div class="card custom-card">
+									<div class="card-body">
+										<form  method="post" action="/view_orderdent/{{service_order.id}}">
+        								{% csrf_token %}
+										<div class="d-lg-flex">
+											<h2 class="main-content-label mb-1"><span class="font-weight-bold">Patient ID :</span>{{patient.pid}}</h2>
+
+											<div class="ml-auto">
+
+												<div class="form-group">
+													<label>Case Status</label>
+											<select name="status" id="status" class="form-control select2">
+												<option value="{{service_order.status}}" selected>{{service_order.status}}</option>
+												<option value="Processing">Processing</option>
+												<option value="Completed">Completed</option>
+												<option value="Dispatched">Dispatched</option>
+											</select>
+										</div>
+
+											</div>
+                                            <div class="ml-auto">
+												<p class="mb-1"><span class="font-weight-bold">Patient Name :</span>{{patient.name}}</p>
+												<p class="mb-0"><span class="font-weight-bold">Date :</span> {{service_order.date}}</p>
+
+											</div>
+										</div>
+										<hr class="mg-b-40">
+
+										<div class="table-responsive mg-t-40">
+											<table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+												<thead>
+													<tr>
+														<th class="bg-primary text-white">Region</th>
+														<th class="bg-primary text-white">Type</th>
+														<th class="bg-primary text-white">Method</th>
+														<th class="bg-primary text-white">Material</th>
+														<th class="bg-primary text-white">Remark</th>
+                                                        <th class="bg-primary text-white">Status</th>
+                                                         <th class="bg-primary text-white">Lab Comment</th>
+                                                         <th class="bg-primary text-white">Delivery Tracking</th>
+                                                        <th class="bg-primary text-white">Actions</th>
+													</tr>
+												</thead>
+												<tbody>
+                                                {% for i in pros %}
+													<tr>
+														<td>{{i.tooth}}</td>
+														<td >{{i.type}}</td>
+														<td >{{i.method}}</td>
+														<td >{{i.material}}</td>
+														<td >{{i.remark}}</td>
+                                                        <td >{{i.status}}</td>
+                                                        <td >{{i.comment}}</td>
+                                                        <td >{{i.tracking}}</td>
+                                                        <td ><a href="/update_order/{{i.id}}" class="btn btn-primary">Update</a></td>
+													</tr>
+                                                {% endfor %}
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="card-footer text-right">
+										<button type="submit" class="btn  ripple btn-primary"> Update</button>
+										{% if service_order.refstudy == "Digital Lab Services" %}
+										 <a href="/lab_orders" class="btn  ripple btn-primary"><i class="fa fa-angle-left"></i>  Back</a>
+										{% endif %}
+										{% if service_order.refstudy == "Implant Surgical Guide" %}
+										<a href="/guide_orders" class="btn  ripple btn-primary"><i class="fa fa-angle-left"></i>  Back</a>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+	   </form>
+						</div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+
+    <!-- /.content -->
+
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+      </div>
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<script>
+window.alert = (function() {
+    var nativeAlert = window.alert;
+    return function(message) {
+        window.alert = nativeAlert;
+        message.indexOf("DataTables warning") === 0 ?
+            console.warn(message) :
+            nativeAlert(message);
+    }
+})();
+    </script>
+<script>
+ $(function () {
+    $("#example2").DataTable({
+
+       "order": [[ 2, "desc" ]],
+       "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+
+    });
+
+  });
+</script>
+{% endif %}
+{%endblock%}

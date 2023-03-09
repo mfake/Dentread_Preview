@@ -1,0 +1,100 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+      <div class="row row-sm">
+          <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>My Profile</h5></a></li>
+                    </ol>
+
+          </div>
+
+        </div>
+		<div class="row mb-2">
+
+
+
+<div class="col-sm-12 col-md-7 col-xl-12">
+								<div class="card custom-card">
+									<div class="">
+										<div class="main-content-body main-content-body-contacts">
+											<div class="main-contact-info-header pt-3">
+												<div class="media">
+													<div class="main-img-user">
+														{% if usr.propic %}
+														<img alt="avatar" src="{{usr.propic.url}}">
+														{% endif %}
+														{% if not usr.propic %}
+														<img alt="avatar" src="{% static '/profilepic/propic.jpg' %}">
+														{% endif %}
+													</div>
+													<div class="media-body">
+														<h4>{{usr.name}}</h4>
+														<p>{{usr.department}}</p>
+
+													</div>
+												</div>
+												<div class="main-contact-action btn-list pt-3 pr-3">
+													<a href="/editprofile_dent" class="btn ripple btn-primary text-white btn-icon" data-placement="top" data-toggle="tooltip" title="Edit Profile"><i class="fe fe-edit"></i></a>
+
+												</div>
+											</div>
+											<div class="main-contact-info-body">
+
+												<div class="media-list">
+													<div class="media">
+														<div class="media-body">
+															<div>
+																<label>Contact</label> <span class="tx-medium">{{usr.contact}}</span>
+															</div>
+															<div>
+																<label>Email</label> <span class="tx-medium">+{{usr.email}}</span>
+															</div>
+														</div>
+													</div>
+													<div class="media">
+														<div class="media-body">
+															<div>
+																<label>Username</label> <span class="tx-medium">{{usr.username}}</span>
+															</div>
+
+														</div>
+													</div>
+													<div class="media">
+														<div class="media-body">
+															<div>
+																<label>Organisation</label> <span class="tx-medium">{{org.orgname}}</span>
+															</div>
+														</div>
+													</div>
+													<div class="media mb-0">
+														<div class="media-body">
+															<div>
+																<label>Organisation Address</label> <span class="tx-medium">{{org.address}}, </span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+		</div>
+		  </div>
+	  </div>
+  </div>
+
+			{% endif %}
+			{% endblock %}

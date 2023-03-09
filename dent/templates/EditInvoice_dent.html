@@ -1,0 +1,327 @@
+{% extends 'domain_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+	<div class="main-content pt-0">
+				<div class="container">
+					<div class="inner-body">
+
+
+    <div class="row row-sm">
+                <div class="col-sm-6 ">
+               <ol class="breadcrumb float-sm-left">
+                   <li class="breadcrumb-item"><a href="#"><h5>Edit invoice</h5></a></li>
+                    </ol>
+
+                 </div>
+
+									<div class="col-sm-12 col-lg-12 col-xl-12">
+										{% if message %}
+								<div class="alert alert-success alert-dismissible fade show" role="alert">
+  									<strong></strong> {{message}}
+  										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+  										</button>
+								</div>
+										{% endif %}
+										<div class="card bg-primary custom-card card-box">
+											<div class="card-body p-4">
+												<div class="row align-items-center">
+													<div class="offset-xl-3 offset-sm-6 col-xl-8 col-sm-6 col-12 img-bg ">
+														<h4 class="d-flex  mb-3">
+															<span class="font-weight-bold text-white ">{{ patient.name }}, Patient id -{{ patient.pid }}</span>
+														</h4>
+
+														<p class="tx-white-7 mb-1">
+													</div>
+													<img src="{% static '/dentread/assets/img/pngs/work3.png' %}" alt="user-img" class="wd-200">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+ <!-- Main content -->
+
+
+          <!-- Profile Image -->
+
+            <div class="row row-sm">
+               <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header bg-primary text-white">
+                <h6 class="card-title">Edit Invoice</h6>
+              </div>
+              <!-- /.card-header -->
+
+<div class="row">
+
+
+
+              <div class="card-body">
+                <!-- Date dd/mm/yyyy -->
+<form method="post" action="/edit_invoice_dent/{{ invoice.id }}" enctype="multipart/form-data">
+        {% csrf_token %}
+                  <div class="form-group">
+                        <label for="exampleInputPassword1">Select Study</label>
+
+                  <select type="text" id="temp" name="temp" onchange="singleSelectChangeValue()"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected" value="{{ invoice.studydes }}">{{ invoice.studydes }}</option>
+                      {% for i in study %}
+                      <option value="{{ i.title }}" class="{{ i.price }}">{{ i.title }}__{{ i.maincat }}__{{ i.subcat }}</option>
+                       <script>
+                      function singleSelectChangeValue() {
+                           var selObj = document.getElementById("temp");
+                           var selValue = selObj.options[selObj.selectedIndex].value;
+                           var studydes = selObj.options[selObj.selectedIndex].text;
+                           var price = selObj.options[selObj.selectedIndex].className;
+
+                               document.getElementById("studydes").value = studydes;
+                               document.getElementById("study").value = selValue;
+                               document.getElementById("price").value = price;
+                               document.getElementById("discount").value= 0;
+                               document.getElementById("cgst").value= 0;
+                               document.getElementById("sgst").value= 0;
+                               document.getElementById("igst").value= 0;
+                               document.getElementById("payable").value= price;
+
+                            }
+</script>
+                      {% endfor %}
+                  </select>
+                      </div>
+
+
+                   <input id="studydes" name="studydes" value="{{ invoice.studydes }}" hidden></input>
+                  <input id="study" name="study" value="{{ invoice.study }}"hidden></input>
+                  <input id="pid" name="pid" value="{{ patient.pid }}" hidden></input>
+                  <input id="name" name="name" value="{{ patient.name }}" hidden></input>
+                  <input id="location" name="location" value="{{ patient.locate }}" hidden></input>
+                  <input id="invid" name="invid"  hidden></input>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Price</label>
+                          <input type="number" class="form-control" id="price" name="price" value="{{ invoice.price }}" placeholder="Price" readonly>
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Discount</label>
+                          <input type="number" class="form-control" id="discount" name="discount" value="{{ invoice.discount }}" oninput="tax()" placeholder="Discount">
+                      </div>
+                  </div>
+                </div>
+
+
+                <!-- /.form group -->
+            <div class="form-group clearfix">
+                      <div class="icheck-primary d-inline">
+                        <input type="checkbox" id="myCheck" onclick="myFunction()">
+                        <label for="myCheck">Check (if Taxable)
+                        </label>
+                      </div>
+<script>
+function myFunction() {
+  var checkBox = document.getElementById("myCheck");
+  var text = document.getElementById("tax");
+  if (checkBox.checked == true){
+    text.style.display = "block";
+  } else {
+     text.style.display = "none";
+  }
+}
+</script>
+</div>
+
+                <div class="row" id="tax" style="display:none">
+                    <div class="row">
+                  <div class="col-sm-4">
+                    <!-- checkbox -->
+                  <div class="form-group" >
+                      <label for="exampleInputPassword1">CGST</label>
+                      <div class="input-group">
+                    <div class="input-group-prepend">
+
+                       <span class="input-group-text" ><i >%</i></span>
+                        </div>
+                          <input type="number"  class="form-control" id="cgst" name="cgst" value="{{ invoice.cgst }}" oninput="tax()" placeholder="CGST">
+                      </div>
+                  </div>
+                  </div>
+
+      <script>
+         function tax() {
+            var price = document.getElementById("price").value;
+            var discount = document.getElementById("discount").value;
+            var payable= price-discount;
+            var sgst = document.getElementById("sgst").value;
+            var igst = document.getElementById("igst").value;
+            var cgst = document.getElementById("cgst").value;
+
+            var afttxpayable = payable + payable * cgst /100 + payable * igst /100 + payable * sgst /100;
+            document.getElementById("payable").value = afttxpayable;
+
+
+         }
+      </script>
+                  <div class="col-sm-4">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">SGST</label>
+                   <div class="input-group">
+                    <div class="input-group-prepend">
+
+                       <span class="input-group-text"><i >%</i></span>
+                        </div>
+                          <input type="number" class="form-control" id="sgst" name="sgst" value="{{ invoice.sgst }}" oninput="tax()" placeholder="SGST">
+</div>
+                      </div>
+                  </div>
+       <div class="col-sm-4">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">IGST</label>
+                         <div class="input-group">
+                    <div class="input-group-prepend">
+
+                       <span class="input-group-text"><i >%</i></span>
+                        </div>
+                          <input type="number" class="form-control" id="igst" name="igst" value="{{ invoice.igst }}" oninput="tax()" placeholder="IGST">
+                      </div>
+                  </div>
+</div>
+            </div>
+                </div>
+                <!-- IP mask -->
+             <div class="form-group">
+                        <label for="exampleInputPassword1">Payable</label>
+
+                        <input type="number" class="form-control" id="payable" name="payable" value="{{ invoice.payable }}" placeholder="Payable" readonly>
+                      </div>
+
+
+                  <div class="row">
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Amount Paid</label>
+                          <input type="number" class="form-control" id="paid" name="paid" value="{{ invoice.paid }}" oninput="checkbal()" placeholder="Amount Paid">
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+      <script>
+         function checkbal() {
+            var paid = document.getElementById("paid").value;
+            var payable = document.getElementById("payable").value;
+            var balance = payable - paid ;
+            document.getElementById("balance").value = balance;
+
+
+         }
+      </script>
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Amount Balance</label>
+                          <input type="number" class="form-control" id="balance" name="balance" value="{{ invoice.balance }}" placeholder="Amount Balance" readonly>
+                      </div>
+                  </div>
+                </div>
+
+                 <div class="row">
+                  <div class="col-sm-6">
+                    <!-- checkbox -->
+                  <div class="form-group">
+                       <label for="exampleInputPassword1">Payment Date</label>
+                          <input type="date" class="form-control" id="date" name="date" value="{{ invoice.date|date:'Y-m-d' }}" value="{% now 'Y-m-d' %}">
+                      </div>
+                  </div>
+                  <div class="col-sm-6">
+
+                   <div class="form-group">
+                       <label for="exampleInputPassword1">Payment Mode</label>
+                         <select type="text" id="mode" name="mode" class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected" value="{{ invoice.mode }}">{{ invoice.mode }}</option>
+                             <option value="Cash">Cash</option>
+                            <option value="Card">Card</option>
+                             <option value="Online">Online</option>
+                         </select>
+                      </div>
+                  </div>
+                </div>
+<div class="row">
+    <div class="col-sm-12">
+          <div class="form-group">
+
+                <label for="exampleInputPassword1">Attachment(prescription)</label>
+                    <div class="custom-file">
+
+                      <input type="file" class="custom-file-input" id="prescription" name="prescription" >
+                      <label class="custom-file-label" for="prescription">Choose file</label>
+                    </div>
+                  </div>
+    </div>
+</div>
+   <div class="row">
+                   <div class="col-sm-12">
+                    <!-- checkbox -->
+                      <button type="submit" class="btn btn-block ripple btn-primary">Update</button>
+                  </div>
+
+
+   </div>
+            </form>    <!-- /.form group -->
+             </div>
+
+               </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+
+
+
+
+
+
+          <!-- /.col -->
+          <div class="col-md-9">
+            <div class="card">
+
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+
+                    <!-- /.post -->
+
+
+
+                  <!-- /.tab-pane -->
+
+
+
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+
+
+
+
+    <!-- /.content -->
+  </div>
+                </div>
+    </div>
+<script>
+$(function () {
+  bsCustomFileInput.init();
+});
+</script>
+
+
+
+</body>
+{% endif %}
+{%endblock%}

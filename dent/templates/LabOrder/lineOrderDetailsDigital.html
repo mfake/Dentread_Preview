@@ -1,0 +1,817 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="container  position-relative" style="padding: 2rem 3rem 0 3rem; position: relative;">
+    {% if lineItem.status == 'Submit Order' or lineItem.status == 'Pickup Order' or lineItem.status == 'Order On-Hold' %}
+        <button class="btn btn-sm btn-danger cancel-button" data-target="#cancelOrderModal" data-toggle="modal">Change Status</button>
+    {% endif %}
+
+    <div class="table-wrapper" style="padding: 1rem; padding-bottom: 1.7rem; background-color: white;">
+        <table class="table" >
+            <thead id="tableHead">
+                <tr style="color: blue; text-align: center;">
+                    <th></th>
+                    <th>Status</th>
+                    <th style="width: 45%;">Details</th>
+                    <th>Action</th>
+                    <th style="width: 30%">Comments</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody">
+                     
+                <tr class="orderSubmittedRow">
+                    <td><i class="fa fa-duotone fa-circle timeLineCircle"></i></td>
+                    <th>Submit Order</th>
+                    <td class="orderDetails"><span style="font-weight: 500;">{{usr.name}} </span> from <span style="font-weight: 500;">{{org.orgname}}</span>  submitted a Service Order for  <span style="font-weight: 500;">{{lineItem.service_name}}</span>  at <span style="font-weight: 500;">{{lineItem.date}}</span> </td>   
+                    <td>
+                        {% if lineItem.availableForCollection == False %}
+                            <i class="fa-solid fa-file-lines" data-toggle="modal" data-target="#orderPickUpModal" ></i> 
+                        {% endif %}
+                    </td>
+                    <td></td>
+                </tr>
+                {% if service_order.preferredData == 'nonDigitalData' %}
+                    <tr class="orderPickedUpRow">
+                        <td><i class="fa fa-duotone fa-circle timeLineCircle"></i></td>
+                        <th>Pickup Order</th>
+                        <td class="orderDetails">
+                            {% if lineItem.orderPickup == False and lineItem.availableForCollection == True %}
+                                Order is yet to be picked up by the dental lab <span style="font-weight: 500;"> {{ refer_id }}</span> 
+                            {% endif %}
+                            {% if lineItem.orderPickup == True %}
+                                Order has been picked up by the dental lab <span style="font-weight: 500;"> {{ refer_id }}</span>
+                                on  <span style="font-weight: 500;"> {{ lineItem.orderPickupTime }}</span>
+                            {% endif %}
+                        </td>   
+                        <td>
+                        </td>
+                        <td></td>
+                    </tr>
+                {% endif %}
+                <tr class="dataValidatedRow">
+                    <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                    <th>Validate Data</th>
+                    <td class="orderDetails">
+
+                        {% if service_order.preferredData == 'digitalData' %}
+                            {% if lineItem.status == 'Submit Order' %}
+                                Data Review Pending by <span style="font-weight: 500;">{{refer_id}}</span> .
+                            {% endif %}
+                            {% if lineItem.status != 'Submit Order' %}
+                                <span style="font-weight: 500;">{{refer_id}}</span>  has reviewed the shared data.
+                            {% endif %}
+                        {% endif %}
+
+                        {% if service_order.preferredData == 'nonDigitalData' %}
+                            {% if lineItem.status == 'Pickup Order' %}
+                                Data Review Pending by <span style="font-weight: 500;">{{refer_id}}</span> .
+                            {% endif %}
+                            {% if lineItem.status != 'Submit Order' and  lineItem.status != 'Pickup Order' %}
+                                <span style="font-weight: 500;">{{refer_id}}</span>  has reviewed the shared data.
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% for i in stlFile %}
+                <tr class="dataApproval imageDataApproval2">
+                    <td></td>
+                    <th>
+                        <span class="badge badge-light">{{ i.site }}</span>
+                    </th>
+                    <td>
+                        {{ i.fileName }}
+                        {% if i.fileStatus %}
+                        
+                        {% autoescape off %}
+                            {{i.badge}}
+                        {% endautoescape %}
+                        {% endif %}                            
+                    </td>
+
+                    <td class="dataUpload  d-flex justify-content-between align-items-center">
+                            {% if i.fileStatus == 'Reject'%}
+                                <i class="fa-solid fa-upload" data-toggle="modal" data-target="#dataResubmitModal2" onclick='onDataResubmitClick({{i.id}})'></i>
+                            {% endif %}
+                    </td>
+                    <td class="dataComment text-center">
+                            {% if i.fileComment %}
+                                {{i.fileComment}}
+                            {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+                {% if lineItem.status != 'Order Cancelled' and lineItem.status  != 'Order On-Hold' %}
+
+
+                    {% if lineItem.designCheck %}
+
+                        <tr class="planSharedRow">
+                            <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                            <th>Share Design</th>
+                            <td class="orderDetails">
+                                {% if lineItem.status == 'Share Design' or lineItem.status == 'Review Design' or lineItem.status == 'Production Complete' or lineItem.status == 'Order Dispatched' or lineItem.status == 'Order Delivered'  %}
+                                    {% if lineItem.designStatus == 'Reject' %}
+                                        <span style="font-weight: 500;">{{org.orgname}} </span>has shared the Design at <span style="font-weight: 500;">{{lineItem.GuideUploadDate}}</span>. 
+                                    {% endif %}
+                                    {% if lineItem.designStatus != 'Reject' %}
+                                        <span style="font-weight: 500;">{{lab_id}} </span>has shared the Design at <span style="font-weight: 500;">{{lineItem.GuideUploadDate}}</span>. Kindly approve/reject the design.
+                                    {% endif %}
+
+                                {% endif %}
+                                
+
+                                {% if lineItem.status == 'Validate Data' and lineItem.fileStatus == 'Approved' %}
+                                    <span style="font-weight: 500;">{{refer_id}} </span>is yet to upload the Design. Kindly wait. 
+                                {% endif %}
+
+
+                                {% if lineItem.status == 'Validate Data' and lineItem.dataApprove == 'Approve'  %}
+                                    <span style="font-weight: 500;">{{refer_id}} </span>is yet to upload the Design. Kindly wait. 
+                                {% endif %}
+                            </td>                  
+                            <td class="text-center">
+                                
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr class="planReviewedRow">
+                            <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                            <th>Review Design</th>
+                            <td class="orderDetails">
+                                {% if lineItem.status == 'Review Design' or lineItem.status == 'Production Complete' or lineItem.status == 'Order Dispatched' or lineItem.status == 'Order Delivered' %}
+
+                                    <span style="font-weight: 500;">{{org.orgname}}</span> has
+                                    {{lineItem.designStatus}}ed the design.
+
+                                {% endif %}
+
+                                {% if lineItem.status == 'Share Design' %}
+                                    {% if lineItem.designStatus == 'Reject' %}
+                                        <span style="font-weight: 500;">{{org.orgname}}</span> has
+                                        {{lineItem.designStatus}}ed the design.
+                                    {% endif %}
+                                    {% if lineItem.designStatus != 'Reject' %}
+                                        <span style="font-weight: 500;">{{org.orgname}} </span> is yet to review the design
+                                    {% endif %} 
+                                {% endif %}
+                            
+                            </td>    
+                            <td class="text-center">
+                                
+                                {% if lineItem.designStatus == None and lineItem.GuideUpload == 'Uploaded' %}
+                                            
+                                    <i class="fa-solid fa-file-lines" data-toggle="modal" onclick="onStatusModalClick({{lineItem.id}});" data-target="#statusModal"></i>
+                                
+                                {% endif %}
+                                {% if lineItem.designStatus == '' and lineItem.GuideUpload == 'Uploaded' %}
+                                            
+                                    <i class="fa-solid fa-file-lines" data-toggle="modal" onclick="onStatusModalClick({{lineItem.id}});" data-target="#statusModal"></i>
+                                
+                                {% endif %}
+                                {% if lineItem.designStatus == 'Re-uploaded' and lineItem.GuideUpload == 'Uploaded' %}
+                                            
+                                <i class="fa-solid fa-file-lines" data-toggle="modal" onclick="onStatusModalClick({{lineItem.id}});" data-target="#statusModal"></i>
+                                
+                                {% endif %}
+                            
+                            </td>
+                            <td>
+                                
+                            </td>
+                        </tr>
+                        
+                        {% if lineItem.status != 'Submit Order' and lineItem.status != 'Validate Data'  %}
+                            <tr class="planApproval">
+                                <td></td>
+                                <th>
+                                    {% if lineItem.designStatus == 'Approve' %}
+                                        <span class='badge badge-success'>Approved</span>
+                                    {% endif %}
+                                    {% if lineItem.designStatus == 'Reject' %}
+                                        <span class='badge badge-danger'>Rejected</span>
+                                    {% endif %}
+                                    {% if lineItem.designStatus == 'Re-uploaded' %}
+                                        <span class='badge badge-warning'>Re-Uploaded</span>
+                                    {% endif %}
+                                </th>
+                                <td>
+                                    {% if feedFile %}
+                                        {% for i in feedFile %}
+                                            {{i.fileName}}
+                                            
+                                            <br>
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if lineItem.GuideUpload == 'Uploaded' %}
+                                        {% for i in feedFile %}
+                                            <a href="/downloadLabPlanPdf/{{service_order.id}}/{{lineItem.id}}/{{i.id}}" download >
+                                                <i class="fa-solid fa-download"></i>                       
+                                            </a>
+                                            {% if stlCheck == True %}
+                                                <a href="/requestPlanningFile/{{service_order.id}}/{{lineItem.id}}" target="_blank" rel="noopener noreferrer" class="ml-2"><i class="fa-solid fa-eye"></i></a>
+                                            {% else %}
+                                                <a href="/downloadLabPlanPdf/{{service_order.id}}/{{lineItem.id}}/{{i.id}}" target="_blank" rel="noopener noreferrer" class="ml-2"><i class="fa-solid fa-eye"></i></a>
+                                            {% endif %}
+                                            <br>
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                                <td class="dataComment">
+                                    {% for i in feedFile %}
+                                        {% if i.fileComment %}
+                                            {{i.fileComment}}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+
+                    {% endif %}
+
+                    <tr class="orderCompleted">
+                        <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                        <th>Production Complete</th>
+                        <td class="orderDetails">
+                            
+                            {% if lineItem.status == 'Production Complete' or lineItem.status == 'Order Dispatched' or lineItem.status == 'Order Delivered' %}
+                                Production has been completed.
+                            {% endif %}
+                            {% if lineItem.status == 'Review Design'%}
+                                Production is yet to be completed.
+                            {% endif %}
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr class="orderDispatchedRow">
+                        <td><i class="fa fa-thin fa-circle timeLineCircle"></i></td>
+                        <th>Order Dispatched</th>
+                        <td class="orderDetails">
+                            {% if lineItem.status == 'Production Complete' %}
+                                <span style="font-weight: 500;">{{refer_id}}</span> is yet to dispatch the order.
+                            {% endif %}
+
+                            {% if lineItem.status == 'Order Dispatched' or lineItem.status == 'Order Delivered'%}
+                                <span style="font-weight: 500;">{{refer_id}}</span>  has dispatched the Order at <span style="font-weight: 500;">{{lineItem.DispatchDate}}</span>, via <span style="font-weight: 500;">{{lineItem.shipby}}</span> courier vide tracking ID: <span style="font-weight: 500;">{{lineItem.trackingId}}</span>, to <span style="font-weight: 500;">{{lineItem.DispatchAddress}}</span>.</td> 
+                            {% endif %}
+                            <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="orderDeliveredRow">
+                        <td><i class="fa fa-thin fa-circle timeLineCircle last"></i></td>
+                        <th>Order Delivered</th>
+                        <td class="orderDetails">
+                            {% if lineItem.status == 'Order Delivered' %}  
+                                Order was delivered to <span style="font-weight: 500;">{{org.orgname}}</span> , <span style="font-weight: 500;">{{lineItem.DispatchAddress}}</span>  at  <span style="font-weight: 500;">{{lineItem.orderDeliverDate}}</span> </td> 
+                            {% endif %}
+                            {% if lineItem.status == 'Order Dispatched' %}
+                                Your order is on the way.
+                            {% endif %}
+                            <td class="text-center">
+                            </td>
+                        <td></td>
+                    </tr>       
+                {% endif %}
+
+                {% if lineItem.status == 'Order Cancelled' %}
+
+                    <tr class="orderCancelledRow">
+                        <td><i class="fa fa-thin fa-circle timeLineCircle orderCancelledCircle"></i></td>
+                        <th>Order Cancelled</th>
+
+                        <td class="orderDetails">
+                            
+                            <span style="font-weight: 500;">{{usr.name}} </span> 
+                            from 
+                            <span style="font-weight: 500;">{{org.orgname}}</span>  
+                            cancelled the order on 
+                            <span style="font-weight: 500;">{{lineItem.cancellationDateTime}}</span>
+                            citing the reason 
+                            <span style="font-weight: 500;">{{lineItem.cancellationReason}}</span>    
+
+                        </td>   
+               
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {% endif %}
+
+                {% if lineItem.status == 'Order On-Hold' %}
+
+                    <tr class="orderOnHoldRow">
+                        <td><i class="fa fa-thin fa-circle timeLineCircle onHoldCircle"></i></td>
+                        <th>Order On-Hold</th>
+
+                        <td class="orderDetails">
+                            
+                            <span style="font-weight: 500;">{{usr.name}} </span> 
+                            from 
+                            <span style="font-weight: 500;">{{org.orgname}}</span>  
+                            put the Order On-Hold on
+                            <span style="font-weight: 500;">{{cancelled_time}}</span>
+                            citing the reason 
+                            <span style="font-weight: 500;">{{reason}}</span>    
+
+                        </td>   
+               
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {% endif %}
+
+
+            </tbody>    
+        </table>
+        <div class="path">
+        </div>
+    </div>
+
+    <a href="#" onclick="window.location.reload(true);" class="position-absolute refresh-icon" >
+        Refresh
+        <i class="fa-solid fa-arrows-rotate"></i>
+    </a>
+</div>
+
+
+<div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-labelledby="cancelOrderModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Cancel/Hold Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+
+                <form action="/holdOrder/{{lineItem.id}}" method="post">
+                    {% csrf_token %}
+                    <input type="text" id="statusInput" name="statusInput" hidden>
+                    <input type="text" id="prevStatus" name="prevStatus" hidden>
+                    <div class="form-group">
+                        <textarea class="form-control" required id="cancellation-reason" name="cancellationReason" rows="3" placeholder="Kindly specify the reason for cancellation/hold"></textarea>
+                    </div>
+                    
+                    <span class="info-text">If you think, there is going to be a delay in the order, we highly recommend you to put the Order On-Hold rather than cancelling it.</span>
+                    <div style="margin: 1rem 0;">
+
+                        {% if lineItem.status == 'Order On-Hold' %}
+                            <button class="btn btn-sm btn-success" type="submit" onclick="onSubmitClick('{{lineItem.prevStatus}}', '{{lineItem.status}}')">Un-Hold Order</button>
+                        {% endif %}
+
+                        {% if lineItem.status != 'Order On-Hold' %}
+                            <button class="btn btn-sm btn-success" type="submit" onclick="onSubmitClick('Order On-Hold', '{{lineItem.status}}')">Hold Order</button>
+                        {% endif %}
+
+                        <button class="btn btn-sm btn-danger" type="submit" onclick="onSubmitClick('Order Cancelled', '{{lineItem.status}}')">Cancel Order</button>
+                    </div>
+                </form>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="d-none" type="button" id="closeButton" style="background: #a3a3a326; border-color: #a3a3a326; color: black; font-weight: 500; margin: 10px 0; margin-right: 1rem; border-radius: 3px; border-width: thin;" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+   
+</div>
+
+<div class="modal fade" id="dataResubmitModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Upload Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="container mt-3">
+                            <form action="/" method="post" class="dropzone dz" id="form2">
+                    
+                        {% csrf_token %}
+                        <div class="fallback">
+                            <input name="file" id="file2" type="file"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="m-3">
+                    <h6>Uploaded Files are:</h6>
+                    <div id="fileNameBody">                 
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" id="closeButton" style="background: #a3a3a326; border-color: #a3a3a326; color: black; font-weight: 500; margin: 10px 0; margin-right: 1rem; border-radius: 3px; border-width: thin;" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function onStatusModalClick(lineId){
+            document.querySelector('#statusModal form').action=`/feedFileDigitalStatus/${lineId}/{{service_order.id}}`
+        };
+        Dropzone.options.form2 = {
+            acceptedFiles: ".stl, .zip, .dicom",
+        maxFiles:2,
+        init: function() {
+            this.on("processing", function(file) {
+                this.options.url = getUrl();
+            });
+            this.on("success", function(file){
+                if (file.previewElement) {
+                    getFiles('fileNameBody');
+                    return file.previewElement.classList.add("dz-success");
+                }
+            });
+            {% comment %} this.on("complete", function(file) {
+                location.reload()
+            }); {% endcomment %}
+            this.on('resetFiles', function() {
+            if(this.files.length != 0){
+                for(i=0; i<this.files.length; i++){
+                    this.files[i].previewElement.remove();
+                }
+                this.files.length = 0;
+            }
+            });
+            this.hiddenFileInput.removeAttribute('multiple');
+        }
+    };
+    </script>
+</div>
+
+<div class="modal fade" id="orderPickUpModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Order Pickup Availablity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="container mt-3">
+                    <form action="/orderPickupAvailablity/{{lineItem.id}}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group form-inline row form-check">
+                            <label for="orderPickUpCheck" class="col-sm-4">Order available For Pickup </label>
+                            <input id="orderPickUpCheck" class="col-sm-3 ml-3 form-check-input" type="checkbox" value="True" name="orderPickup" required>
+                        </div>
+                        <div class="form-group form-inline row justify-content-center ml-3 mt-2">
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                Submit
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" id="closeButton" style="background: #a3a3a326; border-color: #a3a3a326; color: black; font-weight: 500; margin: 10px 0; margin-right: 1rem; border-radius: 3px; border-width: thin;" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Review Design</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="container mt-3">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group form-inline row">
+                            <label for="selectBox"  class="col-sm-4">Plan Status:</label>
+                            <select id="selectBox" required name="status" class="col-sm-6">
+                                <option value="Approve">Approve</option>
+                                <option value="Reject">Reject</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline row">
+                            <label for="comment" class="col-sm-4">Comment:</label>
+                            <textarea name="comment" id="comment" class="col-sm-6" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group form-inline row justify-content-center mt-2">
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                Submit
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" id="closeButton" style="background: #a3a3a326; border-color: #a3a3a326; color: black; font-weight: 500; margin: 10px 0; margin-right: 1rem; border-radius: 3px; border-width: thin;" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+
+    @media screen and (max-width: 992px) {
+        .table-wrapper > div{
+            width: 28px !important;
+        }
+    }
+
+    #designCheck + label::before, #designCheck +  label::after{
+        display: none !important;
+    }
+
+    .info-text{
+        font-size: 13px;
+        font-weight: 500;
+        opacity: 75%;
+        color: #d63939;
+    }
+
+    .data-selection{
+        margin: 0 0 1rem 0;
+    }
+
+    .cancel-button{
+        z-index: 1;
+        position: absolute;
+        bottom: 1rem;
+        right: 4rem;
+    }
+
+    .table thead tr th{
+        border-bottom: none;
+        color: blue;
+    }
+
+    .container{
+        margin-bottom: 1rem;
+    }
+    
+    .table{
+        table-layout: auto; 
+        min-width: 100%; 
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+    .table tbody tr:not(.dataApproval, .planApproval) td, 
+    .table tbody tr:not(.dataApproval, .planApproval) th{
+        border: 1px solid #e8e8f7;
+        border-right: none;
+    }
+    
+    .table tbody td:not(:first-child), .table tbody th:not(:first-child){
+        border-left: none !important;
+    }
+
+    .table tbody tr td:last-child{
+        border-right: 1px solid #e8e8f7;
+    }
+
+    .table tbody tr th{
+        white-space: nowrap;
+    }
+
+    /* .orderDetails{
+        display: none;
+    } */
+
+    .form-check-label::after{
+        display:none !important;
+    }
+
+    .modal-header{
+        background: paleturquoise;
+    }
+
+    #tableBody i:not(.timeLineCircle){
+        color: grey;
+        cursor: pointer;
+    }
+
+    #tableBody i:not(.timeLineCircle):hover{
+        color: blue;
+    }
+
+    .timeLineCircle{
+        color: rgb(156, 156, 156);
+    }
+
+    .orderCancelledCircle{
+        color: red !important;
+    }
+
+    
+
+    .onHoldCircle{
+        color: yellow !important;
+    }
+    /* .planSharedRow i:not(.timeLineCircle){
+        display: none;
+    } */
+
+    .dataApproval,  .designApproval{
+        display: none;
+    }
+
+    .dataComment{
+        text-align: center;
+    }
+
+    .table-wrapper{
+        position: relative;
+    }
+
+    .table-wrapper > div{
+        position: absolute;
+        width: 23px;
+        top: 7rem;
+        bottom: 4.4rem;
+        height: -webkit-fill-available;
+        border-right: 1px dashed rgb(156, 156, 156);
+    }
+
+    .timeLineCircleIncomplete{
+        animation: lastTimeLineCircleAnimation 2s infinite
+    }
+
+    @keyframes lastTimeLineCircleAnimation {
+        0%{
+            color: red;
+        }
+        50%{
+            color: rgb(156, 156, 156);
+        }
+        100%{
+            color: red;
+        }
+    }
+
+    .refresh-icon{
+        top: 15px;
+        right: 0;
+        padding: 8px 16px;
+        background: #1f3f7f;
+        border-radius: 5px;
+        color: white;
+    }
+    .refresh-icon i{
+        margin-left: 4px;
+    }
+    
+</style>
+
+<script>
+
+    console.log('{{lineItem.prevStatus}}')
+    console.log('{{lineItem.status}}')
+
+    if('{{lineItem.status}}' == "Order On-Hold" || '{{lineItem.status}}' == "Order Cancelled"){
+        if('{{lineItem.prevStatus}}' == 'Submit Order'){
+            document.querySelector('.orderPickedUpRow').style.display = 'none'
+            document.querySelector('.dataValidatedRow').style.display = 'none'
+        }
+        else if('{{lineItem.prevStatus}}' == 'Pickup Order'){
+            document.querySelector('.dataValidatedRow').style.display = 'none'
+        }
+    }
+
+    {% if lineItem.status == 'Order Delivered' %}
+        document.querySelector('.table-wrapper>div').style.bottom = '5.7rem';
+    {% endif %}
+
+    function onSubmitClick(val, prev){
+        document.getElementById('statusInput').value = val;
+        document.getElementById('prevStatus').value = prev;
+    }
+
+    dataResubmitTarget = ''
+    function onDataResubmitClick(id){
+        dataResubmitTarget = id;
+        getFiles('fileNameBody');
+    }
+    function getUrl(){
+        return `/uploadLabDataAgain/${dataResubmitTarget}/{{lineItem.id}}`
+    }
+
+    function getFiles(targettedId){
+        let pk ='{{service_order.id}}';
+        let id1 = '{{lineItem.id}}';
+        let csr = $("input[name=csrfmiddlewaretoken]").val();   
+        mydata={'dataResubmitTarget': dataResubmitTarget, 'csrfmiddlewaretoken': csr};
+        let f= document.getElementById(targettedId);
+        while (f.hasChildNodes()) {
+        f.removeChild(f.firstChild);
+        }
+
+        $.ajax(
+        {
+            url: `/viewReUploadedLabData/${pk}/${id1}/${dataResubmitTarget}`,
+            method:'GET',
+            data: mydata,
+
+            success: function (data) {
+                // console.log('the sata is', data)
+            if(data.length>0){
+                // console.log("the data is", data[0]['id'])
+            
+                var main_id= data[0]['id'];
+                $( data ).each(function(i) {
+                var fileName1 = data[i]['fileName'];
+                var table_row= document.createElement('tr');
+                var table_heading= document.createElement('td');
+                var table_heading2= document.createElement('td');
+                table_heading.innerText= fileName1;
+                //   table_heading2.appendChild(anchor);
+                table_row.appendChild(table_heading);
+                table_row.appendChild(table_heading2);
+                f.appendChild(table_row);
+                }); 
+            }
+            }
+        });
+    }
+    
+    
+
+    // to change the colors of the badges 
+
+    {% for i in feedFile %}
+
+        if( '{{i.fileStatus}}'=='Reject'){
+            // document.querySelector('.imageDataApproval2 td span').innerText='Rejected';
+            document.querySelector('.planApproval').style.background='#ffcdcd'
+        }
+        else if( '{{i.fileStatus}}'=='Approve'){
+            document.querySelector('.planApproval').style.background='#c1ffc1'
+        }
+    
+    {% endfor %}
+
+    
+    // to provide colors to the circles 
+    for(let x of document.querySelectorAll('#tableBody tr th')){
+        if(x.previousElementSibling && x.previousElementSibling.querySelector('i')){
+            x.previousElementSibling.querySelector('i').style.color='green';
+        }
+        if(x.innerText=='{{lineItem.status}}'){
+            break;
+        }
+    }
+
+    {% if lineItem.status != 'Order Delivered' %}
+    document.querySelector('.last').classList.add('timeLineCircleIncomplete');
+    // console.log(document.querySelector('.last'))
+    {% endif %}
+
+
+
+    if('{{lineItem.output_type}}'=='Prosthetically Driven Planning'){
+       document.querySelector('.designSharedRow').style.display='none';  
+       document.querySelector('.orderDispatchedRow').style.display='none';  
+       document.querySelector('.orderDeliveredRow').style.display='none';  
+
+    }
+    else if('{{lineItem.output_type}}'=='Plan + Design (.stl)'){
+        document.querySelector('.orderDispatchedRow').style.display='none';  
+        document.querySelector('.orderDeliveredRow').style.display='none';  
+    }
+
+    if('{{lineItem.status}}'!='Submit Order'){
+        for (let x of document.querySelectorAll('.dataApproval')){
+            x.style.display='table-row';
+        }
+    }
+    if('{{lineItem.status}}'!='Submit Order' && '{{lineItem.status}}'!='Data Validate' && '{{lineItem.status}}'!='Plan Share'){
+        document.querySelector('.planApproval').style.display='table-row';
+    }
+
+    if('{{lineItem.status}}'=='Review Design' && '{{lineItem.status}}'!=='Order Dispatch' && '{{lineItem.status}}'=='Order Delivered' && '{{lineItem.status}}'=='Production Complete'){
+        document.querySelector('.planReviewedRow').style.display='table-row';
+    }
+
+    if('{{lineItem.status}}'!='Submit Order' && '{{lineItem.status}}'!='Data Validate'){
+        document.querySelector('.planSharedRow i').style.display='inline';
+    }
+
+    
+</script>
+
+{% endif %}
+{% endblock %}

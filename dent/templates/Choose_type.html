@@ -1,0 +1,308 @@
+{% extends 'dentreadbase.html' %} 
+{% load static %} 
+{% block content %}
+
+<style>
+    body{
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-size: 16px;
+    }
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .wrapper{
+        background-color: white;
+        text-align: center;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    
+    .reg-content{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+    {% comment %} .reg-content>img{
+        display: block;
+        max-width: 60px;
+        margin: 0 auto;
+        padding: 11px 7px;
+        border-radius: 50%;
+        box-shadow: 0.314675509929657px 0.629351019859314px 32.41157913208008px 0px #99999942;
+    } {% endcomment %}
+    .main-heading{
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+    .card-enclosing{
+        display: flex;
+        gap: 2.5rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+    .card-enclosing>.card-content{
+        border: 1px solid #3333334D;
+        padding: 0.5rem;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        gap: 4px;
+        width: 150px;
+    }
+    .card-enclosing>.card-content:hover{
+        background: rgba(31, 63, 127, 0.10);;
+        cursor: pointer;
+    }
+    .card-enclosing>.card-content img{
+        width: 50px;
+    }
+    .reg-image--wrapper img{
+        max-height: 500px;
+        width: 100%;
+        object-fit: cover;
+    }
+    .reg-content{
+        padding: 0 2rem;
+
+    }
+</style>
+
+
+<div class="wrapper content row">
+    <div class="d-none d-md-block col-md-4 p-0 reg-image--wrapper">
+        <img src="/static/svg_icons/registration.jpg" alt="Registration Image">
+    </div>
+    <div class="col-sm-12 col-md-8 reg-content">
+        <img height="75" src="/static/svg_icons/dentread_logo_image.svg" alt="dentread logo">
+        <div class="information">
+            <div class="main-heading">Create Account</div>
+            <div class="help-text">Its free to sign up and only takes a minute</div>
+        </div>
+        <div class="main--content">
+            <div class="help-text">Choose Your Profile</div>
+            <div class="card-enclosing">
+                <div class="card-content">
+                    <img src="/static/svg_icons/clinic-grey.svg" alt="Lab Image">
+                    <div class="help-text light">Dental Clinic</div>
+                </div>
+                <div class="card-content">
+                    <img src="/static/svg_icons/dental-lab-logo.svg" alt="Clinic Image">
+                    <div class="help-text light">Dental Lab</div>
+                </div>
+                <div class="card-content">
+                    <img src="/static/svg_icons/ortho-lab-logo.svg" alt="Clinic Image">
+                    <div class="help-text light">Imaging Center</div>
+                </div>
+                <div class="card-content">
+                  <img src="/static/svg_icons/ortho-lab-logo.svg" alt="Clinic Image">
+                    <div class="help-text light">Orthodontic Lab</div>
+                </div>
+            </div>
+
+        </div>
+        <div class="extra-content">
+            Already have an account? <a href="/">Sign In</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.querySelector('.card-enclosing').addEventListener('click', function(event){
+        let target = event.target;
+        while(!target.classList.contains('card-content')){
+            target = target.parentElement;
+        }
+        let mainHref = '';
+        switch(target.querySelector('.help-text').innerText){
+            case 'Dental Lab':
+                mainHref = "/lab_reg";
+                break;
+            case 'Dental Clinic':
+                mainHref = "/clinic_reg";
+                break;
+            case 'Imaging Center':
+                mainHref = '/imaging_reg';
+                break;
+            case 'Orthodontic Lab':
+                mainHref = '/ortho_reg';
+        }
+        window.location.href = mainHref;
+        // target.querySelector('.help-text').innerText == 'Dental Lab'? window.location.href = "/lab_reg" : window.location.href = "/clinic_reg";
+    });
+</script>
+
+<!-- <div class="page main-signin-wrapper" style="height: 100vh !important">
+ 
+  <div class="row signpages text-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div
+          class="row row-sm"
+          style="box-shadow: rgb(191 184 184) 0px 5px 50px; height: 475px;"
+          
+        >
+          <div class="col-lg-4 d-none d-lg-block text-center"
+            style="background-color: #2f6ebb"
+          >
+            <div
+              class="mt-5 pt-5 p-2 pos-absolute"
+              style="background-color: #2f6ebb"
+            >
+              <div class="clearfix"></div>
+              <img
+                src="{% static '/dentread/assets/img/brand/logowhite2.png' %}"
+                class="ht-150 mb-0"
+                alt="user"
+              />
+              <h5 class="mt-4 text-white">Create Your Account</h5>
+              <span class="tx-white-6 tx-13 mb-5 mt-xl-0"
+                >Sign up to create, discover and connect with Dentread
+                community</span
+              >
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-lg-8 login_form">
+            <div class="container-fluid">
+              <div class="row row-sm">
+                <div class="card-body">
+                  <h3 class="text-primary"></h3>
+                  <div class="clearfix"></div>
+                  <h5 class="text-left mb-0">Choose Your Profile</h5>
+                  <p class="mb-1 text-muted tx-13 ml-0 text-left">
+                    It's free to sign up and only takes a minute.
+                  </p>
+                  <form>
+                    <div class="card-body">
+                      <div class="row">
+                        
+                        <div class="col-sm-12 p-1">
+                          <div class="main-traffic-detail-item">
+                            <div>
+                              <a
+                                href="/clinic_reg"
+                                class="btn ripple btn-outline-secondary btn-rounded btn-block"
+                                ><i
+                                  class="fa fa-h-square fa-2x"
+                                  aria-hidden="true"
+                                ></i>
+                                <h5>Dental Clinic</h5></a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-12 p-1">
+                          <div class="main-traffic-detail-item">
+                            <div>
+                              <a
+                                href="/lab_reg"
+                                class="btn ripple btn-outline-info btn-rounded btn-block"
+                                ><i
+                                  class="fa fa-flask fa-2x"
+                                  aria-hidden="true"
+                                ></i>
+                                <h5>Dental Lab</h5></a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 p-1 d-none">
+                          <div class="main-traffic-detail-item">
+                            <div>
+                              <a
+                                href="/imaging_reg"
+                                class="btn ripple btn-outline-primary btn-rounded btn-block"
+                                ><i class="fa fa-hospital-o fa-2x"></i>
+                                <h5>Imaging Centre</h5></a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 p-1 d-none">
+                          <div class="main-traffic-detail-item">
+                            <div>
+                              <a
+                                href="/radio_reg"
+                                class="btn ripple btn-outline-success btn-rounded btn-block"
+                                ><i
+                                  class="fa fa-user-md fa-2x"
+                                  aria-hidden="true"
+                                ></i>
+                                <h5>Radiologist</h5></a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 p-1 d-none">
+                          <div class="main-traffic-detail-item">
+                            <div>
+                              <a
+                                href="/lab_reg"
+                                class="btn ripple btn-outline-warning btn-rounded btn-block"
+                                >
+                                <i class="fa fa-solid fa-graduation-cap fa-2x"  aria-hidden="true"></i>
+                                <h5>Dental College</h5></a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 p-1 d-none">
+                          <div class="main-traffic-detail-item">
+                            <div>
+                              <a
+                                href="/radio_reg"
+                                class="btn ripple btn-outline-danger btn-rounded btn-block"
+                                >
+                                <i class="fa fa-solid fa-vial fa-2x" aria-hidden="true"></i>
+                                <h5>Orthodontic Lab</h5></a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="text-left ml-0">
+                    <p class="mb-0">
+                      Already have an account?
+                      <a href="/login_dentread">Sign In</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @media (min-width: 1300px){
+    .signpages {
+        width: 70%;
+        border-radius: 6px;
+        margin: 5em auto;
+        display: flex;
+    }
+  }
+  .btn-outline-warning {
+    color: #ff9b21 !important;
+    border-color: #ff9b21;
+  }
+  .btn-outline-warning:hover {
+    color: white !important;
+    border-color: #ff9b21;
+  }
+</style> -->
+
+{% endblock %}

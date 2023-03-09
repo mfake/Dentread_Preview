@@ -1,0 +1,98 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+
+
+  <div class="main-content pt-0 "><!-- Content Wrapper. Contains page content -->
+
+    <!-- Content Header (Page header) -->
+
+      <div class="container">
+          <div class="inner-body">
+
+    <div class="page-header">
+							<div>
+								<h4 class="text-primary" >Manage Studies</h4>
+
+							</div>
+							<div class="d-flex">
+								<div class="justify-content-center">
+
+									<a href="/createstudy" class="btn btn-primary my-2 btn-icon-text">
+									  <i class="fe fe-plus mr-2"></i> Add New Study
+									</a>
+								</div>
+							</div>
+						</div>
+    <!-- Main content -->
+  <div class="row">
+          <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card">
+
+
+
+
+              <!-- /.card-header -->
+              <div class="card-body">
+
+                <table id="example2" class="table table-bordered border-t0 key-buttons text-nowrap w-100">
+                  <thead>
+                  <tr>
+                       <th style="background-color:#2f6ebb;color:white;">Top Category</th>
+                   <th style="background-color:#2f6ebb;color:white;">Study Title</th>
+                      <th style="background-color:#2f6ebb;color:white;">Main Category</th>
+                      <th style="background-color:#2f6ebb;color:white;">Sub Category</th>
+                      <th style="background-color:#2f6ebb;color:white;">Price</th>
+                      <th style="background-color:#2f6ebb;color:white;">Actions</th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                         {% for s in study %}
+                  <tr>
+                      <td>{{ s.topcat }}</td>
+                    <td>{{ s.title }}</td>
+                    <td>{{ s.maincat }}</td>
+                    <td>{{ s.subcat }}
+                    </td>
+                    <td>{{ s.price }}</td>
+  <td>
+
+<div class="dropdown dropleft">
+				<button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-sm btn-outline-primary" data-toggle="dropdown" id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i></button>
+				<div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+					<a class="dropdown-item" href="/edit_study/{{ s.id }}"><i class="fas fa-pencil-alt"></i> Edit</a>
+					<a class="dropdown-item" href="/delete_study/{{ s.id }}" hidden><i class="fas fa-trash"></i> Delete</a>
+				</div>
+			</div>
+
+                      </td>
+                  </tr>
+                {% endfor %}
+                  </tbody>
+
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+
+    <!-- /.content -->
+
+  <!-- /.content-wrapper -->
+
+  <!-- /.control-sidebar -->
+</div>
+        <!-- /.modal-dialog -->
+      </div>
+
+{% endif %}
+{%endblock%}

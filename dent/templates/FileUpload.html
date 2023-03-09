@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- custom css & js -->
+    <link rel="stylesheet" href="{% static '/upload/style.css' %}">
+
+   <script src="{% static '/dropzone/dist/dropzone.js' %}"></script>
+   <link rel="stylesheet" href="{% static '/dropzone/dist/dropzone.css' %}">
+
+  </head>
+  <body>
+    <div class="container mt-3">
+      <form action="addfiles" method="post" class="dropzone dz">
+          {% csrf_token %}
+  <div class="fallback">
+    <input name="file" id="file" type="file" multiple />
+  </div>
+</form>
+
+    </div>
+
+
+  </body>
+</html>
+{% endif %}
+{% endblock %}

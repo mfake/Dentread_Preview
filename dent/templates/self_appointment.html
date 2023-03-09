@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DMDIMAGING | Dashboard</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static '/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static '/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static '/dist/css/adminlte.min.css' %}">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  {% include 'messages.html' %}
+  <!-- /.login-logo -->
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center" style="background-color:#264d60;">
+      <a href="" class="h1" style="color:white;">DMD IMAGING</a>
+    </div>
+    <div class="card-body">
+      <p class="login-box-msg">Please fill the details for appointment</p>
+
+      <form action="/self_appointment" method="post">
+           {% csrf_token %}
+        <div class="form-group">
+                    <label for="exampleInputEmail1">Date</label>
+                    <input type="date" class="form-control" id="date" name="date" >
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Time</label>
+                    <input type="time" class="form-control" id="time" name="time" >
+                  </div>
+                    <div class="form-group">
+                    <label for="exampleInputPassword1">Your Name</label>
+                    <input type="text" class="form-control" id="name" name="name" >
+                  </div>
+                    <div class="form-group">
+                    <label for="exampleInputPassword1">Contact Number</label>
+                    <input type="number" class="form-control" id="contact" name="contact" value="{{appoint.contact}}">
+                  </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Centre</label>
+                        <select type="text" id="centre" name="centre"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected" disabled></option>
+                            {% for i in org %}
+                           <option value="{{i.orgname}}">{{i.orgname}}</option>
+                    {% endfor %}
+
+                       </select>
+                      </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Study</label>
+                        <select type="text" id="study" name="study"  class="form-control select2bs4" style="width: 100%;">
+                      <option selected="selected" ></option>
+
+                           <option value="OPG">OPG</option>
+                            <option value="CBCT">CBCT</option>
+
+
+                       </select>
+                      </div>
+                    <div class="form-group">
+                    <label for="exampleInputPassword1">Remark</label>
+                    <input type="text" class="form-control" id="remark" name="remark" >
+                  </div>
+
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit" class="btn  btn-block" style="background-color:#264d60; color:white;">Submit</button>
+          </div>
+          <!-- /.col -->
+
+      </form>
+
+
+      <!-- /.social-auth-links -->
+
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static '/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static '/dist/js/adminlte.min.js' %}"></script>
+</body>
+</html>

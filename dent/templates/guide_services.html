@@ -1,0 +1,386 @@
+{% extends 'dentread_dashbase.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+	fieldset.scheduler-border {
+		border: 1px groove #ddd !important;
+		padding: 0 1.4em 1.4em 1.4em !important;
+		margin: 0 0 1.5em 0 !important;
+		-webkit-box-shadow:  0px 0px 0px 0px #000;
+				box-shadow:  0px 0px 0px 0px #000;
+	}
+	
+		legend.scheduler-border {
+			font-size: 1.2em !important;
+			font-weight: bold !important;
+			text-align: left !important;
+			width:auto;
+			padding:0 10px;
+			border-bottom:none;
+		}
+
+    @media  screen and (max-width: 750px) {
+        #fixed-width-height{
+            height: 500px !important;
+            width: 500px !important;
+        }
+    }    
+
+    th.sorting, td{
+        display:  table-cell !important;
+    }
+    small, .small{
+        font-size: 14px !important;
+        
+    }
+
+    #example2_filter{
+        display: flex !important;
+        justify-content: end !important;
+        text-align: end;
+    }
+
+    #example2_wrapper>div:nth-child(2) {
+        overflow-x:auto !important;
+    }
+
+    #image-analysis-report--style{
+        background-color: #2f6ebb;
+        color: white;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
+        border-radius: 0.3rem;
+    }
+
+    fieldset{
+        border-radius: 0.5rem;
+    }  
+
+    .carousel-slider #thumbcarousel .carousel-item .thumb {
+        max-width: 81px !important;
+    }
+    .dropdown-item:hover{
+        color: white;
+    }
+    
+</style>
+
+
+
+<div class="main-content side-content pt-0">
+    <div class="container-fluid" style="overflow-x: hidden;">
+        <div class="inner-body">
+
+
+            <!-- Page Header -->
+            <!-- End Page Header -->
+            <!-- Row -->
+            <div class="row row-sm" style="margin-top: 2rem !important;">
+                <div class="col-lg-12 col-md-12">
+                    <div class="card custom-card productdesc">
+                        <div class="card-body h-100">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-12 col-md-12">
+                                    <div class="row" style='justify-content: center'>
+                                                <div class="col-md-11 offset-md-0 col-sm-10 col-9">
+                                                    <fieldset class="scheduler-border">
+                                                        <legend class="scheduler-border"><h4 id="image-analysis-report--style">Implant Surgical Guide</h4></legend>
+                                                        <div class="control-group">
+                                                            <p style="line-height: 1.7rem;">
+                                                        We Offer Design & Fabrication For Implant Surgical Guides. Our Guide Options Include Tooth, Tooth & Tissue, Tissue Formats With Options For In-Office Printing or Pre-Fab Guides.
+                                                    </p>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-11 offset-md-0 col-sm-10 col-9">
+                                            <div class="carousel">
+                                                <div id="carousel" class="carousel slide" data-ride="carousel">
+                                                    <div class="carousel-inner">
+                                                        <div class="carousel-item active"><img
+                                                                src="{% static '/services/guide/guide1.jpg' %}"
+                                                                alt="img" id= 'fixed-width-height' style="width: 100%;">
+                                                        </div>
+
+                                                        <div class="carousel-item"><img
+                                                                src="{% static '/services/guide/guide2.jpg' %}"
+                                                                alt="img" id= 'fixed-width-height' style="width: 100%;">
+                                                            
+                                                        </div>
+                                                        <div class="carousel-item"><img
+                                                                src="{% static '/services/guide/guide3.jpg' %}"
+                                                                alt="img" id= 'fixed-width-height' style="width: 100%;" >
+                                                            
+                                                        </div>
+                                                        <div class="carousel-item"><img
+                                                            src="{% static '/services/guide/guide4.jpg' %}"
+                                                            alt="img" id= 'fixed-width-height' style="width: 100%;">
+                                                        
+                                                    </div>
+                                                    </div>
+                                                    <a class="carousel-control-prev" href="#carousel" role="button"
+                                                       data-slide="prev">
+                                                        <span class="carousel-control-prev-icon"
+                                                              aria-hidden="true"></span>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                    <a class="carousel-control-next" href="#carousel" role="button"
+                                                       data-slide="next">
+                                                        <span class="carousel-control-next-icon"
+                                                              aria-hidden="true"></span>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row-2">
+                                            <div class="clearfix carousel-slider">
+                                                <div id="thumbcarousel" class="carousel slide" data-interval="false">
+                                                    <div class="carousel-inner">
+                                                        <div class="carousel-item active">
+                                                            <div data-target="#carousel" data-slide-to="0"
+                                                                 class="thumb my-2"><img
+                                                                    src="{% static '/services/guide/guide1.jpg' %}"
+                                                                    alt="img"></div>
+                                                            <div data-target="#carousel" data-slide-to="1"
+                                                                 class="thumb my-2"><img
+                                                                    src="{% static '/services/guide/guide2.jpg' %}"
+                                                                    alt="img"></div>
+                                                            <div data-target="#carousel" data-slide-to="2"
+                                                                 class="thumb my-2"><img
+                                                                    src="{% static '/services/guide/guide3.jpg' %}"
+                                                                    alt="img"></div>
+                                                            <div data-target="#carousel" data-slide-to="3"
+                                                                 class="thumb my-2"><img
+                                                                    src="{% static '/services/guide/guide4.jpg' %}"
+                                                                    alt="img"></div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-8 col-lg-12 col-md-12">
+                                    <div class="col-md-11 col-sm-9 col-8 mt-3" style="display: flex;">
+                                        <div class="d-flex ml-2" style="margin-right: auto;">
+                                            <form action="/guide_services/{{mycat.id}}" method="post" style="margin-top: 0.5rem !important;">
+                                                {% csrf_token %}
+                                                <div class="input-group">
+                                                    <input type="search" class="form-control form-control-sm" name="search" id="search" placeholder="Type Patient name, Centre or Registration date " 
+                                                    style="width: 250px !important;">
+                                                    <div class="input-group-append">
+                                                        <button type="submit" class="btn btn-sm btn-primary" style="font-size: inherit !important;">
+                                                            <i class="fa fa-search"></i>
+                                                        Search</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="d-flex" style="margin-right: -2rem;">
+                                            <div class="form-group">
+                                                <a href="/add_patient/{{mycat.id}}"
+                                                   class="btn btn-block btn-primary my-2 btn-icon-text">
+                                                    <i class="fe fe-plus mr-4"></i> Register New Patient
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="colors d-flex mr-3 mt-2">
+                                        <div class="container-fluid">
+                                            <div class="inner-body">
+                                                <!-- /.container-fluid -->
+                                                <!-- Main content -->
+                                                <div class="page-header">
+                                                    <div>
+                                                        <h4 class="text-primary">Refer Existing Patient</h4>
+                                                    </div>
+                                                    <div class="d-flex ml">
+                                                        <div class="justify-content-center">
+                                                            <div class="btn btn-list">
+                                                                <form method="post"
+                                                                      action="/guide_services/{{mycat.id}}">
+                                                                    {% csrf_token %}
+
+                                                                    <div aria-label="Basic example"
+                                                                        class="btn btn-group" role="group">
+                                                                        <input name="query_date" id="query_date" hidden>
+                                                                        <button class="btn ripple pd-x-25"
+                                                                                type="radio" value="today" id='todayFilter' style="border-top-left-radius: 3px; border-bottom-left-radius: 3px; border: 1px solid;"
+                                                                                onclick="todayFunction()" {{check1}}>Today
+                                                                        </button>
+                                                                        <button class="btn ripple pd-x-25"
+                                                                                type="radio" value="yesterday" id='yesterdayFilter' style='border: 1px solid; border-left:none'
+                                                                                onclick="yesterdayFunction()" {{check2}}>
+                                                                            Yesterday
+                                                                        </button>
+                                                                        <button class="btn ripple pd-x-25" style='border: 1px solid; border-left:none' 
+                                                                                type="radio" value="thisweek" id='thisweekFilter'
+                                                                                onclick="thisweekFunction()" {{check3}}>This
+                                                                            Week
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                                <script>
+																	console.log('this is before fnctions', `{{btnchecked}}`)
+                                                                    let todayFunction= function () {
+                                                                        document.getElementById("query_date").value='today';
+                                                                        console.log('inside today')
+                                                                    }
+                                                                    let yesterdayFunction= function () {
+                                                                        document.getElementById("query_date").value = 'yesterday';
+                                                                        console.log('inside yesterday')
+                                                                    }
+                                                                    let thisweekFunction= function () {
+                                                                        document.getElementById("query_date").value = 'thisweek';
+                                                                        console.log('inside thisweek')
+                                                                    }
+                                                                    if(`{{btnchecked}}`=='todayFunction'){
+                                                                        console.log('inside today btnchecked function ')
+                                                                        document.getElementById('todayFilter').classList.add('btn-primary')
+                                                                        document.getElementById('todayFilter').style.border='none'
+                                                                    }
+                                                                    if(`{{btnchecked}}`=='yesterdayFunction'){
+                                                                        console.log('inside yesterday btnchecked function ')
+                                                                        document.getElementById('yesterdayFilter').classList.add('btn-primary')
+                                                                        document.getElementById('yesterdayFilter').style.border='none'
+                                                                    }
+                                                                    if(`{{btnchecked}}`=='thisweekFunction'){
+                                                                        console.log('inside thisweek btnchecked function ')
+                                                                        document.getElementById('thisweekFilter').classList.add('btn-primary')
+                                                                        document.getElementById('thisweekFilter').style.border='none'
+                                                                    }
+                                                                </script>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12 col-lg-12 col-xl-12">
+                                                        <div class="card">
+                                                            <!-- /.card-header -->
+                                                            <div class="card-body">
+
+                                                                <table id="example2"
+                                                                       class="table table-bordered border-t0 key-buttons  w-100">
+                                                                    <thead>
+                                                                    <tr style="color:white;">
+                                                                        <th style="background-color:#2f6ebb;color:white;">
+                                                                            Date
+                                                                        </th><th style="background-color:#2f6ebb;color:white;">
+                                                                            ID
+                                                                        </th><th style="background-color:#2f6ebb;color:white;">
+                                                                            Name
+                                                                        </th>
+                                                                        <th style="background-color:#2f6ebb;color:white;">
+                                                                            Age
+                                                                        </th>
+                                                                        
+                                                                        <th style="background-color:#2f6ebb;color:white;">
+                                                                            Gender
+                                                                        </th>
+                                                                        <th style="background-color:#2f6ebb;color:white;">
+                                                                            Center
+                                                                        </th>
+                                                                       
+                                                                        <th style="background-color:#2f6ebb;color:white;">
+                                                                            Actions
+                                                                        </th>
+                                                                    </tr>
+                                                                    </thead>
+
+                                                                    <tbody>
+                                                                    {% for i in patient %}
+                                                                    <tr>
+                                                                        <td>{{ i.rdate|date:'d-m-Y' }}</td>
+                                                                        <td>{{ i.pid }}</td>
+                                                                        <td><small class="{{i.st}}">{{ i.name }}</td>
+                                                                        <td>{{ i.age }}</td>
+                                                                        <td>{{i.gender}}</td>
+                                                                        <td>{{ i.locate }}</td>
+                                                                        <td>
+                                                                            <button aria-expanded="false" aria-haspopup="true"
+                                                                                class="btn ripple btn-sm btn-outline-primary ml-auto" style="margin-right: 12px;" data-toggle="dropdown"
+                                                                                id="dropleftMenuButton" type="button"><i class="si si-options-vertical"></i>
+                                                                            </button>
+                                                                            
+                                                                            <div aria-labelledby="dropleftMenuButton" class="dropdown-menu tx-13">
+                                                                                <a class="dropdown-item" href="/refer_services/{{i.id}}/{{mycat.id}}"> Select Patient</a>
+                                                                                <a class="dropdown-item" href="/patientdetails/{{ i.id }}"> View Patient</a>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    {% endfor %}
+                                                                    </tbody>
+                                                                </table>
+
+
+                                                            </div>
+                                                            <!-- /.card-body -->
+                                                        </div>
+                                                        <!-- /.card -->
+                                                    </div>
+                                                    <!-- /.row -->
+                                                </div>
+                                                <!-- /.container-fluid -->
+
+                                                <!-- /.content -->
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Row -->
+
+        </div>
+    </div>
+</div>
+</div>
+<script src="{% static '/plugins/jquery/jquery.min.js' %}"></script>
+<script>
+window.alert = (function() {
+    var nativeAlert = window.alert;
+    return function(message) {
+        window.alert = nativeAlert;
+        message.indexOf("DataTables warning") === 0 ?
+            console.warn(message) :
+            nativeAlert(message);
+    }
+})();
+
+</script>
+<script>
+ $(function () {
+    $("#example2").DataTable({
+
+       "order": [[ 1, "desc" ]],
+       "paging": true,
+       "lengthChange": false,
+       "searching": true,
+       "ordering": true,
+       "info": true,
+       "autoWidth": false,
+       "responsive": true,
+       "pageLength": 5,
+
+    });
+    let label = document.querySelector('#example2_filter>label');
+    label.firstChild.textContent='Filter';
+
+  });
+
+</script>
+
+{% endif %}
+{%endblock%}
